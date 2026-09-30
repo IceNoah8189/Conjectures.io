@@ -9,10 +9,10 @@ Install [elan](https://github.com/leanprover/elan), then run from the repo root:
 ```sh
 bash scripts/setup-deps.sh
 lake exe cache get
-lake build TaskSupport
-lake env lean tasks/erdos-168-ii/Challenge.lean
+lake build FormalConjectures TaskSupport
+time lake env lean tasks/erdos-168-ii/Challenge.lean
 ```
 
-The Formal Conjectures dependency is reconstructed from the audited source patch. The Mathlib step downloads prebuilt artifacts. The challenge intentionally still has `sorry`; a successful compile confirms the setup, not the theorem.
+The Formal Conjectures dependency is reconstructed from the audited source patch. The Mathlib step downloads prebuilt artifacts; do not build Mathlib from source. The challenge intentionally still has `sorry`; a successful compile confirms the setup, not the theorem.
 
 See `NOTES.md` for source commits and local verification results.

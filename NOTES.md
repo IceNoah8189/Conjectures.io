@@ -12,4 +12,6 @@
 - Copied and committed the seven task files without edits.
 - Installed Lean v4.33.1 in this workspace.
 - Reconstructed the audited Formal Conjectures commit and confirmed the Lake project resolves Lean v4.33.1 and the validator's pinned Mathlib commit.
-- Mathlib cache and timed challenge compilation: pending.
+- `lake exe cache get` was attempted with `XDG_CACHE_HOME=/workspace/.cache`. The cache's `lakecache.blob.core.windows.net` endpoint was rejected by this environment's proxy (`CONNECT tunnel failed, response 403`, followed by rate limiting). No Mathlib library was built from source.
+- Timed challenge compilation remains unverified. `lake env lean tasks/erdos-168-ii/Challenge.lean` stops at the first import because the blocked cache prevented building its dependencies; its 0.717-second failed run is **not** a successful compilation time.
+- On a machine with access to the Mathlib cache host, run the commands in `README.md` and record the successful compile time here.
