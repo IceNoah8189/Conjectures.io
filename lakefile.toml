@@ -1,0 +1,15 @@
+name = "erdos_168_ii"
+version = "0.1.0"
+defaultTargets = ["TaskSupport"]
+
+[[require]]
+name = "formal_conjectures"
+path = "vendor/formal-conjectures"
+
+[[lean_lib]]
+name = "TaskSupport"
+srcDir = "lean"
+[lean_lib.leanOptions]
+warn.sorry = false
+weak.google.answer = "always_true"
+

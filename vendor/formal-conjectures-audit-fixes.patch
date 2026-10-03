@@ -1,0 +1,1832 @@
+diff --git a/FormalConjectures/ErdosProblems/107.lean b/FormalConjectures/ErdosProblems/107.lean
+index 92f4552..d9c5299 100644
+--- a/FormalConjectures/ErdosProblems/107.lean
++++ b/FormalConjectures/ErdosProblems/107.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Erdős Problem 107
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+ - [Wikipedia](https://en.wikipedia.org/wiki/Happy_ending_problem)
+ -/
+ 
++@[expose] public section
++
+ open Filter
+ open EuclideanGeometry
+ 
+diff --git a/FormalConjectures/ErdosProblems/1095.lean b/FormalConjectures/ErdosProblems/1095.lean
+index cf2e26b..58d819c 100644
+--- a/FormalConjectures/ErdosProblems/1095.lean
++++ b/FormalConjectures/ErdosProblems/1095.lean
+@@ -52,10 +52,8 @@ theorem erdos_1095.variants.lower_solved :
+     ∃ c > 0, (fun k : ℕ ↦ exp (c * log k ^ 2)) =O[atTop] fun k ↦ (g k : ℝ) := by
+   sorry
+ 
+-/--
+-Ecklund, Erdős, and Selfridge [EES74] conjectured $g(k)\leq \exp((1+o(1))k)$.
+--/
+-@[category research open, AMS 11]
++/-- Ecklund, Erdős, and Selfridge [EES74] proved $g(k)\leq \exp((1+o(1))k)$. -/
++@[category research solved, AMS 11]
+ theorem erdos_1095.variants.upper_conjecture :
+     ∃ f : ℕ → ℝ, Tendsto f atTop (𝓝 0) ∧ ∀ᶠ k in atTop, g k ≤ exp (k * (1 + f k)) := by
+   sorry
+@@ -72,7 +70,8 @@ theorem erdos_1095.variants.lower_conjecture : ∃ c > 0, ∀ᶠ k in atTop, g k
+ Sorenson, Sorenson, and Webster [SSWE20] give heuristic evidence that $\log g(k) \asymp \frac{k}{\log k}$.
+ -/
+ @[category research open, AMS 11]
+-theorem erdos_1095.variants.log_equivalent : (fun k ↦ log (g k)) ~[atTop] (fun k ↦ k / log k) := by
++theorem erdos_1095.variants.log_isTheta :
++    (fun k ↦ log (g k)) =Θ[atTop] (fun k ↦ k / log k) := by
+   sorry
+ 
+ end Erdos1095
+diff --git a/FormalConjectures/ErdosProblems/1101.lean b/FormalConjectures/ErdosProblems/1101.lean
+index 54bcf3c..ba63af8 100644
+--- a/FormalConjectures/ErdosProblems/1101.lean
++++ b/FormalConjectures/ErdosProblems/1101.lean
+@@ -53,15 +53,15 @@ def IsGood (u : ℕ → ℕ) : Prop :=
+     ∀ k, A u k < x →
+       (A u (k + 1) : ℝ) - A u k < (1 + ε) * (t u x : ℝ) * (∏' i : ℕ, (1 - 1 / (u i : ℝ)))⁻¹
+ 
+-/-- 1. There is NO good sequence with polynomial growth. -/
++/-- 1. Is there a good sequence with polynomial growth? -/
+ @[category research open, AMS 11]
+-theorem erdos_1101.parts.i :
+-    ¬ ∃ u, IsGood u ∧ ∃ k : ℕ, (fun n => (u n : ℝ)) =O[atTop] (fun n => (n : ℝ) ^ k) := by
++theorem erdos_1101.parts.i : answer(sorry) ↔
++    ∃ u, IsGood u ∧ ∃ k : ℕ, (fun n => (u n : ℝ)) =O[atTop] (fun n => (n : ℝ) ^ k) := by
+   sorry
+ 
+-/-- 2. There is a good sequence with sub-exponential growth. -/
++/-- 2. Is there a good sequence with sub-exponential growth? -/
+ @[category research open, AMS 11]
+-theorem erdos_1101.parts.ii :
++theorem erdos_1101.parts.ii : answer(sorry) ↔
+     ∃ u, IsGood u ∧ (fun n => Real.log (u n : ℝ)) =o[atTop] (fun n => (n : ℝ)) := by
+   sorry
+ 
+diff --git a/FormalConjectures/ErdosProblems/137.lean b/FormalConjectures/ErdosProblems/137.lean
+index 6d61b9a..2549d48 100644
+--- a/FormalConjectures/ErdosProblems/137.lean
++++ b/FormalConjectures/ErdosProblems/137.lean
+@@ -55,7 +55,7 @@ $p\mid m(m+1)\cdots (m+n)$ and yet $p^2$ does not divide the right hand side.
+ @[category research open, AMS 11]
+ theorem erdos_137.variants.multiple_powerful_factors (k : ℕ) : ∀ᶠ n in Filter.atTop,
+     ∀ (m : ℕ) (hm : 0 < m),
+-    letI N := ∏ x ∈ Finset.Ioc m (m + n), x
++    letI N := ∏ x ∈ Finset.Icc m (m + n), x
+     ∃ P : Finset ℕ, P.card = k ∧ ∀ p ∈ P, p.Prime ∧
+     p ∣ N ∧ ¬ p ^ 2 ∣ N := by
+   sorry
+diff --git a/FormalConjectures/ErdosProblems/329.lean b/FormalConjectures/ErdosProblems/329.lean
+index b03c4b6..2082f0f 100644
+--- a/FormalConjectures/ErdosProblems/329.lean
++++ b/FormalConjectures/ErdosProblems/329.lean
+@@ -80,21 +80,14 @@ Erdős and Turán [ErTu41] proved the upper bound of 1.
+ theorem erdos_329.variants.turan_1941 : ∀ (A : Set ℕ), IsSidon A → sidonUpperDensity A ≤ 1 := by
+   sorry
+ 
+-/--
+-The converse: if the maximum density is 1, then any finite Sidon set
+-can be embedded in a perfect difference set modulo $n > 0$.
+-
+-Since the consequent is false (due to the counterexamples in [Ha47] and [AlMi25]),
+-this implication is logically equivalent to the statement that the maximum upper
+-density of Sidon sets is NOT 1.
+-Because the maximum upper density problem is still open, the truth value of this
+-implication is also an open research problem.
+--/
+-@[category research open, AMS 5 11]
++/-- If every finite Sidon set can be embedded in a perfect difference set modulo some $n > 0$,
++then the maximum upper density of Sidon sets is 1. This is the implication stated on the source
++page; the embedding hypothesis itself is known to be false by [Ha47] and [AlMi25]. -/
++@[category research solved, AMS 5 11]
+ theorem erdos_329.variants.converse_implication :
+-    (sSup {sidonUpperDensity A | (A : Set ℕ) (_ : IsSidon A)} = 1) →
+     (∀ (A : Finset ℕ), IsSidon (A : Set ℕ) → ∃ (D : Set ℕ) (n : ℕ) (_ : n > 0),
+-      ↑A ⊆ D ∧ IsPerfectDifferenceSet D n) := by
++      ↑A ⊆ D ∧ IsPerfectDifferenceSet D n) →
++    sSup {sidonUpperDensity A | (A : Set ℕ) (_ : IsSidon A)} = 1 := by
+   sorry
+ 
+ /-  ## Related results and examples -/
+diff --git a/FormalConjectures/ErdosProblems/357.lean b/FormalConjectures/ErdosProblems/357.lean
+index dd19517..c5f1b3d 100644
+--- a/FormalConjectures/ErdosProblems/357.lean
++++ b/FormalConjectures/ErdosProblems/357.lean
+@@ -133,7 +133,7 @@ noncomputable def g (n : ℕ) : ℕ :=
+ /-- Let $g(n)$ be the maximal $k$ such that there exist integers $1 \le a_1, \dotsc, a_k \le n$
+ such that all sums of the shape $\sum_{u \le i \le v} a_i$ are distinct. It is known that
+ $$\left(\frac 1 3 + o(1) \right)n \leq g(n) \leq \left(\frac 2 3 + o(1) \right)n.$$ -/
+-@[category research open, AMS 11]
++@[category research solved, AMS 11]
+ theorem erdos_357.variants.hegyvari : ∃ (o o' : ℕ → ℝ), o =o[atTop] (1 : ℕ → ℝ) ∧
+     o' =o[atTop] (1 : ℕ → ℝ) ∧
+       ∀ᶠ n in atTop, (g n : ℝ) ∈ Set.Icc ((1 / 3 + o n) * n) ((2 / 3 + o' n)*n) := by
+diff --git a/FormalConjectures/ErdosProblems/398.lean b/FormalConjectures/ErdosProblems/398.lean
+index 0b73cb1..784320b 100644
+--- a/FormalConjectures/ErdosProblems/398.lean
++++ b/FormalConjectures/ErdosProblems/398.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Erdős Problem 398
+@@ -24,13 +25,15 @@ import FormalConjecturesUtil
+  - [Wikipedia: Brocard's problem](https://en.wikipedia.org/wiki/Brocard%27s_problem)
+ -/
+ 
++@[expose] public section
++
+ open Nat
+ 
+ namespace Erdos398
+ 
+ /--
+ **Brocard's Problem**
+-Does $n! + 1 = m^2$ have integer solutions other than $n = 4, 5, 7$?
++Are $n = 4, 5, 7$ the only natural numbers for which $n! + 1 = m^2$ has a natural-number solution?
+ -/
+ @[category research open, AMS 11]
+ theorem erdos_398 : answer(sorry) ↔ {n | ∃ m, n ! + 1 = m ^ 2} = {4, 5, 7} := by
+diff --git a/FormalConjectures/ErdosProblems/891.lean b/FormalConjectures/ErdosProblems/891.lean
+index ea7d136..d5fdb28 100644
+--- a/FormalConjectures/ErdosProblems/891.lean
++++ b/FormalConjectures/ErdosProblems/891.lean
+@@ -26,10 +26,18 @@ import FormalConjecturesUtil
+ -/
+ 
+ open Nat Filter Finset
++open Polynomial
+ open scoped ArithmeticFunction.omega
+ 
+ namespace Erdos891
+ 
++/-- Dickson's conjecture for finite families of linear integer polynomials. -/
++def DicksonConjecture : Prop :=
++  ∀ (fs : Finset ℤ[X]),
++    (∀ f ∈ fs, f.degree = 1 ∧ BunyakovskyCondition f) →
++    SchinzelCondition fs →
++    Infinite {n : ℕ | ∀ f ∈ fs, (f.eval (n : ℤ)).natAbs.Prime}
++
+ /--
+ Let $2=p_1 < p_2 < \cdots$ be the primes and $k\geq 2$. Is it true that, for all sufficiently large
+ $n$, there must exist an integer in $[n,n+p_1\cdots p_k)$ with $>k$ many prime factors?
+@@ -69,8 +77,8 @@ integers at most $p_1\cdots p_k$. By Dickson's conjecture [Wikipedia], there are
+ $n'$ such that $\frac{L_k}{m}n'+1$ is prime for all $1\leq m < p_1\cdots p_k$. It follows that,
+ if $n=L_kn'+1$, then all integers in $[n,n+p_1\cdots p_k-1)$ have at most $k$ prime factors.
+ -/
+-@[category research open, AMS 11]
+-theorem erdos_891.variants.weisenberg (k : ℕ) (hk : k ≥ 2) :
++@[category research solved, AMS 11]
++theorem erdos_891.variants.weisenberg (hDickson : DicksonConjecture) (k : ℕ) (hk : k ≥ 2) :
+     ∃ᶠ n in atTop,
+       ∀ m ∈ Ico n (n + (∏ i ∈ range k, i.nth Nat.Prime) - 1),
+       ω m ≤ k := by
+diff --git a/FormalConjectures/ErdosProblems/913.lean b/FormalConjectures/ErdosProblems/913.lean
+index 4aa6e08..5d5bba6 100644
+--- a/FormalConjectures/ErdosProblems/913.lean
++++ b/FormalConjectures/ErdosProblems/913.lean
+@@ -42,7 +42,7 @@ theorem erdos_913 : answer(sorry) ↔
+ It is likely that there are infinitely many primes $p$ such that $8p^2 - 1$ is also prime.
+ -/
+ @[category research open, AMS 11]
+-theorem erdos_913.variants.infinite_many_8p_sq_add_one_primes :
++theorem erdos_913.variants.infinite_many_8p_sq_sub_one_primes :
+     { p | p.Prime ∧ (8 * p ^ 2 - 1).Prime }.Infinite := by
+   sorry
+ 
+diff --git a/FormalConjectures/GreensOpenProblems/72.lean b/FormalConjectures/GreensOpenProblems/72.lean
+index 3e86962..c6540b6 100644
+--- a/FormalConjectures/GreensOpenProblems/72.lean
++++ b/FormalConjectures/GreensOpenProblems/72.lean
+@@ -13,15 +13,25 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
+-import FormalConjecturesUtil
++module
++
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Ben Green's Open Problem 72
+ 
+ More commonly known as the **no-three-in-line problem**.
+ 
+-Given $N > 2$ and more than $2 * N$ points on an $N \times N$-grid,
+-are there $3$ of the points on a common line?
++What is the largest subset of the grid $[N]^2$ with no three points in a line? In particular,
++for $N$ sufficiently large, is it impossible to have a set of size $2N$ with this property?
++
++The upper bound $2N$ is the easy half and is `allowedSetSize_le` below, by pigeonhole on the
++columns. The open content is whether $2N$ is attained. Green records that it is for $N$ up to
++around 50, that $(3/2 + o(1))N$ points are achievable for arbitrary $N$, and that his "personal
++suspicion is that this is optimal". The Wikipedia reference points the same way: Guy and Kelly
++conjectured $c = \sqrt[3]{2\pi^2/3} \approx 1.874$, and after an error in the heuristic was found
++Guy corrected it to $c = \pi/\sqrt3 \approx 1.814$. Both are below $2$, so the expected answer to
++the question above is yes.
+ 
+ *References:*
+ - [Ben Green's Open Problem 72](https://people.maths.ox.ac.uk/greenbj/papers/open-problems.pdf#problem.72)
+@@ -30,6 +40,8 @@ are there $3$ of the points on a common line?
+   https://arxiv.org/abs/2510.17743
+ -/
+ 
++@[expose] public section
++
+ namespace Green72
+ 
+ /-- We say a subset of $[N]^2$ is allowed for some $k$ if it contains no $k$ points
+@@ -73,22 +85,31 @@ def NoKInLineFor (k : ℕ) (N : ℕ) : Prop :=
+   AllowedSetSize k N = (k - 1) * N
+ 
+ /-- The **no-k-in-line problem**:
+-For $N \geq k$ and $k > 2$, the AllowedSetSize is $(k - 1) N$, i. e. on an $N \times N$ subset,
+-there is a set of $(k - 1) N$ points for which no $k$ lie on a line (and not such a set of bigger size).
++For which $k > 2$ does every $N \times N$ grid with $N \geq k$ contain a set of $(k - 1) N$ points
++with no $k$ on a line, so that `AllowedSetSize k N` is the pigeonhole bound $(k - 1) N$?
++
++[GK2025] proves that every $k > 10^{37}$ has this property, which is `no_k_in_line_big` below,
++and does not optimise this constant. At $k = 3$ it is the property that Green expects to fail
++for large $N$, see `green_72`.
+ -/
+ @[category research open, AMS 5 52]
+-theorem NoKInLine {k : ℕ} {N : ℕ} (hk : 2 < k) (h : k ≤ N) : NoKInLineFor k N := by
++theorem NoKInLine : answer(sorry) = {k | 2 < k ∧ ∀ N, k ≤ N → NoKInLineFor k N} := by
+   sorry
+ 
+ /-- **Green's Open Problem 72 / No-three-in-line problem**:
+-The no-k-in-line conjecture holds for $k = 3$. -/
++For $N$ sufficiently large, is it impossible to have $2N$ points in $[N]^2$ with no three in a
++line? Green suspects the answer is yes, and that $(3/2 + o(1))N$ is optimal. -/
+ @[category research open, AMS 5 52]
+-theorem green_72 {N : ℕ} (hN : 3 ≤ N) : NoKInLineFor 3 N := by
++theorem green_72 : answer(sorry) ↔ ∀ᶠ N in Filter.atTop, ¬ NoKInLineFor 3 N := by
+   sorry
+ 
+ alias no_three_in_line := green_72
+ 
+-/-- Does the no-three-in-line problem hold when $N$ is big enough? -/
++/-- Is $2N$ attained for all sufficiently large $N$?
++
++This is not the negation of `green_72`. Negating that one gives $\exists^f N$ where this asks
++$\forall^f N$, so both can be answered `False` if the behaviour oscillates. Green asks his
++question in the `green_72` form. -/
+ @[category research open, AMS 5 52]
+ theorem green_72.variants.eventually : answer(sorry) ↔ ∀ᶠ N in Filter.atTop, NoKInLineFor 3 N := by
+   sorry
+@@ -99,8 +120,8 @@ theorem no_three_in_line_le {N : ℕ} (hN : 3 ≤ N) (hN' : N ≤ 60) :
+     NoKInLineFor 3 N := by
+   sorry
+ 
+-/-- In [GK2025] Grebennikov and Kwan prove the no-k-in-line conjecture for $k > 10 ^ 37$
+-and $N \geq k$. -/
++/-- In [GK2025] Grebennikov and Kwan prove that the pigeonhole bound $(k - 1) N$ is attained
++for $k > 10 ^ {37}$ and $N \geq k$. -/
+ @[category research solved, AMS 5 52]
+ theorem no_k_in_line_big {k : ℕ} (N : ℕ) (h : 10 ^ 37 < k) (hN : k ≤ N) :
+     NoKInLineFor k N := by
+diff --git a/FormalConjectures/Millenium/RiemannHypothesis.lean b/FormalConjectures/Millenium/RiemannHypothesis.lean
+index c8d38be..cbca025 100644
+--- a/FormalConjectures/Millenium/RiemannHypothesis.lean
++++ b/FormalConjectures/Millenium/RiemannHypothesis.lean
+@@ -13,95 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
++public import FormalConjectures.Millennium.RiemannHypothesis
+ 
+-/-!
+-# Riemann Hypothesis and its generalizations
+-
+-The Riemann Hypothesis asserts that all non-trivial zeros of the Riemann zeta function
+-$\zeta(s)$ have real part $\frac{1}{2}$. The trivial zeros are the negative even integers
+-$-2, -4, -6, \ldots$. The hypothesis is one of the seven Millennium Prize Problems
+-posed by the Clay Mathematics Institute.
+-
+-The Generalized Riemann Hypothesis extends this to Dirichlet $L$-functions of primitive
+-Dirichlet characters.
+-
+-Note: the **Extended Riemann Hypothesis** (ERH) for Dedekind zeta functions is intentionally
+-**not** stated here. Mathlib's `NumberField.dedekindZeta` is the naive Dirichlet series
+-(`LSeries`), not a meromorphic continuation; outside the region of absolute convergence
+-`tsum` returns junk `0`, producing spurious zeros that make the naive foramlisation of the
+-conjecture provably false. The ERH should be added once Mathlib provides a meromorphic
+-continuation of the Dedekind zeta function.
+-
+-*References:*
+-- [The Clay Institute](https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf)
+-- [Wikipedia: Riemann hypothesis](https://en.wikipedia.org/wiki/Riemann_hypothesis)
+-- [Wikipedia: Generalized Riemann hypothesis](https://en.wikipedia.org/wiki/Generalized_Riemann_hypothesis)
+-- [Wikipedia: Dedekind zeta function](https://en.wikipedia.org/wiki/Dedekind_zeta_function)
+-- J. Neukirch, *Algebraic Number Theory*, Springer (Grundlehren 322), 1999, Chapter VII, §5.
+-- D. A. Marcus, *Number Fields*, Springer (GTM 81), 1977, Chapter VII.
+--/
+-
+-namespace RiemannHypothesis
+-
+-/-- The **Riemann Hypothesis**: all non-trivial zeros of the Riemann zeta function have real
+-part $\frac{1}{2}$. That is, if $\zeta(s) = 0$, $s \neq 1$, and $s$ is not a trivial zero
+-$-2(n+1)$ for some $n \in \mathbb{N}$, then $\operatorname{Re}(s) = \frac{1}{2}$.
+-
+-This is the official Millennium Prize Problem as posed by the
+-[Clay Mathematics Institute](https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf).
+-
+-This uses the `RiemannHypothesis` type from Mathlib, which is defined as
+-`∀ (s : ℂ), riemannZeta s = 0 → (¬∃ n : ℕ, s = -2 * (n + 1)) → s ≠ 1 → s.re = 1 / 2`. -/
+-@[category research open, AMS 11]
+-theorem riemannHypothesis : RiemannHypothesis := by
+-  sorry
+-
+-end RiemannHypothesis
+-
+-namespace GRH
+-
+-/-- Let $\chi$ be a Dirichlet character, `trivialZeros` is the set of trivial zeros of the
+-Dirichlet $L$-function of $\chi$ which is always a set of non-positive integers.
+-- $\chi = 1$ then the Dirichlet $L$-function is the Riemann zeta function, having trivial
+-  zeroes at all negative even integers (exclude $0$).
+-- $\chi$ is odd, then the trivial zeroes are the negative odd integers.
+-- $\chi \neq 1$ is even, then the trivial zeroes are the non-positive even integers. -/
+-def trivialZeros {q : ℕ} (χ : DirichletCharacter ℂ q) : Set ℤ :=
+-  if q = 1 then {-2 * (n + 1) | (n : ℕ) } else
+-    if χ.Odd then { -2 * n - 1 | (n : ℕ) } else
+-      { - 2 * n | (n : ℕ) }
+-
+-/-- The **Generalized Riemann Hypothesis** asserts that all the non-trivial zeros of the
+-Dirichlet $L$-function $L(\chi, s)$ of a primitive Dirichlet character $\chi$ have real part
+-$\frac{1}{2}$. -/
+-@[category research open, AMS 11]
+-theorem generalized_riemann_hypothesis (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
+-    (hχ : χ.IsPrimitive) (s : ℂ) (hs : χ.LFunction s = 0)
+-    (hs_nontrivial : s ∉ Int.cast '' trivialZeros χ) :
+-    s.re = 1 / 2 := by
+-  sorry
+-
+-/-- GRH for $\chi = 1$ is `RiemannHypothesis`. -/
+-@[category test, AMS 11]
+-theorem implies_riemannHypothesis :
+-    type_of% (generalized_riemann_hypothesis 1 1) ↔ RiemannHypothesis := by
+-  aesop (add simp [DirichletCharacter.isPrimitive_one_level_one, trivialZeros,
+-    RiemannHypothesis, riemannZeta_one_ne_zero])
+-
+-end GRH
+-
+-/- NOTE: Extended Riemann Hypothesis
+-## Extended Riemann Hypothesis
+-
+-The ERH for Dedekind zeta functions **cannot** currently be stated correctly because
+-`NumberField.dedekindZeta` in Mathlib is the naive `LSeries`, not the meromorphic
+-continuation.  Outside the region of absolute convergence (`re s > 1`), `tsum` returns
+-junk `0` for non-summable series.  A statement using the raw `dedekindZeta` therefore has
+-spurious "zeros" that make the conjecture provably **false**.
+-
+-A correct formalisation requires a meromorphic continuation of the Dedekind zeta function
+-(analogous to how `ZMod.LFunction` extends the Dirichlet L-series).  Once Mathlib provides
+-this, the ERH should be added back here.
+--/
++/-! Compatibility import for the corrected Millennium source path. -/
+diff --git a/FormalConjectures/Millennium/RiemannHypothesis.lean b/FormalConjectures/Millennium/RiemannHypothesis.lean
+new file mode 100644
+index 0000000..5b1dcd5
+--- /dev/null
++++ b/FormalConjectures/Millennium/RiemannHypothesis.lean
+@@ -0,0 +1,110 @@
++/-
++Copyright 2026 The Formal Conjectures Authors.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    https://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++-/
++module
++
++public import FormalConjecturesUtil
++
++/-!
++# Riemann Hypothesis and its generalizations
++
++The Riemann Hypothesis asserts that all non-trivial zeros of the Riemann zeta function
++$\zeta(s)$ have real part $\frac{1}{2}$. The trivial zeros are the negative even integers
++$-2, -4, -6, \ldots$. The hypothesis is one of the seven Millennium Prize Problems
++posed by the Clay Mathematics Institute.
++
++The Generalized Riemann Hypothesis extends this to Dirichlet $L$-functions of primitive
++Dirichlet characters.
++
++Note: the **Extended Riemann Hypothesis** (ERH) for Dedekind zeta functions is intentionally
++**not** stated here. Mathlib's `NumberField.dedekindZeta` is the naive Dirichlet series
++(`LSeries`), not a meromorphic continuation; outside the region of absolute convergence
++`tsum` returns junk `0`, producing spurious zeros that make the naive foramlisation of the
++conjecture provably false. The ERH should be added once Mathlib provides a meromorphic
++continuation of the Dedekind zeta function.
++
++*References:*
++- [The Clay Institute](https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf)
++- [Wikipedia: Riemann hypothesis](https://en.wikipedia.org/wiki/Riemann_hypothesis)
++- [Wikipedia: Generalized Riemann hypothesis](https://en.wikipedia.org/wiki/Generalized_Riemann_hypothesis)
++- [Wikipedia: Dedekind zeta function](https://en.wikipedia.org/wiki/Dedekind_zeta_function)
++- J. Neukirch, *Algebraic Number Theory*, Springer (Grundlehren 322), 1999, Chapter VII, §5.
++- D. A. Marcus, *Number Fields*, Springer (GTM 81), 1977, Chapter VII.
++-/
++
++@[expose] public section
++
++namespace RiemannHypothesis
++
++/-- The **Riemann Hypothesis**: all non-trivial zeros of the Riemann zeta function have real
++part $\frac{1}{2}$. That is, if $\zeta(s) = 0$, $s \neq 1$, and $s$ is not a trivial zero
++$-2(n+1)$ for some $n \in \mathbb{N}$, then $\operatorname{Re}(s) = \frac{1}{2}$.
++
++This is the official Millennium Prize Problem as posed by the
++[Clay Mathematics Institute](https://www.claymath.org/wp-content/uploads/2022/05/riemann.pdf).
++
++This uses the `RiemannHypothesis` type from Mathlib, which is defined as
++`∀ (s : ℂ), riemannZeta s = 0 → (¬∃ n : ℕ, s = -2 * (n + 1)) → s ≠ 1 → s.re = 1 / 2`. -/
++@[category research open, AMS 11]
++theorem riemannHypothesis : RiemannHypothesis := by
++  sorry
++
++end RiemannHypothesis
++
++namespace GRH
++
++/-- Let $\chi$ be a Dirichlet character, `trivialZeros` is the set of trivial zeros of the
++Dirichlet $L$-function of $\chi$ which is always a set of non-positive integers.
++- $\chi = 1$ then the Dirichlet $L$-function is the Riemann zeta function, having trivial
++  zeroes at all negative even integers (exclude $0$).
++- $\chi$ is odd, then the trivial zeroes are the negative odd integers.
++- $\chi \neq 1$ is even, then the trivial zeroes are the non-positive even integers. -/
++def trivialZeros {q : ℕ} (χ : DirichletCharacter ℂ q) : Set ℤ :=
++  if q = 1 then {-2 * (n + 1) | (n : ℕ) } else
++    if χ.Odd then { -2 * n - 1 | (n : ℕ) } else
++      { - 2 * n | (n : ℕ) }
++
++/-- The **Generalized Riemann Hypothesis** asserts that all the non-trivial zeros of the
++Dirichlet $L$-function $L(\chi, s)$ of a primitive Dirichlet character $\chi$ have real part
++$\frac{1}{2}$. -/
++@[category research open, AMS 11]
++theorem generalized_riemann_hypothesis (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q)
++    (hχ : χ.IsPrimitive) (s : ℂ) (hs : χ.LFunction s = 0)
++    (hs_nontrivial : s ∉ Int.cast '' trivialZeros χ) :
++    s.re = 1 / 2 := by
++  sorry
++
++/-- GRH for $\chi = 1$ is `RiemannHypothesis`. -/
++@[category test, AMS 11]
++theorem implies_riemannHypothesis :
++    type_of% (generalized_riemann_hypothesis 1 1) ↔ RiemannHypothesis := by
++  aesop (add simp [DirichletCharacter.isPrimitive_one_level_one, trivialZeros,
++    RiemannHypothesis, riemannZeta_one_ne_zero])
++
++end GRH
++
++/- NOTE: Extended Riemann Hypothesis
++## Extended Riemann Hypothesis
++
++The ERH for Dedekind zeta functions **cannot** currently be stated correctly because
++`NumberField.dedekindZeta` in Mathlib is the naive `LSeries`, not the meromorphic
++continuation.  Outside the region of absolute convergence (`re s > 1`), `tsum` returns
++junk `0` for non-summable series.  A statement using the raw `dedekindZeta` therefore has
++spurious "zeros" that make the conjecture provably **false**.
++
++A correct formalisation requires a meromorphic continuation of the Dedekind zeta function
++(analogous to how `ZMod.LFunction` extends the Dirichlet L-series).  Once Mathlib provides
++this, the ERH should be added back here.
++-/
+diff --git a/FormalConjectures/Subsets/FC100OpenSet1.lean b/FormalConjectures/Subsets/FC100OpenSet1.lean
+index 4149ee5..9be1814 100644
+--- a/FormalConjectures/Subsets/FC100OpenSet1.lean
++++ b/FormalConjectures/Subsets/FC100OpenSet1.lean
+@@ -223,6 +223,6 @@ end Subsets.FC100OpenSet1
+ 
+ open Lean Meta ProblemAttributes in
+ #eval verifyCategoryCounts Subsets.FC100OpenSet1.problems [
+-  ("research open", 91),
+-  ("research solved", 9)
++  ("research open", 90),
++  ("research solved", 10)
+ ]
+diff --git a/FormalConjectures/Wikipedia/ArtinPrimitiveRootsConjecture.lean b/FormalConjectures/Wikipedia/ArtinPrimitiveRootsConjecture.lean
+index 8088dd5..15ed864 100644
+--- a/FormalConjectures/Wikipedia/ArtinPrimitiveRootsConjecture.lean
++++ b/FormalConjectures/Wikipedia/ArtinPrimitiveRootsConjecture.lean
+@@ -13,16 +13,17 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
+-import FormalConjectures.Millenium.RiemannHypothesis
++public import FormalConjecturesUtil
++public import FormalConjectures.Millennium.RiemannHypothesis
+ 
+ /-!
+ # Artin's conjecture on primitive roots
+ 
+ Artin's conjecture predicts, given an integer $a$, densities of primes $p$ for which
+ $a$ is a primitive root modulo $p$. Under certain conditions (when $a$ is not a
+-power and its squarefree part is $1\pmod{4}$) the density is given by Artin's constant
++power and its squarefree part is not $1\pmod{4}$) the density is given by Artin's constant
+ $$\prod_{p\ \text{prime}} \left(1 - \frac{1}{p(p - 1)}\right).$$
+ For more general values of $a$, this constant must be corrected by certain factors.
+ - When $a = b^m$, $m$ is a maximal odd power, the squarefree part of $b$ satisfies
+@@ -36,8 +37,10 @@ For more general values of $a$, this constant must be corrected by certain facto
+   \prod_{p \mid b_0, p\nmid m} \frac{1}{1 + p - p^2}.$$
+ - When $a = -1$ or $a$ is a square, then the density is $0$.
+ 
+-Note that Artin's conjecture has been proved subject to the Generalized Riemann Hypothesis
+-[Ho67].
++Note that Artin's conjecture has been proved by Hooley [Ho67] subject to the Riemann hypothesis
++for the Dedekind zeta functions of the Kummer fields $\mathbb{Q}(\zeta_k, a^{1/k})$, $k$
++squarefree. These fields are in general non-abelian over $\mathbb{Q}$, so this hypothesis is not
++covered by the Generalized Riemann Hypothesis for Dirichlet $L$-functions.
+ 
+ *References:*
+ - [Wikipedia](https://en.wikipedia.org/wiki/Artin%27s_conjecture_on_primitive_roots)
+@@ -46,11 +49,35 @@ Note that Artin's conjecture has been proved subject to the Generalized Riemann
+ - [Ho67] Hooley, C. "On Artin's conjecture." _Journal für die reine und angewandte Mathematik_ 225 (1967): 209-220.
+ -/
+ 
++@[expose] public section
++
+ open GRH
+ open scoped Topology Nat
+ 
+ namespace ArtinPrimitiveRootsConjecture
+ 
++/-- `Z` is a Dedekind zeta function of the number field `K`: it is holomorphic away from $s = 1$
++and agrees with the Dedekind zeta series of `K` on $\operatorname{Re} s > 1$, where that series
++converges. Such a `Z` is uniquely determined on $\mathbb{C} \setminus \{1\}$. -/
++def IsDedekindZeta (K : Type*) [Field K] [NumberField K] (Z : ℂ → ℂ) : Prop :=
++  DifferentiableOn ℂ Z {1}ᶜ ∧ ∀ s : ℂ, 1 < s.re → Z s = NumberField.dedekindZeta K s
++
++/-- The **Riemann hypothesis for the Dedekind zeta function** $\zeta_K$ of a number field $K$:
++every zero of (the analytic continuation of) $\zeta_K$ in the critical strip
++$0 < \operatorname{Re} s < 1$ has real part $\frac{1}{2}$. -/
++def DedekindZetaRH (K : Type*) [Field K] [NumberField K] : Prop :=
++  ∀ Z : ℂ → ℂ, IsDedekindZeta K Z → ∀ s : ℂ, 0 < s.re → s.re < 1 → Z s = 0 → s.re = 1 / 2
++
++open Polynomial in
++/-- **Hooley's hypothesis** for $a$: the Riemann hypothesis holds for the Dedekind zeta function
++of the Kummer field $\mathbb{Q}(\zeta_k, a^{1/k})$, the splitting field of $X^k - a$ over
++$\mathbb{Q}$, for every squarefree $k$. This is the hypothesis under which Hooley [Ho67] proved
++Artin's conjecture. -/
++def HooleyHypothesis (a : ℤ) : Prop :=
++  ∀ k : ℕ, Squarefree k →
++    letI := NumberField.of_module_finite ℚ (X ^ k - C (a : ℚ)).SplittingField
++    DedekindZetaRH (X ^ k - C (a : ℚ)).SplittingField
++
+ /-- Let $S(a)$ be the set of primes such that $a$ is a primitive root modulo $p$. -/
+ abbrev S (a : ℤ) : Set ℕ :=
+   {p : ℕ | p.Prime ∧ orderOf (a : ZMod p) = (p-1 : ℕ)}
+@@ -95,11 +122,13 @@ theorem artin_primitive_roots.parts.i (a : ℤ) (ha : ¬IsSquare a) (ha' : a ≠
+   sorry
+ 
+ /--
+-**Artin's Conjecture on Primitive Roots**, first half, conditional on GRH.
++**Artin's Conjecture on Primitive Roots**, first half, conditional on the Riemann hypothesis
++for the Dedekind zeta functions of the fields $\mathbb{Q}(\zeta_k, a^{1/k})$, $k$ squarefree
++[Ho67].
+ -/
+ @[category research solved, AMS 11]
+ theorem conditional_artin_primitive_roots.parts.i (a : ℤ) (ha : ¬IsSquare a) (ha' : a ≠ -1)
+-    (h : type_of% generalized_riemann_hypothesis) :
++    (h : HooleyHypothesis a) :
+     ∃ x > 0, (S a).HasDensity x {p | p.Prime} := by
+   sorry
+ 
+@@ -120,14 +149,16 @@ theorem artin_primitive_roots.parts.ii
+ 
+ 
+ /--
+-**Artin's Conjecture on Primitive Roots**, second half, conditional on GRH.
++**Artin's Conjecture on Primitive Roots**, second half, conditional on the Riemann hypothesis
++for the Dedekind zeta functions of the fields $\mathbb{Q}(\zeta_k, a^{1/k})$, $k$ squarefree
++[Ho67].
+ -/
+ @[category research solved, AMS 11]
+ theorem conditional_artin_primitive_roots.parts.ii
+     (a a_0 b : ℤ) (ha : a = a_0 * b ^ 2)
+     (ha' : ∀ n m, m ≠ 1 → a ≠ n ^ m) (ha_0 : Squarefree a_0)
+     (ha_0' : ¬a_0 ≡ 1 [ZMOD 4])
+-    (h : type_of% generalized_riemann_hypothesis) :
++    (h : HooleyHypothesis a) :
+     (S a).HasDensity ArtinConstant {p | p.Prime} := by
+   sorry
+ 
+@@ -159,13 +190,15 @@ theorem artin_primitive_roots.variants.part_ii_power_squarefreePart_not_modeq_on
+   sorry
+ 
+ /--
+-**Artin's Conjecture on Primitive Roots**, second half, power version, conditional on GRH
++**Artin's Conjecture on Primitive Roots**, second half, power version, conditional on the
++Riemann hypothesis for the Dedekind zeta functions of the fields $\mathbb{Q}(\zeta_k, a^{1/k})$,
++$k$ squarefree [Ho67].
+ -/
+ @[category research solved, AMS 11]
+ theorem conditional_artin_primitive_roots.variants.part_ii_power_squarefreePart_not_modeq_one
+     (a m b : ℕ) (ha : a = b ^ m) (hb : ∀ u v, 1 < u → b ≠ v ^ u) (hm₁ : 1 < m)
+     (hm₂ : Odd m) (hb' : ¬ b.squarefreePart ≡ 1 [MOD 4])
+-    (h : type_of% generalized_riemann_hypothesis) :
++    (h : HooleyHypothesis a) :
+     (S a).HasDensity (ArtinConstant * powCorrectionFactor m) {p | p.Prime} := by
+   sorry
+ 
+@@ -189,13 +222,15 @@ theorem artin_primitive_roots.variants.part_ii_power_squarefreePart_modeq_one
+   sorry
+ 
+ /--
+-**Artin's Conjecture on Primitive Roots**, second half, power version, conditional on GRH.
++**Artin's Conjecture on Primitive Roots**, second half, power version, conditional on the
++Riemann hypothesis for the Dedekind zeta functions of the fields $\mathbb{Q}(\zeta_k, a^{1/k})$,
++$k$ squarefree [Ho67].
+ -/
+ @[category research solved, AMS 11]
+ theorem conditional_artin_primitive_roots.variants.part_ii_power_squarefreePart_modeq_one
+     (a m b : ℕ) (ha : a = b ^ m) (hb : ∀ u v, 1 < u → b ≠ v ^ u) (hm₁ : 1 < m)
+     (hm₂ : Odd m) (hb' : b.squarefreePart ≡ 1 [MOD 4])
+-    (h : type_of% generalized_riemann_hypothesis) :
++    (h : HooleyHypothesis a) :
+     (S a).HasDensity
+       (ArtinConstant * powCorrectionFactor m * entanglementFactor b m)
+       {p | p.Prime} := by
+diff --git a/FormalConjectures/Wikipedia/BorsukConjecture.lean b/FormalConjectures/Wikipedia/BorsukConjecture.lean
+new file mode 100644
+index 0000000..cec2f56
+--- /dev/null
++++ b/FormalConjectures/Wikipedia/BorsukConjecture.lean
+@@ -0,0 +1,204 @@
++/-
++Copyright 2026 The Formal Conjectures Authors.
++
++Licensed under the Apache License, Version 2.0 (the "License");
++you may not use this file except in compliance with the License.
++You may obtain a copy of the License at
++
++    https://www.apache.org/licenses/LICENSE-2.0
++
++Unless required by applicable law or agreed to in writing, software
++distributed under the License is distributed on an "AS IS" BASIS,
++WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++See the License for the specific language governing permissions and
++limitations under the License.
++-/
++module
++
++public import FormalConjecturesUtil
++
++/-!
++# Borsuk's conjecture
++
++In 1933 Karol Borsuk [Bo33] asked whether every bounded subset of $\mathbb{R}^n$ can be
++partitioned into $n + 1$ sets, each of strictly smaller diameter. The hypothesis that the
++answer is positive became known as **Borsuk's conjecture**.
++
++The conjecture is true for $n = 2$ [Bo33] and $n = 3$ [Pe47, Eg55]. It is false in general:
++Kahn and Kalai [KK93] disproved it for $n = 1325$ and for all $n > 2014$. Bondarenko [Bo14]
++gave a counterexample in dimension $65$, and Jenrich and Brouwer [JB14] one in dimension $64$,
++the smallest refereed counterexample. In 2026 Grinsztajn [Gr26] posted a 321-point
++counterexample in dimension $63$, obtained with AI assistance and verified by exact
++computation; the same configuration was found independently by Konz and by Ji [Ji26]. The
++cases $4 \leq n \leq 62$ are open. In dimension $4$, every bounded set can be partitioned into
++$9$ parts of smaller diameter [La82], and a 2026 preprint reduces this to $8$ parts [TV26].
++
++Erdős Problem 505 (`FormalConjectures.ErdosProblems.«505»`) points to this file.
++
++*References:*
++- [Wikipedia](https://en.wikipedia.org/wiki/Borsuk%27s_conjecture)
++- [Bo33] Borsuk, K. (1933). *Drei Sätze über die n-dimensionale euklidische Sphäre*.
++  Fundamenta Mathematicae 20, 177–190. https://doi.org/10.4064/fm-20-1-177-190
++- [Pe47] Perkal, J. (1947). *Sur la subdivision des ensembles en parties de diamètre inférieur*.
++  Colloquium Mathematicum 2, 45.
++- [Eg55] Eggleston, H. G. (1955). *Covering a three-dimensional set with sets of smaller
++  diameter*. Journal of the London Mathematical Society 30, 11–24.
++  https://doi.org/10.1112/jlms/s1-30.1.11
++- [La82] Lassak, M. (1982). *An estimate concerning Borsuk partition problem*.
++  Bulletin of the Polish Academy of Sciences, Mathematics 30(9–10), 449–451.
++- [KK93] Kahn, J., Kalai, G. (1993). *A counterexample to Borsuk's conjecture*.
++  Bulletin of the American Mathematical Society 29(1), 60–62.
++  https://arxiv.org/abs/math/9307229
++- [Bo14] Bondarenko, A. (2014). *On Borsuk's conjecture for two-distance sets*.
++  Discrete & Computational Geometry 51(3), 509–515. https://doi.org/10.1007/s00454-014-9579-4
++- [JB14] Jenrich, T., Brouwer, A. E. (2014). *A 64-dimensional counterexample to Borsuk's
++  conjecture*. Electronic Journal of Combinatorics 21(4), P4.29. https://doi.org/10.37236/4069
++- [Gr26] Grinsztajn, M. (2026). *A 63-dimensional counterexample to Borsuk's conjecture*.
++  Proof note and verification script, https://github.com/maaxgrin/borsuk-63-counterexample
++- [Ji26] Ji, Y. (2026). *An AI generated counterexample to Borsuk problem in dimension 63*.
++  https://arxiv.org/abs/2608.12561 (withdrawn as a duplicate of [Gr26])
++- [TV26] Tolmachev, A., Voronov, V. (2026). *Reducing the upper bound for the Borsuk number
++  in $\mathbb{R}^4$ to 8*. https://arxiv.org/abs/2605.19068
++- [OP28a] Tao, T. et al., *Optimization problems*, constant 28a (smallest Borsuk
++  counterexample dimension). https://teorth.github.io/optimizationproblems/constants/28a.html
++- [Ka15] Kalai, G. (2015). *Some old and new problems in combinatorial geometry I: Around
++  Borsuk's problem*. https://arxiv.org/abs/1505.04952
++-/
++
++@[expose] public section
++
++open Metric Bornology
++
++open scoped EuclideanGeometry
++
++namespace Borsuk
++
++variable {E : Type*} [PseudoEMetricSpace E]
++
++/--
++`HasBorsukCover k s` means that the set `s` can be covered by `k` sets, each of strictly
++smaller extended diameter than `s`.
++
++We use the extended diameter `Metric.ediam` rather than `Metric.diam`: the latter takes the
++junk value `0` on unbounded sets, which would make `Set.univ` a covering set of "small"
++diameter. With `Metric.ediam`, a set of diameter `0` has no Borsuk cover, and an unbounded
++set has no finite Borsuk cover, matching Borsuk's formulation for bounded sets with at
++least two points.
++-/
++def HasBorsukCover (k : ℕ) (s : Set E) : Prop :=
++  ∃ c : Fin k → Set E, s ⊆ ⋃ i, c i ∧ ∀ i, ediam (c i) < ediam s
++
++/--
++**Borsuk's conjecture** in dimension `n`: every bounded subset of $\mathbb{R}^n$ with at
++least two points can be partitioned into $n + 1$ sets of strictly smaller diameter.
++-/
++def BorsukConjecture (n : ℕ) : Prop :=
++  ∀ s : Set (ℝ^n), IsBounded s → s.Nontrivial → HasBorsukCover (n + 1) s
++
++/--
++**Borsuk's conjecture**, open range: every bounded subset of $\mathbb{R}^n$ with at least two
++points can be partitioned into $n + 1$ sets of strictly smaller diameter, for
++$4 \leq n \leq 62$.
++
++The conjecture is known to be true for $n \leq 3$ and false for $n \geq 63$.
++-/
++@[category research open, AMS 52]
++theorem borsuk_conjecture (n : ℕ) (hn : 4 ≤ n) (hn' : n ≤ 62) : BorsukConjecture n := by
++  sorry
++
++/-- **Borsuk's conjecture** in dimension $4$, the smallest open case. -/
++@[category research open, AMS 52]
++theorem borsuk_conjecture.four : BorsukConjecture 4 := by
++  sorry
++
++/--
++**Partial result in dimension $4$**: every bounded subset of $\mathbb{R}^4$ with at least two
++points can be partitioned into $9$ sets of strictly smaller diameter. Proved by Lassak [La82],
++who showed more generally that $2^{n-1} + 1$ parts suffice in $\mathbb{R}^n$.
++-/
++@[category research solved, AMS 52]
++theorem borsuk_conjecture.four.nine_parts (s : Set (ℝ^4)) (hs : IsBounded s)
++    (hs' : s.Nontrivial) : HasBorsukCover 9 s := by
++  sorry
++
++/--
++**Partial result in dimension $4$**: every bounded subset of $\mathbb{R}^4$ with at least two
++points can be partitioned into $8$ sets of strictly smaller diameter. Claimed by Tolmachev and
++Voronov [TV26] via computer-assisted partitions of a truncated Lassak cover, with floating-point
++verification; the preprint is not yet refereed.
++-/
++@[category research solved, AMS 52]
++theorem borsuk_conjecture.four.eight_parts (s : Set (ℝ^4)) (hs : IsBounded s)
++    (hs' : s.Nontrivial) : HasBorsukCover 8 s := by
++  sorry
++
++/-- **Borsuk's conjecture** holds vacuously in dimension $0$: the space is a single point. -/
++@[category test, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L118"]
++theorem borsuk_conjecture.zero : BorsukConjecture 0 := by
++  sorry
++
++/--
++**Borsuk's conjecture** in dimension $1$: a bounded set of reals with at least two points
++splits at the midpoint of its smallest enclosing interval into two parts of smaller diameter.
++-/
++@[category textbook, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L126"]
++theorem borsuk_conjecture.one : BorsukConjecture 1 := by
++  sorry
++
++/-- **Borsuk's conjecture** in the plane, proved by Borsuk [Bo33]. -/
++@[category research solved, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L131"]
++theorem borsuk_conjecture.two : BorsukConjecture 2 := by
++  sorry
++
++/-- **Borsuk's conjecture** in dimension $3$, proved by Perkal [Pe47] and Eggleston [Eg55]. -/
++@[category research solved, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L136"]
++theorem borsuk_conjecture.three : BorsukConjecture 3 := by
++  sorry
++
++/--
++**Borsuk's conjecture** is false in general: Kahn and Kalai [KK93] gave counterexamples in
++dimension $1325$ and in every dimension $n > 2014$.
++-/
++@[category research solved, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L144"]
++theorem borsuk_conjecture.not_forall : ¬ ∀ n, BorsukConjecture n := by
++  sorry
++
++/-- **Borsuk's conjecture** fails in dimension $65$, by Bondarenko [Bo14]. -/
++@[category research solved, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L149"]
++theorem borsuk_conjecture.not_sixty_five : ¬ BorsukConjecture 65 := by
++  sorry
++
++/--
++**Borsuk's conjecture** fails in dimension $64$, by Jenrich and Brouwer [JB14]. This is the
++smallest dimension with a refereed counterexample.
++-/
++@[category research solved, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L157"]
++theorem borsuk_conjecture.not_sixty_four : ¬ BorsukConjecture 64 := by
++  sorry
++
++/--
++**Borsuk's conjecture** fails in dimension $63$, by a 321-point configuration found in 2026
++by Grinsztajn [Gr26] and independently by Konz and Ji [Ji26]. This is the smallest dimension
++in which the conjecture is currently known to be false.
++-/
++@[category research solved, AMS 52,
++  formal_proof using formal_conjectures at
++    "https://github.com/mo271/formal-conjectures/blob/07a6d25f07ba0e16a916be14e9830c36cfcb9777/FormalConjectures/Wikipedia/BorsukConjecture.lean#L166"]
++theorem borsuk_conjecture.not_sixty_three : ¬ BorsukConjecture 63 := by
++  sorry
++
++end Borsuk
+diff --git a/FormalConjectures/Wikipedia/BrocardConjecture.lean b/FormalConjectures/Wikipedia/BrocardConjecture.lean
+index e83f06c..4d698d9 100644
+--- a/FormalConjectures/Wikipedia/BrocardConjecture.lean
++++ b/FormalConjectures/Wikipedia/BrocardConjecture.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Brocard's Conjecture
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+ - [Luan Alberto Ferreira, *Real exponential sums over primes and prime gaps*](https://arxiv.org/abs/2307.08725)
+ -/
+ 
++@[expose] public section
++
+ open Finset Filter
+ 
+ namespace Brocard
+diff --git a/FormalConjectures/Wikipedia/Bunyakovsky.lean b/FormalConjectures/Wikipedia/Bunyakovsky.lean
+index 7692947..909ee39 100644
+--- a/FormalConjectures/Wikipedia/Bunyakovsky.lean
++++ b/FormalConjectures/Wikipedia/Bunyakovsky.lean
+@@ -13,14 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Bunyakovsky conjecture
+ 
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Bunyakovsky_conjecture)
+ -/
++
++@[expose] public section
++
+ open Polynomial
+ namespace Bunyakovsky
+ 
+diff --git a/FormalConjectures/Wikipedia/CarmichaelTotient.lean b/FormalConjectures/Wikipedia/CarmichaelTotient.lean
+index 2598d9a..54512ec 100644
+--- a/FormalConjectures/Wikipedia/CarmichaelTotient.lean
++++ b/FormalConjectures/Wikipedia/CarmichaelTotient.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Carmichael's totient function conjecture
+@@ -27,6 +28,8 @@ $φ(n) = φ(m)$ where $φ$ is the Euler totient function.
+ - [F1998] Kevin Ford. The distribution of totients. https://arxiv.org/abs/1104.3264
+ -/
+ 
++@[expose] public section
++
+ universe u v
+ 
+ open Nat
+diff --git a/FormalConjectures/Wikipedia/ClassNumberProblem.lean b/FormalConjectures/Wikipedia/ClassNumberProblem.lean
+index 34c5a43..2d5c7d2 100644
+--- a/FormalConjectures/Wikipedia/ClassNumberProblem.lean
++++ b/FormalConjectures/Wikipedia/ClassNumberProblem.lean
+@@ -13,14 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Class number problem for real quadratic fields
+ 
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Class_number_problem)
+ -/
++
++@[expose] public section
++
+ open Polynomial
+ namespace ClassNumberProblem
+ 
+diff --git a/FormalConjectures/Wikipedia/Dickson.lean b/FormalConjectures/Wikipedia/Dickson.lean
+index dd9a266..c77c4d9 100644
+--- a/FormalConjectures/Wikipedia/Dickson.lean
++++ b/FormalConjectures/Wikipedia/Dickson.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Dickson's conjecture
+@@ -27,6 +28,9 @@ import FormalConjecturesUtil
+ - [Leonard Eugene Dickson, *History of the Theory of Numbers, Vol. I: Divisibility and Primality*](https://archive.org/details/historyoftheoryo01dickuoft)
+ - [Arxiv](https://arxiv.org/pdf/0906.3850)
+ -/
++
++@[expose] public section
++
+ open Polynomial
+ namespace Dickson
+ 
+diff --git a/FormalConjectures/Wikipedia/Fermat.lean b/FormalConjectures/Wikipedia/Fermat.lean
+index 3ca015d..0726cda 100644
+--- a/FormalConjectures/Wikipedia/Fermat.lean
++++ b/FormalConjectures/Wikipedia/Fermat.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Open questions about Fermat numbers
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Fermat_number)
+ -/
+ 
++@[expose] public section
++
+ namespace Fermat
+ 
+ /--
+@@ -46,10 +49,10 @@ theorem infinite_fermat_composite : answer(sorry) ↔ Infinite {n : ℕ | ¬Prim
+   sorry
+ 
+ /--
+-Are all Fermat numbers are square-free?
++Does a Fermat number exist that is not square-free?
+ -/
+ @[category research open, AMS 11]
+-theorem all_fermat_squarefree : answer(sorry) ↔ ∀ n : ℕ, Squarefree n.fermatNumber := by
++theorem exists_fermat_not_squarefree : answer(sorry) ↔ ∃ n : ℕ, ¬Squarefree n.fermatNumber := by
+   sorry
+ 
+ end Fermat
+diff --git a/FormalConjectures/Wikipedia/GaussCircleProblem.lean b/FormalConjectures/Wikipedia/GaussCircleProblem.lean
+index 5448505..005da83 100644
+--- a/FormalConjectures/Wikipedia/GaussCircleProblem.lean
++++ b/FormalConjectures/Wikipedia/GaussCircleProblem.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Gauss circle problem
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Gauss_circle_problem)
+ -/
+ 
++@[expose] public section
++
+ open Filter
+ 
+ open scoped EuclideanGeometry Real Topology
+diff --git a/FormalConjectures/Wikipedia/GoldbachConjecture.lean b/FormalConjectures/Wikipedia/GoldbachConjecture.lean
+index 08feda5..4001d50 100644
+--- a/FormalConjectures/Wikipedia/GoldbachConjecture.lean
++++ b/FormalConjectures/Wikipedia/GoldbachConjecture.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Goldbach's conjecture
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+ - [Goldbach's Conjecture Wikipedia Page](https://en.wikipedia.org/wiki/Goldbach%27s_conjecture)
+ -/
+ 
++@[expose] public section
++
+ namespace GoldbachConjecture
+ 
+ /--
+diff --git a/FormalConjectures/Wikipedia/Goormaghtigh.lean b/FormalConjectures/Wikipedia/Goormaghtigh.lean
+index 807537c..3eabf7f 100644
+--- a/FormalConjectures/Wikipedia/Goormaghtigh.lean
++++ b/FormalConjectures/Wikipedia/Goormaghtigh.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # The Goormaghtigh conjecture
+@@ -29,6 +30,8 @@ having nontrivial repunit representations in two different bases.
+   [No new Goormaghtigh primes up to $10^{700}$](https://math.colgate.edu/~integers/y98/y98.pdf)
+ -/
+ 
++@[expose] public section
++
+ namespace Goormaghtigh
+ 
+ /-- The repunit with `digits` digits in the given base, expressed without division. -/
+diff --git a/FormalConjectures/Wikipedia/Hadamard.lean b/FormalConjectures/Wikipedia/Hadamard.lean
+index 180b7a2..6665a82 100644
+--- a/FormalConjectures/Wikipedia/Hadamard.lean
++++ b/FormalConjectures/Wikipedia/Hadamard.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Hadamard's conjecture
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+  - [Résolution d'une question relative aux déterminants](https://gallica.bnf.fr/ark:/12148/bpt6k486252g/f400.image.r) by *Jacques Hadamard*,  Bull. des sciences math., p.245, 1893
+ -/
+ 
++@[expose] public section
++
+ namespace Hadamard
+ 
+ /--
+@@ -113,7 +116,14 @@ which satisfies the condition.
+ -/
+ @[category test, AMS 15]
+ theorem isHadamard_H12 : IsHadamard H12 := by
+-  sorry
++  have h : H12.transpose * H12 = (12 : ℝ) • 1 := by
++    rw [← Matrix.ext_iff]
++    norm_num +decide [Fin.forall_fin_succ, Matrix.mul_apply, Fin.sum_univ_succ, H12,
++      Matrix.one_apply]
++  have hd : H12.det ^ 2 = 12 ^ 12 := by simpa [Matrix.det_smul, ← sq] using congrArg Matrix.det h
++  refine ⟨by simp [Fin.forall_fin_succ, H12], ?_⟩
++  rw [← Real.sqrt_sq_eq_abs, hd]
++  norm_num
+ 
+ /--
+ For all $k ≤ 166$, it is known there that there is a Hadamard matrix of size $4 * k$.
+diff --git a/FormalConjectures/Wikipedia/HardyLittlewood.lean b/FormalConjectures/Wikipedia/HardyLittlewood.lean
+index 1f4439a..84a6fbf 100644
+--- a/FormalConjectures/Wikipedia/HardyLittlewood.lean
++++ b/FormalConjectures/Wikipedia/HardyLittlewood.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # First Hardy–Littlewood conjecture
+@@ -22,7 +23,9 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/First_Hardy%E2%80%93Littlewood_conjecture)
+ -/
+ 
+-open Filter
++@[expose] public section
++
++open Asymptotics Filter
+ 
+ open scoped Nat.Prime
+ 
+@@ -58,15 +61,23 @@ noncomputable def Nat.primeTupleCounting {k : ℕ} (m : Fin k.succ → ℕ) (n :
+   open scoped Classical in
+   Nat.count (IsAdmissiblePrimeConstellation m) n.succ
+ 
++/--
++The first Hardy–Littlewood conjecture for the tuple $(m_0, m_1, \dots, m_k)$: if $m_0 = 0$ and
++the $m_i$ are pairwise distinct, then
++$$
++  \pi_P(n)\sim C_P\int_2^n\frac{dt}{\log^{k+1}t}.
++$$
++-/
+ def FirstHardyLittlewoodConjectureFor {k : ℕ} (m : Fin k.succ → ℕ) : Prop :=
+-  let C : ℝ :=
++  m 0 = 0 → Function.Injective m →
++    let C : ℝ :=
+       2 ^ k * ∏' (q : { q : ℕ // q.Prime ∧ 3 ≤ q}),
+         (1 - (Nat.numResidues q m : ℝ) / q) / (1 - 1 / q) ^ k.succ
+     let π_P : ℕ → ℝ := fun n => (Nat.primeTupleCounting m n : ℝ)
+-    π_P =O[atTop] fun n => C * ∫ t in (2)..n, 1 / t.log ^ k.succ
++    π_P ~[atTop] fun n => C * ∫ t in (2)..n, 1 / t.log ^ k.succ
+ 
+ /--
+-Let $P = (m_1, \dots, m_k)$ be a tuple of positive even integers. Let
++Let $P = (m_1, \dots, m_k)$ be a tuple of distinct positive even integers. Let
+ $\pi_P(n)$ denote the number of primes $p\leq n$ such that $(p, p + m_1, \dots, p + m_k)$
+ forms an admissible prime constellation. Let $w(q; m_1, \dots, m_k)$ denote the
+ number of distinct residues of $0, m_1, \dots, m_k$ modulo $q$, and let
+diff --git a/FormalConjectures/Wikipedia/IdonealCompleteness.lean b/FormalConjectures/Wikipedia/IdonealCompleteness.lean
+index bed775b..3df6119 100644
+--- a/FormalConjectures/Wikipedia/IdonealCompleteness.lean
++++ b/FormalConjectures/Wikipedia/IdonealCompleteness.lean
+@@ -13,9 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Idoneal numbers completeness conjecture
+@@ -34,6 +34,8 @@ The Idoneal Numbers Completeness Conjecture asserts that the following list of
+ - [OEIS A000926](https://oeis.org/A000926)
+ -/
+ 
++@[expose] public section
++
+ namespace Idoneal
+ 
+ /--
+diff --git a/FormalConjectures/Wikipedia/InscribedSquare.lean b/FormalConjectures/Wikipedia/InscribedSquare.lean
+index d928c7e..19cd56d 100644
+--- a/FormalConjectures/Wikipedia/InscribedSquare.lean
++++ b/FormalConjectures/Wikipedia/InscribedSquare.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Inscribed square problem
+@@ -30,6 +31,8 @@ There are several open and solved variants of this conjecture.
+  - [arxiv/2005.09193](https://arxiv.org/abs/2005.09193)
+ -/
+ 
++@[expose] public section
++
+ open Topology ContDiff Manifold
+ open scoped EuclideanGeometry
+ 
+@@ -76,19 +79,23 @@ theorem exists_inscribed_rectangle (γ : Circle → ℝ²) (hγ : IsEmbedding γ
+ 
+ /--
+ It is known that every *smooth* Jordan curve admits inscribed rectangles of all aspect ratios.
++Here a smooth Jordan curve is a smooth embedding of the circle into the plane, i.e. a smooth
++simple closed curve with nowhere vanishing velocity.
+ -/
+ @[category research solved, AMS 51]
+ theorem exists_inscribed_rectangle_of_smooth (γ : Circle → ℝ²)
+-    (hγ : IsEmbedding γ) (hγ' : ContMDiff (𝓡 1) (𝓡 2) ∞ γ) (r : ℝ) (hr : r > 0) :
++    (hγ : IsSmoothEmbedding (𝓡 1) (𝓡 2) ∞ γ) (r : ℝ) (hr : r > 0) :
+     ∃ t₁ t₂ t₃ t₄, IsRectangle (γ t₁) (γ t₂) (γ t₃) (γ t₄) r := by
+   sorry
+ 
+ /--
+ It is also known that every $C^2$ Jordan curve admits an inscribed square.
++Here a $C^2$ Jordan curve is a $C^2$ embedding of the circle into the plane, i.e. a $C^2$
++simple closed curve with nowhere vanishing velocity.
+ -/
+ @[category research solved, AMS 51]
+ theorem exists_inscribed_square_of_C2 (γ : Circle → ℝ²)
+-    (hγ : IsEmbedding γ) (hγ' : ContMDiff (𝓡 1) (𝓡 2) 2 γ) :
++    (hγ : IsSmoothEmbedding (𝓡 1) (𝓡 2) 2 γ) :
+     ∃ t₁ t₂ t₃ t₄, IsRectangle (γ t₁) (γ t₂) (γ t₃) (γ t₄) 1 := by
+   sorry
+ 
+diff --git a/FormalConjectures/Wikipedia/InverseGalois.lean b/FormalConjectures/Wikipedia/InverseGalois.lean
+index 0d1b26e..27f7d2d 100644
+--- a/FormalConjectures/Wikipedia/InverseGalois.lean
++++ b/FormalConjectures/Wikipedia/InverseGalois.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Inverse Galois problem
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Inverse_Galois_problem)
+ -/
+ 
++@[expose] public section
++
+ namespace InverseGalois
+ 
+ structure GaloisRealization.{u, v} (K : Type u) (G : Type v) [Field K] [Group G] where
+@@ -90,11 +93,11 @@ theorem inverse_galois_problem.variants.complex_rational_functions
+ 
+ /--
+ Every finite group is realisable over the field of rational functions
+-with coefficients `K`, where `K` is any field of characteristic 0.
++with coefficients `K`, where `K` is any algebraically closed field of characteristic 0.
+ -/
+ @[category research solved, AMS 12]
+ theorem inverse_galois_problem.variants.complex_function_field
+-    {G K : Type*} [Field K] [CharZero K] [Fintype G] [Group G] :
++    {G K : Type*} [Field K] [IsAlgClosed K] [CharZero K] [Fintype G] [Group G] :
+     IsRealizable (RatFunc K) G := by
+   sorry
+ 
+diff --git a/FormalConjectures/Wikipedia/Irrational.lean b/FormalConjectures/Wikipedia/Irrational.lean
+index afd6f7a..7a3d95d 100644
+--- a/FormalConjectures/Wikipedia/Irrational.lean
++++ b/FormalConjectures/Wikipedia/Irrational.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Open questions on irrationality of numbers
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Irrational_number#Open_questions)
+ -/
+ 
++@[expose] public section
++
+ open Real
+ 
+ local notation "e" => exp 1
+diff --git a/FormalConjectures/Wikipedia/KummerVandiver.lean b/FormalConjectures/Wikipedia/KummerVandiver.lean
+index efde8b3..d3dcbfc 100644
+--- a/FormalConjectures/Wikipedia/KummerVandiver.lean
++++ b/FormalConjectures/Wikipedia/KummerVandiver.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Kummer–Vandiver conjecture
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Kummer%E2%80%93Vandiver_conjecture)
+ -/
+ 
++@[expose] public section
++
+ open NumberField CyclotomicField IsCyclotomicExtension
+ 
+ namespace KummerVandiver
+diff --git a/FormalConjectures/Wikipedia/LegendreConjecture.lean b/FormalConjectures/Wikipedia/LegendreConjecture.lean
+index 9295ed4..d977734 100644
+--- a/FormalConjectures/Wikipedia/LegendreConjecture.lean
++++ b/FormalConjectures/Wikipedia/LegendreConjecture.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Legendre's conjecture
+@@ -24,6 +25,9 @@ import FormalConjecturesUtil
+ - [Legendre Conjecture Wikipedia Page](https://en.wikipedia.org/wiki/Legendre%27s_conjecture)
+ - [Luan Alberto Ferreira, *Real exponential sums over primes and prime gaps*](https://arxiv.org/abs/2307.08725)
+ -/
++
++@[expose] public section
++
+ open Filter
+ namespace LegendreConjecture
+ 
+diff --git a/FormalConjectures/Wikipedia/LehmerMahlerMeasureProblem.lean b/FormalConjectures/Wikipedia/LehmerMahlerMeasureProblem.lean
+index 3dbb26e..aefe872 100644
+--- a/FormalConjectures/Wikipedia/LehmerMahlerMeasureProblem.lean
++++ b/FormalConjectures/Wikipedia/LehmerMahlerMeasureProblem.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Lehmer's Mahler measure problem
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Lehmer%27s_conjecture)
+ -/
+ 
++@[expose] public section
++
+ namespace LehmerMahlerMeasureProblem
+ 
+ open Polynomial LehmerMahlerMeasureProblem
+@@ -57,10 +60,10 @@ theorem lehmer_mahler_measure_problem.variants.best (f : ℤ[X])
+   sorry
+ 
+ /--
+-If $f$ is not reciprocal and $M(f) > 1$ then $M(f) \ge M(X^3 - X - 1)$.
++If $f$ is irreducible and not reciprocal and $M(f) > 1$ then $M(f) \ge M(X^3 - X - 1)$.
+ -/
+ @[category research solved, AMS 11]
+-theorem lehmer_mahler_measure_problem.variants.not_reciprocal (f : ℤ[X])
++theorem lehmer_mahler_measure_problem.variants.not_reciprocal (f : ℤ[X]) (hi : Irreducible f)
+     (hf : mahlerMeasureZ f > 1) (hf' : f.reverse ≠ f) :
+     mahlerMeasureZ f ≥ mahlerMeasureZ (X^3 - X - 1) := by
+   sorry
+@@ -70,11 +73,12 @@ def Polynomial.HasOddCoeffs (f : Polynomial ℤ) : Prop :=
+   ∀ i ≤ f.natDegree, Odd (f.coeff i)
+ 
+ /--
+-If all the coefficients of $f$ are odd and $M(f) > 1$, then $M(f) \ge M(X^2 - X - 1)$.
++If $f$ is not reciprocal, all the coefficients of $f$ are odd and $M(f) > 1$, then
++$M(f) \ge M(X^2 - X - 1)$.
+ -/
+ @[category research solved, AMS 11]
+ theorem lehmer_mahler_measure_problem.variants.odd (f : ℤ[X])
+-    (hf : mahlerMeasureZ f > 1) (hf' : f.HasOddCoeffs) :
++    (hf : mahlerMeasureZ f > 1) (hf' : f.reverse ≠ f) (hf'' : f.HasOddCoeffs) :
+     mahlerMeasureZ f ≥ mahlerMeasureZ (X^2 - X - 1) := by
+   sorry
+ 
+diff --git a/FormalConjectures/Wikipedia/LehmerTotient.lean b/FormalConjectures/Wikipedia/LehmerTotient.lean
+index c149ba8..72e3ff7 100644
+--- a/FormalConjectures/Wikipedia/LehmerTotient.lean
++++ b/FormalConjectures/Wikipedia/LehmerTotient.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Lehmer's totient problem
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Lehmer%27s_totient_problem)
+ -/
+ 
++@[expose] public section
++
+ namespace LehmerTotient
+ 
+ /--
+diff --git a/FormalConjectures/Wikipedia/Lemoine.lean b/FormalConjectures/Wikipedia/Lemoine.lean
+index e7346fd..4350b46 100644
+--- a/FormalConjectures/Wikipedia/Lemoine.lean
++++ b/FormalConjectures/Wikipedia/Lemoine.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Lemoine's conjectures
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+ - [Ki85] Kiltinen, J. and Young P. (1985). Goldbach, Lemoine, and a Know/Don't Know Problem.
+ -/
+ 
++@[expose] public section
++
+ namespace Lemoine
+ 
+ def OddPrime (n : ℕ) : Prop :=
+diff --git a/FormalConjectures/Wikipedia/Mersenne.lean b/FormalConjectures/Wikipedia/Mersenne.lean
+index bb27507..354079b 100644
+--- a/FormalConjectures/Wikipedia/Mersenne.lean
++++ b/FormalConjectures/Wikipedia/Mersenne.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Conjectures about Mersenne primes
+@@ -25,6 +26,8 @@ import FormalConjecturesUtil
+ - [MathWorld: Catalan-Mersenne Number](https://mathworld.wolfram.com/Catalan-MersenneNumber.html)
+ -/
+ 
++@[expose] public section
++
+ namespace Mersenne
+ 
+ namespace Nat
+@@ -78,14 +81,15 @@ theorem new_mersenne_conjecture (p : ℕ) (hp : Odd p) :
+     NewMersenneConjectureStatement p := by
+   sorry
+ 
+-/-- It suffices to check this conjecture for primes -/
++/-- It suffices to check this conjecture for odd primes. The statement fails at `p = 2`:
++`mersenne 2 = 3` is prime and `2 = 2 ^ 0 + 1`, but `2` gives no Wagstaff prime. -/
+ @[category textbook, AMS 11]
+ theorem new_mersenne_conjecture_of_prime :
+-    (∀ p, p.Prime → NewMersenneConjectureStatement p) →
++    (∀ p, p.Prime → Odd p → NewMersenneConjectureStatement p) →
+     ∀ p, Odd p → NewMersenneConjectureStatement p := by
+   intro H p hp_odd
+   by_cases hp_prime : p.Prime
+-  · exact H p hp_prime
++  · exact H p hp_prime hp_odd
+   suffices ¬Nat.GivesWagstaffPrime p by
+     have hF1 : ¬(mersenne p).Prime := fun h => hp_prime h.of_mersenne
+     refine ⟨?_, ?_, ?_⟩ <;> grind
+diff --git a/FormalConjectures/Wikipedia/NormalityOfPi.lean b/FormalConjectures/Wikipedia/NormalityOfPi.lean
+index 53eb74d..598f6d5 100644
+--- a/FormalConjectures/Wikipedia/NormalityOfPi.lean
++++ b/FormalConjectures/Wikipedia/NormalityOfPi.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Normality of mathematical constants
+@@ -29,6 +30,8 @@ normal in any base.
+ * [Wikipedia (Pi)](https://en.wikipedia.org/wiki/Pi)
+ -/
+ 
++@[expose] public section
++
+ open Real
+ 
+ namespace NormalNumber
+diff --git a/FormalConjectures/Wikipedia/Oppermann.lean b/FormalConjectures/Wikipedia/Oppermann.lean
+index 31ec8b4..87da32f 100644
+--- a/FormalConjectures/Wikipedia/Oppermann.lean
++++ b/FormalConjectures/Wikipedia/Oppermann.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Oppermann's Conjecture
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+ - [Luan Alberto Ferreira, *Real exponential sums over primes and prime gaps*](https://arxiv.org/abs/2307.08725)
+ -/
+ 
++@[expose] public section
++
+ open Finset Filter
+ 
+ namespace Oppermann
+diff --git a/FormalConjectures/Wikipedia/PerfectNumbers.lean b/FormalConjectures/Wikipedia/PerfectNumbers.lean
+index 43775be..288efc0 100644
+--- a/FormalConjectures/Wikipedia/PerfectNumbers.lean
++++ b/FormalConjectures/Wikipedia/PerfectNumbers.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Perfect numbers
+@@ -37,6 +38,8 @@ formalised here:
+ - [Wikipedia, Odd perfect numbers](https://en.wikipedia.org/wiki/Perfect_number#Odd_perfect_numbers)
+ -/
+ 
++@[expose] public section
++
+ namespace PerfectNumbers
+ 
+ open Nat
+diff --git a/FormalConjectures/Wikipedia/PollocksConjecture.lean b/FormalConjectures/Wikipedia/PollocksConjecture.lean
+index 59648f3..dfc658e 100644
+--- a/FormalConjectures/Wikipedia/PollocksConjecture.lean
++++ b/FormalConjectures/Wikipedia/PollocksConjecture.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Pollock's (tetrahedral numbers) conjecture
+@@ -30,6 +31,8 @@ Every positive integer is the sum of at most 5 tetrahedral numbers.
+ - [MathWorld: Pollock's Conjecture](https://mathworld.wolfram.com/PollocksConjecture.html)
+ -/
+ 
++@[expose] public section
++
+ namespace PollocksConjecture
+ 
+ open scoped BigOperators
+diff --git a/FormalConjectures/Wikipedia/PrimesAndPerfectSquares.lean b/FormalConjectures/Wikipedia/PrimesAndPerfectSquares.lean
+index bfebf00..6d06662 100644
+--- a/FormalConjectures/Wikipedia/PrimesAndPerfectSquares.lean
++++ b/FormalConjectures/Wikipedia/PrimesAndPerfectSquares.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Primes and perfect squares
+@@ -22,6 +23,8 @@ import FormalConjecturesUtil
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Landau%27s_problems#Near-square_primes)
+ -/
+ 
++@[expose] public section
++
+ 
+ namespace PrimesAndPerfectSquares
+ 
+diff --git a/FormalConjectures/Wikipedia/RegularPrimes.lean b/FormalConjectures/Wikipedia/RegularPrimes.lean
+index 1aac756..9008aa7 100644
+--- a/FormalConjectures/Wikipedia/RegularPrimes.lean
++++ b/FormalConjectures/Wikipedia/RegularPrimes.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Infinite Regular Primes
+@@ -26,6 +27,8 @@ infinitely many regular primes.
+ *Reference:* [Wikipedia](https://en.wikipedia.org/wiki/Regular_prime)
+ -/
+ 
++@[expose] public section
++
+ open scoped NumberField
+ 
+ variable (p : ℕ)
+@@ -39,7 +42,7 @@ noncomputable def IsRegularPrime [Fact p.Prime] : Prop :=
+ 
+ /-- The prime 37 is not a regular prime. -/
+ @[category textbook, AMS 11]
+-theorem not_isRegularPrime_37_first : ¬ @IsRegularPrime 37 (by decide) := by
++theorem not_isRegularPrime_37 : ¬ @IsRegularPrime 37 (by decide) := by
+   sorry
+ 
+ /-- The set of regular primes. -/
+@@ -54,16 +57,12 @@ lemma small_regular_primes :
+     { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 } ⊆ regularPrimes := by
+   sorry
+ 
+-/-- The prime 37 is not a regular prime. -/
+-@[category textbook, AMS 11]
+-theorem not_isRegularPrime_37_second : ¬ @IsRegularPrime 37 (by decide) := by
+-  sorry
+-
+-/-- An equivalent definition of a regular prime `p` is that it does not divide the numerator of the
+-first `p-3` Bernoulli numbers. Not in Mathlib. -/
++/-- **Kummer's criterion.** An equivalent definition of a regular prime `p` is that it does not
++divide the numerator of any of the Bernoulli numbers $B_k$ for $k = 2, 4, 6, \dots, p - 3$.
++Not in Mathlib. -/
+ @[category textbook, AMS 11]
+ theorem isRegularPrime_iff_Bernoulli (p : ℕ) [Fact p.Prime] :
+-    IsRegularPrime p ↔ ∀ k ∈ Finset.Icc 2 (p - 3), ¬ (p : ℤ) ∣ (bernoulli' k).num := by
++    IsRegularPrime p ↔ ∀ k ∈ Finset.Icc 2 (p - 3), Even k → ¬ (p : ℤ) ∣ (bernoulli' k).num := by
+   sorry
+ 
+ /-- The set of irregular primes is infinite. -/
+diff --git a/FormalConjectures/Wikipedia/TwinPrimes.lean b/FormalConjectures/Wikipedia/TwinPrimes.lean
+index 48b05df..ebe01d9 100644
+--- a/FormalConjectures/Wikipedia/TwinPrimes.lean
++++ b/FormalConjectures/Wikipedia/TwinPrimes.lean
+@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -/
++module
+ 
+-import FormalConjecturesUtil
++public import FormalConjecturesUtil
+ 
+ /-!
+ # Twin prime conjecture
+@@ -24,6 +25,8 @@ import FormalConjecturesUtil
+ - [Twin Primes Conjecture Wikipedia Page](https://en.wikipedia.org/wiki/Twin_prime#Twin_prime_conjecture)
+ -/
+ 
++@[expose] public section
++
+ 
+ namespace TwinPrimes
+ 
+diff --git a/FormalConjecturesForMathlib/NumberTheory/NormalNumber.lean b/FormalConjecturesForMathlib/NumberTheory/NormalNumber.lean
+index faaae83..b46c27e 100644
+--- a/FormalConjecturesForMathlib/NumberTheory/NormalNumber.lean
++++ b/FormalConjecturesForMathlib/NumberTheory/NormalNumber.lean
+@@ -21,9 +21,10 @@ public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+ /-!
+ # Normal numbers
+ 
+-A real number $x$ is *normal in base* $b$ if every digit
++A real number $x$ is *simply normal in base* $b$ if every digit
+ $d \in \{0,1,\dots,b-1\}$ appears with asymptotic frequency $1/b$
+-in the base-$b$ expansion of $x$.
++in the base-$b$ expansion of $x$. It is *normal in base* $b$ if, for every
++$k \ge 1$, every string of $k$ digits appears with asymptotic frequency $1/b^k$.
+ 
+ A number that is normal in every integer base $b \ge 2$
+ is called *absolutely normal*.
+@@ -38,6 +39,7 @@ classical constants such as $\pi$, $e$, or $\sqrt{2}$ are normal in any base.
+ ## Main definitions
+ 
+ * `digitSeq`: the sequence of digits in the base-`b` fractional expansion of a real number.
++* `IsSimplyNormalInBase`: a real number is simply normal in base `b`.
+ * `IsNormalInBase`: a real number is normal in base `b`.
+ * `IsAbsolutelyNormal`: a real number is normal in every base `b ≥ 2`.
+ -/
+@@ -57,10 +59,10 @@ where `{x}` denotes the fractional part of `x`. -/
+ noncomputable def digitSeq (b : ℕ) (x : ℝ) (n : ℕ) : ℕ :=
+   ⌊(b : ℝ) ^ (n + 1) * Int.fract x⌋₊ % b
+ 
+-/-- A real number `x` is *normal in base* `b`
++/-- A real number `x` is *simply normal in base* `b`
+ if every digit `d < b` appears with asymptotic frequency `1 / b`
+ in the base-`b` fractional expansion of `x`. -/
+-noncomputable def IsNormalInBase (b : ℕ) (x : ℝ) : Prop :=
++noncomputable def IsSimplyNormalInBase (b : ℕ) (x : ℝ) : Prop :=
+   ∀ d : ℕ, d < b →
+     Tendsto
+       (fun n : ℕ =>
+@@ -68,6 +70,24 @@ noncomputable def IsNormalInBase (b : ℕ) (x : ℝ) : Prop :=
+       atTop
+       (nhds (1 / (b : ℝ)))
+ 
++/-- A real number `x` is *normal in base* `b`
++if every string `w` of `k` digits `< b` appears with asymptotic frequency `1 / b ^ k`
++in the base-`b` fractional expansion of `x`, that is, the proportion of positions `i < n`
++at which `w` occurs tends to `1 / b ^ k`. -/
++noncomputable def IsNormalInBase (b : ℕ) (x : ℝ) : Prop :=
++  ∀ (k : ℕ) (w : Fin k → ℕ), (∀ j, w j < b) →
++    Tendsto
++      (fun n : ℕ =>
++        (((Finset.range n).filter (fun i => ∀ j : Fin k, digitSeq b x (i + j) = w j)).card : ℝ) / n)
++      atTop
++      (nhds (1 / (b : ℝ) ^ k))
++
++/-- A number that is normal in base `b` is simply normal in base `b`. -/
++theorem IsNormalInBase.isSimplyNormalInBase {b : ℕ} {x : ℝ} (h : IsNormalInBase b x) :
++    IsSimplyNormalInBase b x := by
++  intro d hd
++  simpa [Fin.forall_fin_one] using h 1 (fun _ => d) (fun _ => hd)
++
+ /-- A real number `x` is *absolutely normal*
+ if it is normal in every integer base `b ≥ 2`. -/
+ noncomputable def IsAbsolutelyNormal (x : ℝ) : Prop :=
+diff --git a/lakefile.toml b/lakefile.toml
+index 8cc37c7..57b1c3f 100644
+--- a/lakefile.toml
++++ b/lakefile.toml
+@@ -61,22 +61,6 @@ weak.linter.style.moduleDocstring = true
+ weak.linter.style.latex_docstring = true
+ weak.linter.style.imports = true
+ 
+-[[lean_lib]]
+-name = "FormalConjecturesAnswerPostpone"
+-globs = ["FormalConjectures.+"]
+-[lean_lib.leanOptions]
+-# Switch off warnings generated by `sorry`
+-warn.sorry = false
+-# our own linters which only make sense for the problems themselves
+-weak.linter.style.ams_attribute = true
+-weak.linter.style.category_attribute = true
+-weak.linter.style.conditional_formal_proof = true
+-weak.linter.style.moduleDocstring = true
+-weak.linter.style.latex_docstring = true
+-weak.linter.style.imports = true
+-weak.google.answer = "postpone"
+-
+-
+ [[lean_exe]]
+ name = "extract_names"
+ srcDir = "scripts"
