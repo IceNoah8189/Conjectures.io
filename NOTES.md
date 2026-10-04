@@ -13,8 +13,7 @@
 - Installed Lean v4.33.1 in this workspace.
 - Reconstructed the audited Formal Conjectures commit and confirmed the Lake project resolves Lean v4.33.1 and the validator's pinned Mathlib commit.
 - `lake exe cache get` was attempted with `XDG_CACHE_HOME=/workspace/.cache`. The cache's `lakecache.blob.core.windows.net` endpoint was rejected by this environment's proxy (`CONNECT tunnel failed, response 403`, followed by rate limiting). No Mathlib library was built from source.
-- Timed challenge compilation remains unverified. `lake env lean tasks/erdos-168-ii/Challenge.lean` stops at the first import because the blocked cache prevented building its dependencies; its 0.717-second failed run is **not** a successful compilation time.
-- On a machine with access to the Mathlib cache host, run the commands in `README.md` and record the successful compile time here.
+- The initial cloud compilation check stopped at the first import because the blocked cache prevented building its dependencies; its 0.717-second failed run was **not** a successful compilation time. The later successful check is recorded below.
 - Local WSL build works: first compile of Challenge.lean took about 7 minutes; it reports the expected sorry warning.
 
 ## Definition of F (2026-10-04)
@@ -74,3 +73,72 @@ how the challenge obtains its target type.
   sandbox exposes `.git` as read-only.
 - Remaining work is mathematical research on the irrationality stage in
   PLAN.md, followed by proof development and submission validation.
+
+## Verified mathematical facts and computations supplied by the user (2026-10-04)
+
+The following facts and numerical checks were supplied by the user as
+verified. They are not proved in Lean in this repository. The reported
+brute-force checks and exact DP computation have not been rerun here;
+no DP source or computational certificate was supplied with these notes.
+
+- Write every positive integer uniquely as n = q * 2^a * 3^b with
+  gcd(q,6) = 1. A forbidden triple n, 2n, 3n stays in the same q-class,
+  so these classes are independent for this problem.
+- Let g(t) be the largest cardinality of a set of lattice points (a,b)
+  with a,b ≥ 0 and 2^a * 3^b ≤ t that contains no whole triple
+  (a,b), (a+1,b), (a,b+1). Set g(0) = 0. Then
+  F(N) = Σ over 1 ≤ q ≤ N with gcd(q,6) = 1 of g(floor(N/q)).
+  The user checked this identity against brute force for
+  N = 3, 10, 30, 60, and 100.
+- g can increase only at 3-smooth numbers, meaning numbers 2^a * 3^b.
+  Every increase has size exactly one. Define the jump set
+  J = {s ≥ 1 : g(s) - g(s-1) = 1}. A smooth number can have increment
+  zero; the claim is not that every smooth number is a jump.
+- The reported first jump points are:
+  1, 2, 4, 6, 8, 12, 16, 24, 32, 36, 48, 64, 72, 96, 128, 144,
+  162, 216, 256, 288, 324, 432, 512, 576, 648, 768, 972, 1024, …
+- An exact column-by-column bitmask DP found 302 jumps among the 452
+  smooth numbers at most 10^11. This is finite computational evidence,
+  not an exact rule for all future jump points or a Lean certificate.
+- Consequently the limit has the series expression
+  L = (1/3) * Σ over s in J of 1/s. Its reported numerical value is
+  approximately 0.80096575. No certified error interval was supplied for
+  this decimal, so it should not be used as a proved precision bound.
+- The hard part remains an exact rule for which smooth numbers are jumps
+  and an irrationality proof for that particular series. PLAN.md now uses
+  g and J consistently and treats these facts as inputs for future
+  formalization, not as already available Lean theorems.
+
+## Related work and reuse checks (2026-10-04)
+
+- The accepted Erdős 1062(ii) result is a related example of a density
+  problem handled by a coefficient expansion and a Diophantine argument.
+  The [acceptance record](https://conjectures.io/results/8d59a0af-6762-4606-93c9-72dd356a57bc)
+  credits submitter JenW1N. The linked
+  [exposition by Liam Kruer and Jensen Kohlmeyer](https://conjectures.io/papers/erdos1062ii.pdf?v=20260922-authors),
+  dated 22 September 2026, describes a series of rank increments,
+  a coefficient expansion, and a contradiction using small nonzero
+  linear forms in rational powers of two and three. It is an exposition
+  of the accepted formal artifact; its prose is not itself kernel-verified.
+- The 1062 condition forbids any element dividing two distinct others,
+  whereas 168 forbids only n, 2n, 3n. In 1062, divisibility can connect
+  distinct q-classes. Its formulas and arithmetic hypotheses therefore
+  require a fresh applicability check before use for 168.
+- User-supplied lead: a public Lean proof of limit existence may be in
+  [baobingzhang/jsp-000165-erdos168-lean](https://github.com/baobingzhang/jsp-000165-erdos168-lean).
+  Web attempts to read the repository, API metadata, README, and LICENSE
+  failed; no licence, theorem statement, or proof status was verified.
+  No code was copied. Before any reuse, inspect the actual licence and
+  relevant file headers, record the revision and author credit, and check
+  the target definition, dependencies, and unfinished proof assumptions.
+
+## Documentation revision checks (2026-10-04)
+
+- Read the current AGENTS.md, NOTES.md, and PLAN.md, then added the user's
+  verified facts with their computational scope and updated the stages.
+- Checked the 1062 acceptance record and its linked PDF using web access;
+  the 168 repository remains a lead requiring inspection.
+- `git diff --check` passed; the revision changes only NOTES.md and PLAN.md.
+  No proof was written or Lean file changed, so the previous challenge
+  compilation check remains the relevant check; it was not rerun.
+- No wallet, key, or secret file was accessed.
