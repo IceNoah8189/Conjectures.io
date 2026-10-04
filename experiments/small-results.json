@@ -1,0 +1,528 @@
+{
+  "method": "Boolean hitting set; exact cardinality SAT/UNSAT; no column DP",
+  "z3_version": "5.1.0",
+  "limit": 288,
+  "smooth_count": 29,
+  "g_at_limit": 20,
+  "jump_count": 20,
+  "jumps": [
+    1,
+    2,
+    4,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32,
+    36,
+    48,
+    64,
+    72,
+    96,
+    128,
+    144,
+    162,
+    216,
+    256,
+    288
+  ],
+  "prefix_comparison": {
+    "through": 288,
+    "expected": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      12,
+      16,
+      24,
+      32,
+      36,
+      48,
+      64,
+      72,
+      96,
+      128,
+      144,
+      162,
+      216,
+      256,
+      288
+    ],
+    "actual": [
+      1,
+      2,
+      4,
+      6,
+      8,
+      12,
+      16,
+      24,
+      32,
+      36,
+      48,
+      64,
+      72,
+      96,
+      128,
+      144,
+      162,
+      216,
+      256,
+      288
+    ],
+    "agree": true
+  },
+  "brute_force_all_integer_cutoffs_through": 64,
+  "density_lower": {
+    "numerator": 49391,
+    "denominator": 62208,
+    "decimal": "0.79396540637860082304526748971193415637860082304527"
+  },
+  "density_upper": {
+    "numerator": 37535,
+    "denominator": 46656,
+    "decimal": "0.80450531550068587105624142661179698216735253772291"
+  },
+  "density_tail_bound": {
+    "numerator": 1967,
+    "denominator": 186624,
+    "decimal": "0.010539909122085048010973936899862825788751714677641"
+  },
+  "requested_decimal": "0.8009657549",
+  "requested_decimal_in_interval": true,
+  "difference_from_requested_decimal": {
+    "lower": {
+      "numerator": -17010846907,
+      "denominator": 2430000000000,
+      "decimal": "-0.0070003485213991769547325102880658436213991769547325"
+    },
+    "upper": {
+      "numerator": 25803396779,
+      "denominator": 7290000000000,
+      "decimal": "0.0035395606006858710562414266117969821673525377229081"
+    }
+  },
+  "rows": [
+    {
+      "t": 1,
+      "points": 1,
+      "g": 1,
+      "jump": 1,
+      "cover": [],
+      "budget_test": "sat",
+      "seconds": 0.000855
+    },
+    {
+      "t": 2,
+      "points": 2,
+      "g": 2,
+      "jump": 1,
+      "cover": [],
+      "budget_test": "sat",
+      "seconds": 0.000255
+    },
+    {
+      "t": 3,
+      "points": 3,
+      "g": 2,
+      "jump": 0,
+      "cover": [
+        3
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.000231
+    },
+    {
+      "t": 4,
+      "points": 4,
+      "g": 3,
+      "jump": 1,
+      "cover": [
+        1
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000288
+    },
+    {
+      "t": 6,
+      "points": 5,
+      "g": 4,
+      "jump": 1,
+      "cover": [
+        2
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000326
+    },
+    {
+      "t": 8,
+      "points": 6,
+      "g": 5,
+      "jump": 1,
+      "cover": [
+        2
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000258
+    },
+    {
+      "t": 9,
+      "points": 7,
+      "g": 5,
+      "jump": 0,
+      "cover": [
+        2,
+        9
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.000278
+    },
+    {
+      "t": 12,
+      "points": 8,
+      "g": 6,
+      "jump": 1,
+      "cover": [
+        3,
+        4
+      ],
+      "budget_test": "sat",
+      "seconds": 0.00048
+    },
+    {
+      "t": 16,
+      "points": 9,
+      "g": 7,
+      "jump": 1,
+      "cover": [
+        3,
+        4
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000365
+    },
+    {
+      "t": 18,
+      "points": 10,
+      "g": 7,
+      "jump": 0,
+      "cover": [
+        3,
+        4,
+        18
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.00032
+    },
+    {
+      "t": 24,
+      "points": 11,
+      "g": 8,
+      "jump": 1,
+      "cover": [
+        3,
+        6,
+        8
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000546
+    },
+    {
+      "t": 27,
+      "points": 12,
+      "g": 8,
+      "jump": 0,
+      "cover": [
+        3,
+        6,
+        8,
+        27
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.000548
+    },
+    {
+      "t": 32,
+      "points": 13,
+      "g": 9,
+      "jump": 1,
+      "cover": [
+        3,
+        6,
+        8,
+        9
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000697
+    },
+    {
+      "t": 36,
+      "points": 14,
+      "g": 10,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        16
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000602
+    },
+    {
+      "t": 48,
+      "points": 15,
+      "g": 11,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        16
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000929
+    },
+    {
+      "t": 54,
+      "points": 16,
+      "g": 11,
+      "jump": 0,
+      "cover": [
+        2,
+        9,
+        12,
+        16,
+        54
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.000563
+    },
+    {
+      "t": 64,
+      "points": 17,
+      "g": 12,
+      "jump": 1,
+      "cover": [
+        2,
+        3,
+        12,
+        16,
+        18
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000834
+    },
+    {
+      "t": 72,
+      "points": 18,
+      "g": 13,
+      "jump": 1,
+      "cover": [
+        3,
+        4,
+        16,
+        18,
+        24
+      ],
+      "budget_test": "sat",
+      "seconds": 0.000929
+    },
+    {
+      "t": 81,
+      "points": 19,
+      "g": 13,
+      "jump": 0,
+      "cover": [
+        3,
+        4,
+        16,
+        18,
+        24,
+        81
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.00081
+    },
+    {
+      "t": 96,
+      "points": 20,
+      "g": 14,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        24,
+        32,
+        54
+      ],
+      "budget_test": "sat",
+      "seconds": 0.001207
+    },
+    {
+      "t": 108,
+      "points": 21,
+      "g": 14,
+      "jump": 0,
+      "cover": [
+        2,
+        9,
+        12,
+        24,
+        32,
+        54,
+        108
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.00097
+    },
+    {
+      "t": 128,
+      "points": 22,
+      "g": 15,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        16,
+        54,
+        64,
+        72
+      ],
+      "budget_test": "sat",
+      "seconds": 0.001246
+    },
+    {
+      "t": 144,
+      "points": 23,
+      "g": 16,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        16,
+        54,
+        72,
+        96
+      ],
+      "budget_test": "sat",
+      "seconds": 0.00162
+    },
+    {
+      "t": 162,
+      "points": 24,
+      "g": 17,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        16,
+        54,
+        72,
+        96
+      ],
+      "budget_test": "sat",
+      "seconds": 0.001405
+    },
+    {
+      "t": 192,
+      "points": 25,
+      "g": 17,
+      "jump": 0,
+      "cover": [
+        2,
+        9,
+        12,
+        16,
+        54,
+        72,
+        96,
+        192
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.001487
+    },
+    {
+      "t": 216,
+      "points": 26,
+      "g": 18,
+      "jump": 1,
+      "cover": [
+        2,
+        9,
+        12,
+        24,
+        48,
+        54,
+        64,
+        72
+      ],
+      "budget_test": "sat",
+      "seconds": 0.0018
+    },
+    {
+      "t": 243,
+      "points": 27,
+      "g": 18,
+      "jump": 0,
+      "cover": [
+        2,
+        9,
+        12,
+        24,
+        48,
+        54,
+        64,
+        72,
+        243
+      ],
+      "budget_test": "unsat",
+      "seconds": 0.002289
+    },
+    {
+      "t": 256,
+      "points": 28,
+      "g": 19,
+      "jump": 1,
+      "cover": [
+        3,
+        4,
+        18,
+        24,
+        32,
+        81,
+        108,
+        128,
+        144
+      ],
+      "budget_test": "sat",
+      "seconds": 0.003787
+    },
+    {
+      "t": 288,
+      "points": 29,
+      "g": 20,
+      "jump": 1,
+      "cover": [
+        3,
+        4,
+        18,
+        24,
+        32,
+        81,
+        108,
+        144,
+        192
+      ],
+      "budget_test": "sat",
+      "seconds": 0.002466
+    }
+  ]
+}

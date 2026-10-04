@@ -1,0 +1,46 @@
+# Independent exact computation of g(t)
+
+`exact_g.py` builds the lattice directly using integer products. Each point
+has a Boolean omission variable; each forbidden corner requires at least
+one of its three variables to be true. Z3 solves the resulting Boolean
+hitting-set problem with an integer cardinality constraint. This program
+was written independently for this task. It uses no column-by-column
+bitmask DP, external optimization code, published value table, or assumed
+formula for the jump set. The expected prefix is used only for comparison
+after the optima have been computed.
+
+If h is the minimum cover size for the previous prefix, the next minimum
+is either h or h+1. Restricting a new cover to the old domain proves the
+lower bound h. Appending the new point to an old cover proves the upper
+bound h+1. An exact SAT query for a cover of size at most h therefore
+determines which value holds. A SAT witness gives g = k-h; UNSAT gives
+g = k-h-1 and the previous cover plus the new point supplies a witness.
+Each cover is checked directly against every generated corner. UNKNOWN
+or a timeout aborts; neither is interpreted as a mathematical result.
+
+This is an exact integer/Boolean computation relying on Z3's SAT/UNSAT
+answers, not a Lean proof or an independently checked proof certificate.
+The program also compares all integer cutoffs through 64 with a separate
+exhaustive subset enumeration using the numerical triples n, 2n, 3n.
+
+For reproducible runs with Python 3.10 or later:
+
+```bash
+python3 -m venv experiments/.venv
+experiments/.venv/bin/python -m pip install -r experiments/requirements.txt
+experiments/.venv/bin/python experiments/exact_g.py --limit 288 --output experiments/small-results.json
+experiments/.venv/bin/python experiments/exact_g.py --limit 100000000000 --progress --output experiments/results.json
+```
+
+The JSON records g at every smooth number, all jumps, minimum-cover
+witnesses, and exact rational density bounds. For arbitrary integer t,
+g(t) equals the value at the last smooth number at most t, with g(0)=0.
+The upper density bound adds all remaining smooth reciprocal terms,
+computed exactly as 1 minus one third of the prefix's reciprocal sum.
+No floating-point arithmetic is used in optimization or these bounds.
+
+In this environment pip was unavailable. The pinned public PyPI wheel
+was downloaded into `/tmp`, its SHA-256 checked, and extracted into a
+temporary virtual environment. The wheel digest was
+`dfad9e309d7010b1ff6bdb33f21570a1603ef4727373221c7117a74448f0cfef`.
+The standard pip instructions above avoid that environment-specific step.

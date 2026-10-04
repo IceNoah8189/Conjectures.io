@@ -142,3 +142,28 @@ no DP source or computational certificate was supplied with these notes.
   No proof was written or Lean file changed, so the previous challenge
   compilation check remains the relevant check; it was not rerun.
 - No wallet, key, or secret file was accessed.
+
+## Independent solver: first successful check (2026-10-04)
+
+- Wrote `experiments/exact_g.py` independently as an exact Boolean
+  hitting-set model. It does not use the user's column-by-column bitmask
+  DP, external experiment code, an assumed jump rule, or published optima.
+  The comparison prefix is inspected only after solving.
+- Z3 5.1.0 checks cardinality-bounded SAT/UNSAT queries. The minimum
+  cover size can stay constant or increase by one on adding a point;
+  each query distinguishes these cases. Every returned cover is checked
+  directly against every forbidden corner. UNKNOWN aborts the run.
+- This is an exact Boolean computation relying on Z3, not a Lean theorem
+  or an independently checked proof certificate. JSON stores witnesses
+  and the SAT/UNSAT outcomes for later replay.
+- Python had no pip. Created `/tmp/erdos168-venv` without pip, downloaded
+  the pinned PyPI wheel with approved network access, checked its SHA-256,
+  and extracted it into that temporary environment. The dependency and
+  normal installation commands are recorded in `experiments/README.md`.
+- Command: `/tmp/erdos168-venv/bin/python experiments/exact_g.py --limit 288 --output experiments/small-results.json`.
+  Exit code 0: 29 smooth points, g(288)=20, and all 20 requested jumps
+  agree exactly, including the absence of extra jumps through 288.
+- A separate exhaustive numerical subset enumeration agrees with the
+  Boolean solver at every integer cutoff from 0 through 64.
+- The larger density computation and literature review are in progress.
+  No Lean file, wallet, key, or secret file has been touched.
