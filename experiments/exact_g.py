@@ -2,7 +2,7 @@
 """Independent exact Boolean hitting-set computation for Erdos 168.
 
 No column states, bitmask DP, tabulated optima, or conjectural jump rule
-are used. Z3 checks a cardinality-bounded Boolean formula. Fractions keep
+are used. Z3 solves a Boolean MaxSAT formula. Fractions keep
 the density sum and its smooth-number tail bound exact.
 """
 
@@ -41,31 +41,38 @@ def smooth_points(limit):
 def checked_cover(weights, cover, triples):
     """Check the returned witness independently of the SAT model."""
     cover = set(cover)
-    if not cover <= set(weights):
+    domain = set(weights)
+    if not cover <= domain:
         raise AssertionError("witness contains a point outside the domain")
-    if any(not (cover & set(triple)) for triple in triples):
+    numerical_triples = {(n, 2*n, 3*n) for n in weights if 3*n in domain}
+    if set(triples) != numerical_triples:
+        raise AssertionError("lattice constraints differ from numerical triples")
+    if any(not (cover & set(triple)) for triple in numerical_triples):
         raise AssertionError("witness fails to hit a forbidden triple")
 
 
 def exact_prefix(limit, timeout_ms=0, progress=False):
     """Compute g at every smooth point up to limit, with cover witnesses.
 
-    Let h(k) be the minimum cover size on the first k points. Adding a
-    point cannot decrease h(k), and adjoining that point to an old cover
-    increases its size by at most one. Thus one feasibility query with
-    budget h(k-1) determines h(k): SAT keeps it; UNSAT increases it by one.
-    The old cover plus the new point is a witness for the latter case.
-    Any UNKNOWN response aborts rather than being reported as an optimum.
+    Corner clauses are hard constraints; each non-omitted vertex is a
+    unit-weight soft constraint. The exact minimum soft cost is the
+    minimum number of omissions. Check matching integer lower and upper
+    bounds and the returned cover; UNKNOWN aborts the computation.
     """
-    solver = z3.SolverFor("QF_FD")
-    solver.set(random_seed=0)
+    solver = z3.Optimize()
+    solver.set(maxsat_engine="maxres")
     if timeout_ms:
         solver.set(timeout=timeout_ms)
     variables, positions, weights, triples = [], {}, [], []
-    cover, minimum, rows = set(), 0, []
+    minimum, rows, objective = 0, [], None
     for weight, a, b in smooth_points(limit):
         started = time.perf_counter()
         variables.append(z3.Bool(f"omit_{a}_{b}"))
+        # With the same default objective id, all soft clauses sum to
+        # one objective: each omitted point has cost one.
+        handle = solver.add_soft(z3.Not(variables[-1]), weight=1)
+        if objective is None:
+            objective = handle
         positions[a, b] = len(weights)
         weights.append(weight)
         # Any corner containing the new point has one of these anchors.
@@ -76,26 +83,23 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
                 solver.add(z3.Or(*(variables[i] for i in indices)))
                 triples.append(tuple(weights[i] for i in indices))
         previous_minimum = minimum
-        budget = z3.PbLe([(variable, 1) for variable in variables], minimum)
-        solver.push()
-        solver.add(budget)
         result = solver.check()
-        if result == z3.sat:
-            model = solver.model()
-            cover = {
-                n for n, variable in zip(weights, variables)
-                if z3.is_true(model.eval(variable, model_completion=True))
-            }
-            if len(cover) != minimum:
-                raise AssertionError("SAT witness contradicts previous minimum")
-        elif result == z3.unsat:
-            minimum += 1
-            cover.add(weight)
-        else:
+        if result != z3.sat:
             raise RuntimeError(
                 f"no exact result at t={weight}: {solver.reason_unknown()}"
             )
-        solver.pop()
+        lower, upper = solver.lower(objective), solver.upper(objective)
+        if not (z3.is_int_value(lower) and z3.is_int_value(upper)
+                and lower.as_long() == upper.as_long()):
+            raise RuntimeError(f"unclosed objective at {weight}: {lower}, {upper}")
+        minimum = lower.as_long()
+        if minimum not in (previous_minimum, previous_minimum + 1):
+            raise AssertionError("minimum cover violates one-point bound")
+        model = solver.model()
+        cover = {
+            n for n, variable in zip(weights, variables)
+            if z3.is_true(model.eval(variable, model_completion=True))
+        }
         checked_cover(weights, cover, triples)
         if len(cover) != minimum:
             raise AssertionError("incorrect witness cardinality")
@@ -105,13 +109,14 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
             "g": len(weights) - minimum,
             "jump": int(minimum == previous_minimum),
             "cover": sorted(cover),
-            "budget_test": str(result),
+            "minimum_cover_lower": minimum,
+            "minimum_cover_upper": upper.as_long(),
             "seconds": round(time.perf_counter() - started, 6),
         }
         rows.append(row)
         if progress and (len(rows) % 25 == 0 or row["seconds"] > 1):
             print(f"points={len(rows)} t={weight} g={row['g']} "
-                  f"check={result} seconds={row['seconds']}", flush=True)
+                  f"cover={minimum} seconds={row['seconds']}", flush=True)
     return rows
 
 
@@ -169,7 +174,7 @@ def make_report(limit, rows, brute_limit):
         "upper": fraction_record(upper - EXPECTED_DENSITY),
     }
     return {
-        "method": "Boolean hitting set; exact cardinality SAT/UNSAT; no column DP",
+        "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
         "z3_version": z3.get_version_string(),
         "limit": limit,
         "smooth_count": len(rows),
@@ -186,7 +191,7 @@ def make_report(limit, rows, brute_limit):
         "density_lower": fraction_record(lower),
         "density_upper": fraction_record(upper),
         "density_tail_bound": fraction_record(tail_bound),
-        "requested_decimal": str(float(EXPECTED_DENSITY)),
+        "requested_decimal": "0.8009657549",
         "requested_decimal_in_interval": lower <= EXPECTED_DENSITY <= upper,
         "difference_from_requested_decimal": difference,
         "rows": rows,

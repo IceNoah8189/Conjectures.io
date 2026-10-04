@@ -167,3 +167,50 @@ no DP source or computational certificate was supplied with these notes.
   Boolean solver at every integer cutoff from 0 through 64.
 - The larger density computation and literature review are in progress.
   No Lean file, wallet, key, or secret file has been touched.
+
+## Literature search and solver performance update (2026-10-04)
+
+- Primary historical source: R. L. Graham, H. S. Witsenhausen, and
+  J. H. Spencer, [On extremal density theorems for linear forms](https://mathweb.ucsd.edu/~ronspubs/77_05_extremal_density.pdf),
+  in Number Theory and Algebra (H. Zassenhaus, editor), Academic Press,
+  1977, pp. 103–109. Its general density theorem gives the increment
+  series for this problem; see also Theorem 2 as cited in the recent
+  preprint below. This is a density representation through finite optima,
+  not a closed formula for those optima.
+- Fan Chung, Paul Erdős, and Ronald Graham,
+  [On sparse sets hitting linear forms](https://math.ucsd.edu/~fan/wp/linear.pdf),
+  Number Theory for the Millennium I, 2002, pp. 257–272, studies the
+  equivalent problem of hitting all lattice corners. In Section 3 it
+  compares the minimum hitting number with a boundary-corrected choice
+  among three residue classes and leaves equality conjectural. Its f(k)
+  counts omissions, so our g(d_k) = k - f(k). Section 5 also asks whether
+  the candidate formula always holds and how to compute large prefixes.
+- Nikola Veselinov,
+  [Extremal densities for forbidden configurations in S-smooth numbers](https://arxiv.org/html/2604.15515v1),
+  arXiv:2604.15515v1, submitted 16 April 2026, gives an asymptotic
+  estimate g(t) = (2/3)*Psi_{2,3}(t) + O(log t), the density series,
+  and computable reciprocal-tail bounds. Propositions 6.2–6.3 show that
+  globally nested optimizers are impossible and characterize a jump
+  by the existence of a suitable optimizer of the previous prefix.
+  Powers of two always jump. This criterion still requires solving an
+  optimization problem; it is not an explicit rule for all jumps.
+- Conclusion of this search: no proved closed formula for the exact g(t),
+  or explicit complete jump rule, was found in these sources. The known
+  exact series and optimizer-based criterion must be distinguished from
+  such a formula. This is a scoped literature finding, not proof that no
+  formula exists anywhere. Searches included the three historical authors,
+  the exact forbidden triple, recent work on problem 168, and S-smooth
+  forbidden configurations; no later resolving paper was identified.
+- [OEIS A386439](https://oeis.org/A386439), contributed by Sean Eberhard
+  in September 2025, reports 0.80096575500655898909… and lists irrationality
+  as open. This is an external numerical cross-check, not input to the
+  independent solver. No linked SageMath script or external experiment
+  source code was read or copied.
+- The original cardinality-query implementation became slow above about
+  150 points, so its large run was stopped. The program now uses Z3's
+  exact `maxres` MaxSAT engine on the same independently generated hard
+  corner clauses, with one unit soft clause per retained point. It accepts
+  results only when the exact integer objective bounds coincide and the
+  cover has the corresponding size. The small run through 288 was repeated
+  successfully, including all brute-force checks through 64. The larger
+  run with this formulation is in progress.

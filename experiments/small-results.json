@@ -1,5 +1,5 @@
 {
-  "method": "Boolean hitting set; exact cardinality SAT/UNSAT; no column DP",
+  "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
   "z3_version": "5.1.0",
   "limit": 288,
   "smooth_count": 29,
@@ -112,8 +112,9 @@
       "g": 1,
       "jump": 1,
       "cover": [],
-      "budget_test": "sat",
-      "seconds": 0.000855
+      "minimum_cover_lower": 0,
+      "minimum_cover_upper": 0,
+      "seconds": 0.001578
     },
     {
       "t": 2,
@@ -121,8 +122,9 @@
       "g": 2,
       "jump": 1,
       "cover": [],
-      "budget_test": "sat",
-      "seconds": 0.000255
+      "minimum_cover_lower": 0,
+      "minimum_cover_upper": 0,
+      "seconds": 0.000935
     },
     {
       "t": 3,
@@ -130,10 +132,11 @@
       "g": 2,
       "jump": 0,
       "cover": [
-        3
+        2
       ],
-      "budget_test": "unsat",
-      "seconds": 0.000231
+      "minimum_cover_lower": 1,
+      "minimum_cover_upper": 1,
+      "seconds": 0.001013
     },
     {
       "t": 4,
@@ -141,10 +144,11 @@
       "g": 3,
       "jump": 1,
       "cover": [
-        1
+        2
       ],
-      "budget_test": "sat",
-      "seconds": 0.000288
+      "minimum_cover_lower": 1,
+      "minimum_cover_upper": 1,
+      "seconds": 0.000888
     },
     {
       "t": 6,
@@ -154,8 +158,9 @@
       "cover": [
         2
       ],
-      "budget_test": "sat",
-      "seconds": 0.000326
+      "minimum_cover_lower": 1,
+      "minimum_cover_upper": 1,
+      "seconds": 0.000831
     },
     {
       "t": 8,
@@ -165,8 +170,9 @@
       "cover": [
         2
       ],
-      "budget_test": "sat",
-      "seconds": 0.000258
+      "minimum_cover_lower": 1,
+      "minimum_cover_upper": 1,
+      "seconds": 0.000836
     },
     {
       "t": 9,
@@ -174,11 +180,12 @@
       "g": 5,
       "jump": 0,
       "cover": [
-        2,
-        9
+        3,
+        6
       ],
-      "budget_test": "unsat",
-      "seconds": 0.000278
+      "minimum_cover_lower": 2,
+      "minimum_cover_upper": 2,
+      "seconds": 0.000968
     },
     {
       "t": 12,
@@ -189,8 +196,9 @@
         3,
         4
       ],
-      "budget_test": "sat",
-      "seconds": 0.00048
+      "minimum_cover_lower": 2,
+      "minimum_cover_upper": 2,
+      "seconds": 0.00104
     },
     {
       "t": 16,
@@ -201,8 +209,9 @@
         3,
         4
       ],
-      "budget_test": "sat",
-      "seconds": 0.000365
+      "minimum_cover_lower": 2,
+      "minimum_cover_upper": 2,
+      "seconds": 0.001109
     },
     {
       "t": 18,
@@ -210,12 +219,13 @@
       "g": 7,
       "jump": 0,
       "cover": [
-        3,
-        4,
-        18
+        2,
+        9,
+        12
       ],
-      "budget_test": "unsat",
-      "seconds": 0.00032
+      "minimum_cover_lower": 3,
+      "minimum_cover_upper": 3,
+      "seconds": 0.001234
     },
     {
       "t": 24,
@@ -223,12 +233,13 @@
       "g": 8,
       "jump": 1,
       "cover": [
-        3,
+        2,
         6,
         8
       ],
-      "budget_test": "sat",
-      "seconds": 0.000546
+      "minimum_cover_lower": 3,
+      "minimum_cover_upper": 3,
+      "seconds": 0.001287
     },
     {
       "t": 27,
@@ -236,13 +247,14 @@
       "g": 8,
       "jump": 0,
       "cover": [
-        3,
-        6,
+        2,
         8,
-        27
+        9,
+        18
       ],
-      "budget_test": "unsat",
-      "seconds": 0.000548
+      "minimum_cover_lower": 4,
+      "minimum_cover_upper": 4,
+      "seconds": 0.001309
     },
     {
       "t": 32,
@@ -255,8 +267,9 @@
         8,
         9
       ],
-      "budget_test": "sat",
-      "seconds": 0.000697
+      "minimum_cover_lower": 4,
+      "minimum_cover_upper": 4,
+      "seconds": 0.001786
     },
     {
       "t": 36,
@@ -267,10 +280,11 @@
         2,
         9,
         12,
-        16
+        24
       ],
-      "budget_test": "sat",
-      "seconds": 0.000602
+      "minimum_cover_lower": 4,
+      "minimum_cover_upper": 4,
+      "seconds": 0.001775
     },
     {
       "t": 48,
@@ -283,8 +297,9 @@
         12,
         16
       ],
-      "budget_test": "sat",
-      "seconds": 0.000929
+      "minimum_cover_lower": 4,
+      "minimum_cover_upper": 4,
+      "seconds": 0.001465
     },
     {
       "t": 54,
@@ -296,10 +311,11 @@
         9,
         12,
         16,
-        54
+        36
       ],
-      "budget_test": "unsat",
-      "seconds": 0.000563
+      "minimum_cover_lower": 5,
+      "minimum_cover_upper": 5,
+      "seconds": 0.001727
     },
     {
       "t": 64,
@@ -308,13 +324,14 @@
       "jump": 1,
       "cover": [
         2,
-        3,
+        9,
         12,
         16,
-        18
+        36
       ],
-      "budget_test": "sat",
-      "seconds": 0.000834
+      "minimum_cover_lower": 5,
+      "minimum_cover_upper": 5,
+      "seconds": 0.002079
     },
     {
       "t": 72,
@@ -328,8 +345,9 @@
         18,
         24
       ],
-      "budget_test": "sat",
-      "seconds": 0.000929
+      "minimum_cover_lower": 5,
+      "minimum_cover_upper": 5,
+      "seconds": 0.001741
     },
     {
       "t": 81,
@@ -339,13 +357,14 @@
       "cover": [
         3,
         4,
-        16,
         18,
         24,
-        81
+        48,
+        54
       ],
-      "budget_test": "unsat",
-      "seconds": 0.00081
+      "minimum_cover_lower": 6,
+      "minimum_cover_upper": 6,
+      "seconds": 0.001911
     },
     {
       "t": 96,
@@ -360,8 +379,9 @@
         32,
         54
       ],
-      "budget_test": "sat",
-      "seconds": 0.001207
+      "minimum_cover_lower": 6,
+      "minimum_cover_upper": 6,
+      "seconds": 0.001851
     },
     {
       "t": 108,
@@ -369,16 +389,17 @@
       "g": 14,
       "jump": 0,
       "cover": [
-        2,
-        9,
+        3,
+        4,
         12,
         24,
+        27,
         32,
-        54,
-        108
+        36
       ],
-      "budget_test": "unsat",
-      "seconds": 0.00097
+      "minimum_cover_lower": 7,
+      "minimum_cover_upper": 7,
+      "seconds": 0.002211
     },
     {
       "t": 128,
@@ -386,16 +407,17 @@
       "g": 15,
       "jump": 1,
       "cover": [
-        2,
-        9,
+        3,
+        4,
         12,
-        16,
-        54,
-        64,
-        72
+        24,
+        27,
+        32,
+        36
       ],
-      "budget_test": "sat",
-      "seconds": 0.001246
+      "minimum_cover_lower": 7,
+      "minimum_cover_upper": 7,
+      "seconds": 0.002063
     },
     {
       "t": 144,
@@ -411,8 +433,9 @@
         72,
         96
       ],
-      "budget_test": "sat",
-      "seconds": 0.00162
+      "minimum_cover_lower": 7,
+      "minimum_cover_upper": 7,
+      "seconds": 0.002815
     },
     {
       "t": 162,
@@ -428,8 +451,9 @@
         72,
         96
       ],
-      "budget_test": "sat",
-      "seconds": 0.001405
+      "minimum_cover_lower": 7,
+      "minimum_cover_upper": 7,
+      "seconds": 0.002366
     },
     {
       "t": 192,
@@ -437,17 +461,18 @@
       "g": 17,
       "jump": 0,
       "cover": [
-        2,
-        9,
-        12,
-        16,
-        54,
-        72,
-        96,
-        192
+        3,
+        6,
+        8,
+        27,
+        36,
+        48,
+        64,
+        108
       ],
-      "budget_test": "unsat",
-      "seconds": 0.001487
+      "minimum_cover_lower": 8,
+      "minimum_cover_upper": 8,
+      "seconds": 0.002241
     },
     {
       "t": 216,
@@ -458,14 +483,15 @@
         2,
         9,
         12,
-        24,
+        16,
         48,
         54,
         64,
         72
       ],
-      "budget_test": "sat",
-      "seconds": 0.0018
+      "minimum_cover_lower": 8,
+      "minimum_cover_upper": 8,
+      "seconds": 0.00242
     },
     {
       "t": 243,
@@ -473,18 +499,19 @@
       "g": 18,
       "jump": 0,
       "cover": [
-        2,
-        9,
-        12,
+        3,
+        4,
+        18,
         24,
         48,
-        54,
         64,
         72,
-        243
+        81,
+        108
       ],
-      "budget_test": "unsat",
-      "seconds": 0.002289
+      "minimum_cover_lower": 9,
+      "minimum_cover_upper": 9,
+      "seconds": 0.00281
     },
     {
       "t": 256,
@@ -494,16 +521,17 @@
       "cover": [
         3,
         4,
+        16,
         18,
         24,
-        32,
+        64,
         81,
         108,
-        128,
         144
       ],
-      "budget_test": "sat",
-      "seconds": 0.003787
+      "minimum_cover_lower": 9,
+      "minimum_cover_upper": 9,
+      "seconds": 0.004212
     },
     {
       "t": 288,
@@ -511,18 +539,19 @@
       "g": 20,
       "jump": 1,
       "cover": [
-        3,
-        4,
-        18,
-        24,
-        32,
+        2,
+        9,
+        12,
+        16,
+        54,
+        64,
+        72,
         81,
-        108,
-        144,
-        192
+        96
       ],
-      "budget_test": "sat",
-      "seconds": 0.002466
+      "minimum_cover_lower": 9,
+      "minimum_cover_upper": 9,
+      "seconds": 0.003348
     }
   ]
 }

@@ -3,23 +3,26 @@
 `exact_g.py` builds the lattice directly using integer products. Each point
 has a Boolean omission variable; each forbidden corner requires at least
 one of its three variables to be true. Z3 solves the resulting Boolean
-hitting-set problem with an integer cardinality constraint. This program
+hitting-set problem as MaxSAT: each retained point is a unit-weight soft
+constraint, while every corner constraint is mandatory. This program
 was written independently for this task. It uses no column-by-column
 bitmask DP, external optimization code, published value table, or assumed
 formula for the jump set. The expected prefix is used only for comparison
 after the optima have been computed.
 
-If h is the minimum cover size for the previous prefix, the next minimum
-is either h or h+1. Restricting a new cover to the old domain proves the
-lower bound h. Appending the new point to an old cover proves the upper
-bound h+1. An exact SAT query for a cover of size at most h therefore
-determines which value holds. A SAT witness gives g = k-h; UNSAT gives
-g = k-h-1 and the previous cover plus the new point supplies a witness.
-Each cover is checked directly against every generated corner. UNKNOWN
-or a timeout aborts; neither is interpreted as a mathematical result.
+The minimum soft cost h is the minimum number of omissions; g = k-h
+for a prefix of k points. The program accepts an optimum only when the
+solver returns SAT and its exact integer objective lower and upper bounds
+coincide. The corresponding cover is checked directly against every
+generated corner, and its size must equal the objective. UNKNOWN, a
+timeout, or unequal bounds aborts; none is interpreted as an optimum.
+It also checks that the minimum cover changes by zero or one as each
+point is added. Z3's `maxres` engine uses unsatisfiable cores to solve
+MaxSAT, avoiding the slow standalone cardinality queries of the initial
+small-domain version (commit `a11f93f`).
 
 This is an exact integer/Boolean computation relying on Z3's SAT/UNSAT
-answers, not a Lean proof or an independently checked proof certificate.
+optimization answers, not a Lean proof or an independently checked proof certificate.
 The program also compares all integer cutoffs through 64 with a separate
 exhaustive subset enumeration using the numerical triples n, 2n, 3n.
 
