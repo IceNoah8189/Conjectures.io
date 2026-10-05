@@ -20,11 +20,15 @@ It also checks that the minimum cover changes by zero or one as each
 point is added. Z3's `maxres` engine uses unsatisfiable cores to solve
 MaxSAT, avoiding the slow standalone cardinality queries of the initial
 small-domain version (commit `a11f93f`).
-Each prefix uses a fresh optimization object, with all hard clauses added
+Each prefix uses a fresh optimization object and a fresh Z3 context, with all hard clauses added
 before the soft objective. An initial incremental-object run timed out
 at t = 2448880128; rebuilding the same problem closed both bounds in
 under a second in a separate trial. A timeout is a performance failure,
 not a disagreement in g or in the jump list.
+Reusing the global context also led to a timeout at t = 241864704,
+although a standalone model closed this optimum in 0.14 seconds. Isolating
+each query's context makes its Boolean expression construction independent
+of prior queries. All result checks remain in place.
 
 This is an exact integer/Boolean computation relying on Z3's SAT/UNSAT
 optimization answers, not a Lean proof or an independently checked proof certificate.

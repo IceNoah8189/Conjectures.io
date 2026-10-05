@@ -224,3 +224,10 @@ no DP source or computational certificate was supplied with these notes.
   independently reconstructs numerical triples to check completeness of
   the lattice clauses at every prefix. A run through 10^12 is in progress
   to obtain tighter density bounds and check the user's 10^11 count.
+
+- The fresh-object run still reused the global Z3 context and timed out
+  at t=241864704. A standalone query closed the same optimum in 0.14
+  seconds. The implementation now isolates every prefix in a fresh Z3
+  context as well as a fresh optimization object. The small-domain run
+  passes again, and the ongoing large run has passed both earlier timeout
+  points. No UNKNOWN answer has been used as an optimum.

@@ -51,6 +51,36 @@ def checked_cover(weights, cover, triples):
         raise AssertionError("witness fails to hit a forbidden triple")
 
 
+def minimum_cover(weights, triples, timeout_ms=0):
+    """Solve one prefix in a fresh solver AND a fresh Z3 context."""
+    context = z3.Context()
+    variables = [z3.Bool(str(n), ctx=context) for n in weights]
+    solver = z3.Optimize(ctx=context)
+    solver.set(maxsat_engine="maxres")
+    if timeout_ms:
+        solver.set(timeout=timeout_ms)
+    by_weight = dict(zip(weights, variables))
+    solver.add(*(z3.Or(*(by_weight[n] for n in triple)) for triple in triples))
+    handles = [solver.add_soft(z3.Not(variable), weight=1) for variable in variables]
+    # Same default objective id and unit weights: one cost per omission.
+    objective = handles[0]
+    result = solver.check()
+    if result != z3.sat:
+        raise RuntimeError(
+            f"no exact result at t={weights[-1]}: {solver.reason_unknown()}"
+        )
+    lower, upper = solver.lower(objective), solver.upper(objective)
+    if not (z3.is_int_value(lower) and z3.is_int_value(upper)
+            and lower.as_long() == upper.as_long()):
+        raise RuntimeError(f"unclosed objective: {lower}, {upper}")
+    model = solver.model()
+    cover = {
+        n for n, variable in zip(weights, variables)
+        if z3.is_true(model.eval(variable, model_completion=True))
+    }
+    return lower.as_long(), cover
+
+
 def exact_prefix(limit, timeout_ms=0, progress=False):
     """Compute g at every smooth point up to limit, with cover witnesses.
 
@@ -59,11 +89,10 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
     minimum number of omissions. Check matching integer lower and upper
     bounds and the returned cover; UNKNOWN aborts the computation.
     """
-    variables, positions, weights, triples = [], {}, [], []
+    positions, weights, triples = {}, [], []
     minimum, rows = 0, []
     for weight, a, b in smooth_points(limit):
         started = time.perf_counter()
-        variables.append(z3.Bool(str(weight)))
         positions[a, b] = len(weights)
         weights.append(weight)
         # Any corner containing the new point has one of these anchors.
@@ -73,36 +102,9 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
                 indices = [positions[point] for point in corner]
                 triples.append(tuple(weights[i] for i in indices))
         previous_minimum = minimum
-        # Rebuild each optimization problem: retained optimization state
-        # caused severe slowdowns in an initial larger-prefix trial.
-        # Declare all hard clauses before adding the soft objective.
-        solver = z3.Optimize()
-        solver.set(maxsat_engine="maxres")
-        if timeout_ms:
-            solver.set(timeout=timeout_ms)
-        by_weight = dict(zip(weights, variables))
-        solver.add(*(z3.Or(*(by_weight[n] for n in triple)) for triple in triples))
-        handles = [solver.add_soft(z3.Not(variable), weight=1) for variable in variables]
-        # All soft clauses have the same default objective id and weight
-        # one, so their joint cost is exactly the number of omissions.
-        objective = handles[0]
-        result = solver.check()
-        if result != z3.sat:
-            raise RuntimeError(
-                f"no exact result at t={weight}: {solver.reason_unknown()}"
-            )
-        lower, upper = solver.lower(objective), solver.upper(objective)
-        if not (z3.is_int_value(lower) and z3.is_int_value(upper)
-                and lower.as_long() == upper.as_long()):
-            raise RuntimeError(f"unclosed objective at {weight}: {lower}, {upper}")
-        minimum = lower.as_long()
+        minimum, cover = minimum_cover(weights, triples, timeout_ms)
         if minimum not in (previous_minimum, previous_minimum + 1):
             raise AssertionError("minimum cover violates one-point bound")
-        model = solver.model()
-        cover = {
-            n for n, variable in zip(weights, variables)
-            if z3.is_true(model.eval(variable, model_completion=True))
-        }
         checked_cover(weights, cover, triples)
         if len(cover) != minimum:
             raise AssertionError("incorrect witness cardinality")
@@ -113,7 +115,7 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
             "jump": int(minimum == previous_minimum),
             "cover": sorted(cover),
             "minimum_cover_lower": minimum,
-            "minimum_cover_upper": upper.as_long(),
+            "minimum_cover_upper": minimum,
             "seconds": round(time.perf_counter() - started, 6),
         }
         rows.append(row)
@@ -178,7 +180,7 @@ def make_report(limit, rows, brute_limit):
     }
     return {
         "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
-        "optimization_state": "fresh at each prefix; hard clauses before soft clauses",
+        "optimization_state": "fresh solver and Z3 context at each prefix; hard clauses before soft clauses",
         "z3_version": z3.get_version_string(),
         "limit": limit,
         "smooth_count": len(rows),
