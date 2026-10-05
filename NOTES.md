@@ -657,3 +657,222 @@ and documentation changed. The challenge and all Lean statements remain
 unchanged; no wallet, key, or secret file was accessed. Remaining issues
 include a proved boundary correction or different exact formula for g,
 and the irrationality argument.
+
+## Excess E: factorization, boundary pairs, ratios and interval rules (2026-10-04)
+
+Enriched all 32 cutoffs where exact g exceeds the participating-colour
+candidate: the 28 through 10^11 and all four in the saved extension.
+Each has E(t)=g(t)-g_cand(t)=1. The table below records its factorization,
+extra omitted pair, all three participating-colour counts, every minimizing
+colour (including whether the minimum is tied), and the requested ratios.
+Ratios in the displayed table are rounded to nine decimal places; exact
+fractions, long decimals, floor-logarithm exponents, pair weights, g and
+candidate g are preserved in `experiments/excess-results.csv` and JSON.
+All logarithms and interval decisions were computed by integer powers,
+never floating-point logarithms.
+
+The first 28 rows have t <= 10^11; the last four are the extension.
+
+| t | Factorization | Extra omitted pair (a,b) | (c0,c1,c2) | Minimizers | t / 2^floor(log2 t) | t / 3^floor(log3 t) |
+| ---: | --- | --- | --- | --- | ---: | ---: |
+| 1536 | 2^9 * 3^1 | (7,1), (9,0) | (15,15,15) | 0,1,2 (tie) | 1.500000000 | 2.106995885 |
+| 6144 | 2^11 * 3^1 | (9,1), (11,0) | (21,20,20) | 1,2 (tie) | 1.500000000 | 2.809327846 |
+| 12288 | 2^12 * 3^1 | (10,1), (12,0) | (23,24,23) | 0,2 (tie) | 1.500000000 | 1.872885231 |
+| 786432 | 2^18 * 3^1 | (16,1), (18,0) | (46,46,46) | 0,1,2 (tie) | 1.500000000 | 1.479810553 |
+| 3145728 | 2^20 * 3^1 | (18,1), (20,0) | (55,55,55) | 0,1,2 (tie) | 1.500000000 | 1.973080737 |
+| 3188646 | 2^1 * 3^13 | (18,1), (20,0) | (56,55,55) | 1,2 (tie) | 1.520464897 | 2.000000000 |
+| 6291456 | 2^21 * 3^1 | (19,1), (21,0) | (60,60,60) | 0,1,2 (tie) | 1.500000000 | 1.315387158 |
+| 6377292 | 2^2 * 3^13 | (19,1), (21,0) | (60,61,60) | 0,2 (tie) | 1.520464897 | 1.333333333 |
+| 12582912 | 2^22 * 3^1 | (20,1), (22,0) | (65,65,65) | 0,1,2 (tie) | 1.500000000 | 2.630774316 |
+| 12754584 | 2^3 * 3^13 | (20,1), (22,0) | (65,65,66) | 0,1 (tie) | 1.520464897 | 2.666666667 |
+| 25165824 | 2^23 * 3^1 | (21,1), (23,0) | (71,70,70) | 1,2 (tie) | 1.500000000 | 1.753849544 |
+| 25509168 | 2^4 * 3^13 | (21,1), (23,0) | (72,70,70) | 1,2 (tie) | 1.520464897 | 1.777777778 |
+| 50331648 | 2^24 * 3^1 | (22,1), (24,0) | (76,76,76) | 0,1,2 (tie) | 1.500000000 | 1.169233029 |
+| 51018336 | 2^5 * 3^13 | (22,1), (24,0) | (76,77,76) | 0,2 (tie) | 1.520464897 | 1.185185185 |
+| 402653184 | 2^27 * 3^1 | (25,1), (27,0) | (94,94,94) | 0,1,2 (tie) | 1.500000000 | 1.039318248 |
+| 408146688 | 2^8 * 3^13 | (25,1), (27,0) | (94,95,94) | 0,2 (tie) | 1.520464897 | 1.053497942 |
+| 1610612736 | 2^29 * 3^1 | (27,1), (29,0) | (107,107,107) | 0,1,2 (tie) | 1.500000000 | 1.385757664 |
+| 1632586752 | 2^10 * 3^13 | (27,1), (29,0) | (108,107,107) | 1,2 (tie) | 1.520464897 | 1.404663923 |
+| 3265173504 | 2^11 * 3^13 | (28,1), (30,0) | (114,114,114) | 0,1,2 (tie) | 1.520464897 | 2.809327846 |
+| 6530347008 | 2^12 * 3^13 | (29,1), (31,0) | (121,121,121) | 0,1,2 (tie) | 1.520464897 | 1.872885231 |
+| 12884901888 | 2^32 * 3^1 | (30,1), (32,0) | (128,128,128) | 0,1,2 (tie) | 1.500000000 | 1.231784591 |
+| 13060694016 | 2^13 * 3^13 | (30,1), (32,0) | (129,128,128) | 1,2 (tie) | 1.520464897 | 1.248590154 |
+| 25769803776 | 2^33 * 3^1 | (31,1), (33,0) | (136,135,135) | 1,2 (tie) | 1.500000000 | 2.463569181 |
+| 26121388032 | 2^14 * 3^13 | (31,1), (33,0) | (136,136,135) | 2 (unique) | 1.520464897 | 2.497180308 |
+| 27518828544 | 2^22 * 3^8 | (31,1), (33,0) | (136,136,136) | 0,1,2 (tie) | 1.601806641 | 2.630774316 |
+| 27894275208 | 2^3 * 3^20 | (31,1), (33,0) | (136,137,136) | 0,2 (tie) | 1.623660513 | 2.666666667 |
+| 51539607552 | 2^34 * 3^1 | (32,1), (34,0) | (143,143,143) | 0,1,2 (tie) | 1.500000000 | 1.642379454 |
+| 52242776064 | 2^15 * 3^13 | (32,1), (34,0) | (143,143,144) | 0,1 (tie) | 1.520464897 | 1.664786872 |
+| 103079215104 | 2^35 * 3^1 | (33,1), (35,0) | (151,151,151) | 0,1,2 (tie) | 1.500000000 | 1.094919636 |
+| 104485552128 | 2^16 * 3^13 | (33,1), (35,0) | (152,151,151) | 1,2 (tie) | 1.520464897 | 1.109857915 |
+| 206158430208 | 2^36 * 3^1 | (34,1), (36,0) | (159,159,159) | 0,1,2 (tie) | 1.500000000 | 2.189839272 |
+| 208971104256 | 2^17 * 3^13 | (34,1), (36,0) | (159,160,159) | 0,2 (tie) | 1.520464897 | 2.219715829 |
+
+### A simple interval rule fitting all 507 cutoffs
+
+The following candidate has **zero mismatches on all 507 saved cutoffs**:
+
+```text
+E(t) = 1 iff there exists an integer m >= 0 such that
+    24*2^m <= t < 27*2^m
+    and c_((m+2) mod 3)(t) = min(c_0(t), c_1(t), c_2(t)).
+Otherwise E(t) = 0.
+```
+
+The intervals are disjoint, so m is unique when one applies. Equivalently,
+put k=floor(log2(t)). The condition is k>=4,
+3/2 <= t/2^k < 27/16, and c_((k-2) mod 3) is minimal. A tie is allowed,
+but the specific colour determined by m must attain the minimum.
+The rule identifies all 32 positive cases and all 475 zero cases correctly.
+An independent direct enumeration of interval exponents also matched all
+507 cutoffs, rather than relying only on the floor-log implementation.
+
+Among the 32 excess cutoffs, 15 have a three-way minimum tie, 16 have
+exactly two minimizers, and one has a unique minimum: at t=26121388032,
+(c0,c1,c2)=(136,136,135), so colour 2 alone is minimal. Thus a requirement
+that the minimum be tied would miss a real discrepancy.
+
+There are only four observed normalized binary ratios among the positive
+cases: 3/2 (16 cutoffs), 1594323/1048576 (14 cutoffs), 6561/4096 (one), and
+3486784401/2147483648 (one). The ternary ratios range much more widely;
+the simple ternary interval tested below does not characterize E.
+These counts and ratios are observations on the saved finite domain.
+
+### Why 24 and 27, and which pair is meant
+
+There is a concrete local modification behind the dyadic interval. Let
+r=(m+2) mod 3. Start with the omission cover consisting of every
+corner-participating point of colour r. Remove these three omissions:
+
+```text
+(m+2,0), (m+1,2), (m+3,1)
+weights: 4*2^m, 18*2^m, 24*2^m
+```
+
+Add these two omissions instead:
+
+```text
+(m+1,1), (m+3,0)
+weights: 6*2^m, 8*2^m
+```
+
+The three removed points have colour r; the two added points have colour
+r+1 modulo 3. At t >= 24*2^m, all required points and their relevant
+corners are present. Before 27*2^m, every corner losing one of the three
+old omissions is still hit by one of the two new omissions. In particular,
+the potentially obstructing corner anchored at (m,2) has its third point
+(m,3), of weight 27*2^m, outside the domain. Other additional corners of
+the removed points have still larger thresholds. Thus the correction
+is a cover one smaller than the original colour-r cover.
+
+The program explicitly checked this modification at **all 89 saved
+cutoffs in the dyadic intervals**, including the 57 with E=0. When colour
+r is minimal, it constructs a corner-free set of size g_cand+1; this
+happens at exactly the 32 observed discrepancy cutoffs. Each corrected
+cover has cardinality |Σ|-exact_g there, so it is an optimum relative to
+the saved exact results. The complete corrected covers, not just the
+pair coordinates, are saved in `experiments/excess-results.json`.
+
+This construction gives a general ordinary mathematical **sufficiency**
+argument for an improvement of at least one when the stated condition
+holds. The assertion that E is exactly one there, and that E is zero
+everywhere else, is only verified on the 507 cutoffs. No general upper
+bound or necessity theorem has been established, and no Lean was written.
+
+### Verification that the pair is omitted in every optimum
+
+The listed pair is more than a choice in one saved witness: both points
+belong to no maximum corner-free set at every one of the 32 cutoffs.
+For the first ten cutoffs, the 20 existing exact point-requirement
+classifications already show this. For the other 22 cutoffs,
+`experiments/verify_excess_pairs.py` made **44 fresh exact MaxSAT queries**,
+one requiring each point. All queries closed their integer objective
+bounds, checked the requirement and cover witnesses, and found the
+required maximum to be exactly g-1. The unrestricted saved optimum
+witnesses omit both points, witnessing exclusion at size g.
+
+All 64 pair points are therefore classified `none`, with no counterexamples.
+The new query bounds, omission witnesses, timings and source attribution
+are saved in `experiments/excess-pairs.json`. This settles the pairs at
+the 22 cutoffs that lacked membership data in the previous notes; full
+membership classifications of all other vertices were not recomputed.
+Since the constructed optimum contains every point outside colour r
+except this pair, no other off-colour point can belong to `none` at these
+cutoffs. The pair is exactly the off-colour `none` set relative to r.
+Different optima can make additional off-colour omissions, so the pair
+should not be extracted by treating every saved witness as canonical.
+
+### All tested rules and every mismatch
+
+A false positive predicts E=1 when E=0; a false negative predicts E=0
+when E=1. All five tests used all 507 cutoffs. Full per-cutoff predictions
+and every mismatch (with counts and actual/predicted E) are in
+`experiments/excess-results.json`; the cutoff lists below are complete.
+
+| Rule | Correct E=1 cases | False positives | False negatives | Total mismatches |
+| --- | ---: | ---: | ---: | ---: |
+| D: some 24*2^m <= t < 27*2^m, m>=0 | 32 | 57 | 0 | 57 |
+| D and at least two minimizing colours | 31 | 8 | 1 | 9 |
+| D and c0=c1=c2 | 15 | 0 | 17 | 17 |
+| D and colour (m+2) mod 3 minimal | 32 | 0 | 0 | 0 |
+| Some 10*3^j <= t < 12*3^j, j>=0 | 5 | 61 | 27 | 88 |
+
+D: some 24*2^m <= t < 27*2^m, m>=0:
+
+False positives: 24, 48, 96, 192, 384, 768, 3072, 6561, 13122, 24576, 26244, 49152, 52488, 98304, 104976, 196608, 209952, 393216, 419904, 839808, 1572864, 1594323, 1679616, 3359232, 6718464, 13436928, 26873856, 53747712, 100663296, 102036672, 107495424, 201326592, 204073344, 214990848, 429981696, 805306368, 816293376, 859963392, 1719926784, 3221225472, 3439853568, 3486784401, 6442450944, 6879707136, 6973568802, 13759414272, 13947137604, 55037657088, 55788550416, 110075314176, 111577100832, 220150628352, 223154201664, 412316860416, 417942208512, 440301256704, 446308403328.
+
+False negatives: none.
+
+
+D and at least two minimizing colours:
+
+False positives: 192, 384, 839808, 1572864, 805306368, 3439853568, 6879707136, 412316860416.
+
+False negatives: 26121388032.
+
+
+D and c0=c1=c2:
+
+False positives: none.
+
+False negatives: 6144, 12288, 3188646, 6377292, 12754584, 25165824, 25509168, 51018336, 408146688, 1632586752, 13060694016, 25769803776, 26121388032, 27894275208, 52242776064, 104485552128, 208971104256.
+
+
+D and colour (m+2) mod 3 minimal:
+
+False positives: none.
+
+False negatives: none.
+
+
+Some 10*3^j <= t < 12*3^j, j>=0:
+
+False positives: 32, 96, 288, 864, 2592, 7776, 8192, 23328, 24576, 69984, 73728, 209952, 221184, 629856, 663552, 1889568, 1990656, 2097152, 5668704, 5971968, 16777216, 17006112, 17915904, 18874368, 53747712, 56623104, 150994944, 153055008, 161243136, 169869312, 452984832, 459165024, 483729408, 509607936, 1358954496, 1377495072, 1451188224, 1528823808, 4076863488, 4132485216, 4294967296, 4353564672, 4586471424, 12230590464, 12397455648, 13759414272, 36691771392, 37192366944, 38654705664, 39182082048, 41278242816, 110075314176, 111577100832, 115964116992, 117546246144, 123834728448, 330225942528, 334731302496, 347892350976, 352638738432, 371504185344.
+
+False negatives: 1536, 6144, 12288, 786432, 3145728, 3188646, 6377292, 12582912, 12754584, 25165824, 25509168, 402653184, 408146688, 1610612736, 1632586752, 3265173504, 6530347008, 25769803776, 26121388032, 27518828544, 27894275208, 51539607552, 52242776064, 103079215104, 104485552128, 206158430208, 208971104256.
+
+### Commands, artifacts and remaining work
+
+```bash
+python3 experiments/excess_rule.py
+/tmp/erdos168-venv/bin/python experiments/verify_excess_pairs.py
+```
+
+- `experiments/excess-results.csv`: the complete 32-row enriched table,
+  including exact rational ratios and pair weights.
+- `experiments/excess-results.md`: the readable table displayed above.
+- `experiments/excess-results.json`: all 507 comparisons, every rule's
+  predictions/mismatches, exact ratios, and corrected optimum witnesses.
+- `experiments/excess-pairs.json`: 44 new requirement queries and 20
+  reused classifications verifying the pair points belong to no optimum.
+- `experiments/excess_rule.py` uses only the Python standard library;
+  the verification script reuses the existing independent Z3 solver.
+
+The factorizations, floor-power inequalities, exact ratios, corrected
+optimum sizes and pair records were cross-checked. The CSV and displayed
+Markdown tables agree with the JSON; every discrepancy cutoff is present,
+including all four beyond 10^11. `git diff --check` passed. All theorem
+statements and Lean files are unchanged, and no wallet, key or secret
+file was accessed. The new interval rule is a candidate for a general
+exact formula; proving its necessity and optimality remains separate
+from the irrationality argument. Neither has been proved in Lean.

@@ -170,3 +170,44 @@ candidate. In the first 200 prefixes the failures coincide exactly with
 the ten recorded extra-pair prefixes, starting at 1536; forcing data is
 not available at the later failures. All discrepancy rows are listed in
 `../NOTES.md`. None of these computations is a Lean proof.
+
+## Interval rule for the excess
+
+```bash
+python3 experiments/excess_rule.py
+experiments/.venv/bin/python experiments/verify_excess_pairs.py
+```
+
+`excess_rule.py` reconstructs all 507 exact comparisons and tests five
+interval/tie rules. The following rule fits all 507 cutoffs, with 32
+positive cases and no mismatches:
+
+```text
+E(t)=1 iff there exists m >= 0 such that
+  24*2^m <= t < 27*2^m
+  and c_((m+2) mod 3)(t) = min(c_0(t), c_1(t), c_2(t)).
+```
+
+The specified colour must minimize the counts; a tie by itself is
+insufficient. This is a finite fitted equivalence, not a proved general
+formula. The interval has a direct geometric motivation: start from
+that participating colour cover, remove omissions `(m+2,0)`, `(m+1,2)`,
+`(m+3,1)`, and add `(m+1,1)`, `(m+3,0)`. The resulting cover is one
+point smaller. Its feasibility was checked at all 89 cutoffs in these
+intervals, and it achieves exact g at every excess cutoff.
+
+`excess-results.csv` and `excess-results.md` list all 32 discrepancies with
+factorizations, extra omitted pairs, colour counts, minimizing colours,
+and normalized ratios to the largest powers of two and three. The CSV
+retains exact fractions and long decimal values. `excess-results.json`
+also records corrected optimal cover witnesses, predictions on all 507
+cutoffs, and every mismatch of every tested rule. Neither logarithms nor
+interval comparisons use floating-point arithmetic.
+
+`verify_excess_pairs.py` checks that both pair points belong to no optimum.
+It reuses 20 earlier constrained classifications and makes 44 fresh exact
+requirement queries for the 22 later discrepancy cutoffs. Requiring any
+of the 64 pair points lowers g by one. Exclusion is witnessed by the
+saved optimal covers, which already omit both points. `excess-pairs.json`
+records the source of every result and new constrained optimum witnesses.
+Full membership of all other points beyond prefix 200 was not recomputed.
