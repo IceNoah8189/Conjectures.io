@@ -1,0 +1,37 @@
+{
+  "experiment": "699",
+  "time_cap_seconds": 90.0,
+  "arithmetic": "Python exact integers",
+  "witnesses": [],
+  "n_max_completed": 300,
+  "pairs_checked": 1113775,
+  "strong_form_exceptions": [
+    [
+      10,
+      3,
+      5
+    ],
+    [
+      16,
+      2,
+      6
+    ],
+    [
+      28,
+      3,
+      14
+    ],
+    [
+      28,
+      5,
+      14
+    ],
+    [
+      244,
+      3,
+      122
+    ]
+  ],
+  "known_gcd_28_5_14": 1080,
+  "elapsed_seconds": 1.151
+}

@@ -1,0 +1,15 @@
+{
+  "experiment": "373-maximal",
+  "time_cap_seconds": 90.0,
+  "arithmetic": "Python exact integers",
+  "witnesses": [],
+  "known_16_check": [
+    14,
+    5,
+    2
+  ],
+  "n_max_completed": 1000,
+  "recursive_nodes": 346394,
+  "cache": "CacheInfo(hits=0, misses=346394, maxsize=200000, currsize=200000)",
+  "elapsed_seconds": 25.06
+}

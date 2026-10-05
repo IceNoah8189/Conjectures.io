@@ -1,0 +1,16 @@
+{
+  "experiment": "406-one-two",
+  "time_cap_seconds": 90.0,
+  "arithmetic": "Python exact integers",
+  "witnesses": [],
+  "exponent_max_completed": 100000,
+  "all_admissible_exponents_in_range": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    15
+  ],
+  "elapsed_seconds": 4.438
+}

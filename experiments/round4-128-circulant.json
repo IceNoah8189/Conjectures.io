@@ -1,0 +1,15 @@
+{
+  "experiment": "128-circulant",
+  "time_cap_seconds": 90.0,
+  "arithmetic": "Python exact integers",
+  "witnesses": [],
+  "n_max_completed": 24,
+  "counts": {
+    "generator_sets": 12280,
+    "triangle_free": 950,
+    "average_rejections": 273,
+    "subsets_checked": 9724224
+  },
+  "coverage": "all circulant graphs only, not all graphs",
+  "elapsed_seconds": 15.749
+}

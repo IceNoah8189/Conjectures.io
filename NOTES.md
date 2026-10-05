@@ -3136,3 +3136,362 @@ was neither proved nor verified; the exact extensions instead refuted
 the simpler minimum-return extrapolations.
 
 168 VERDICT: FAILURE
+
+## Round 4: target screen
+
+**Recommendation: erdos-686-variants-twenty-five, prove mode, with a 1–2 day
+witness-discovery gate. No target in this pool currently merits a confident
+1–2 week proof commitment.** Its attraction is the small kernel proof after
+finding one natural-number triple; discovery remains an open mathematical
+problem. This recommendation is the best of a weak shortlist, not a claim
+that ratio 25 is probably representable. Do not return to 168(ii).
+
+Screen started 2026-10-05 19:46:31 UTC. Screening only: no Lean invocation,
+proof construction, theorem edit, submission, commit, push, or secret access.
+The latest user instruction replaces the earlier commit rule: Claude receives
+a one-line `.claude-runs/commitmsg.txt` handoff instead.
+
+### Coverage and method
+
+All **277** English descriptions and printed types in
+`.claude-runs/targets.md` were read at statement level. The snapshot identifies
+pool `7cc9b52` and formal-conjectures `6a786f99`. The full per-target record is
+[round4-target-screen.tsv](experiments/round4-target-screen.tsv): 277 unique
+rows, source paths, flags, definition-check level, disposition, reason, and a
+hash of each snapshot's printed type. Those hashes are inventory hashes,
+not the site's elaborated-type commitments.
+
+There are **40 mathematical flags**: possible definition mismatches,
+conditionally short finite certificates, and recent solution/partial-solution
+claims. Another **23 targets** were excluded after public status checks:
+20 catalog-solved, two prior-proof rejections, and one pending verified
+submission. Of the 40 mathematical flags, 15 are ranked below and 25 were
+rejected or left at lower priority. **214** remaining entries have no
+realistic route at the statement pass. Actual source definitions were read
+for **62 targets**, including all 15 ranked targets; the other entries have
+only statement-level review, not an exhaustive definition or literature audit.
+
+I also checked the current Erdős metadata for all **205 distinct Erdős
+numbers** represented in the snapshot, using
+[teorth/erdosproblems problems.yaml](https://github.com/teorth/erdosproblems/blob/b916d95cdfd41a6d2f21aa304515834e84f247c9/data/problems.yaml)
+at commit `b916d95cdfd41a6d2f21aa304515834e84f247c9`. Their main problems are
+open/verifiable/falsifiable except #126, marked proved in Lean. Main-number
+status does **not** settle a selected variant: the #126 little-o strengthening
+is still a different task. Site successes and this metadata can disagree
+because the site's exact variant or a formalization defect can be resolved
+while the informal main problem stays open.
+
+Riemann, Goldbach, twin primes, Collatz, odd perfect numbers, Lehmer, and the
+other established hard conjectures were not promoted merely because a finite
+counterexample would be decidable. No verified loophole was found in them.
+Likewise, being labeled “verifiable” or “falsifiable” is not evidence that
+witness discovery fits a Plus budget. Mathlib has a good surface for the
+arithmetic **verification** of many rows below; it does not provide their
+missing global mathematics.
+
+### Public status and reward rules
+
+The [live catalog](https://conjectures.io/problems) marks **20** exact targets
+from this snapshot Solved. The [results page](https://conjectures.io/results)
+reports **26 solved / 26 paid, 33 Lean-verified, 39 submissions, and 257 live
+bounties**. These are different counters; neither is an independently
+replayed proof audit. The snapshot's “277 open” heading means open when
+entered, not all currently available.
+
+The 20 excluded catalog-solved entries are: erdos-14-parts-i,
+erdos-14-parts-ii, erdos-18-b, erdos-96, erdos-108, erdos-196,
+erdos-272-variants-szabo-strong, erdos-354-parts-i, erdos-416-parts-i,
+erdos-653, erdos-726, erdos-859, erdos-944, erdos-1062-parts-ii,
+green-15, green-24-variants-conjecture, green-39, green-40-f-two-eq-one,
+green-47, and green-51-one-half.
+
+The results listing also excludes #252 (“Already formalized elsewhere,”
+16 September), #70 omega-times-two-four (“Already solved before this
+submission,” 21 September), and #579 (Lean verified 3 October, review pending,
+currently reward-ineligible). The withdrawal of the settled **main** #126
+must not be confused with its selected little-o variant. #770-three has
+inconsistent public attempts metadata between catalog and individual page;
+I did not promote it.
+
+**U** in the ranking means its exact individual problem page displayed no
+attempts in either mode when checked on 5 October. All 15 pages were opened,
+in addition to the catalog/results listings. Published partial contributions
+are distinguished from completed submissions. U cannot establish absence of
+private work, unpublished claims, or a change after this check.
+
+The [How it works page](https://conjectures.io/how-it-works) and individual
+problem pages were checked alongside the validator's
+[manual review criteria](https://github.com/conjectures-io/conjectures-validator/blob/main/docs/MANUAL_REVIEW_CRITERIA.md)
+(v3, effective 11 September 2026). An accepted unchanged task whose success
+comes from a material formalization mismatch can receive
+`FORMALIZATION_DEFECT_AWARD`: **the lesser of US$750 equivalent and the locked
+submission bounty, paid in Alpha**. It is an approved defect result, not a
+full informal-conjecture solution; the task is quarantined or corrected.
+Prior exact public formalization can disqualify. A prior informal solution
+can trigger `NOT_NOVEL` when the submission substantially implements its
+specific mathematics; a shared conclusion or standard strategy alone is
+insufficient. Therefore “recently solved, not yet formalized” is not
+necessarily a reward opportunity. No eligibility ruling was requested here.
+
+### Ranked shortlist
+
+Scores are coarse judgments of a successful exact-target Lean result in
+1–2 weeks on the stated budget, **not calibrated percentages**. 2 means low
+odds; 1 very low; 0 no credible budget-fitting route identified. None reaches
+5. Effort estimates explicitly separate a short discovery gate from
+**conditional** proof work; they are not promises of total solution time.
+For existential statements, counterexample mode requires proving universal
+nonexistence, so a failed search cannot win it.
+
+| Rank / target | Mode | Why potentially tractable | Main risk | Estimated Codex days | Public claimed status | Odds /10 |
+|---|---|---|---|---|---|---|
+| 1. [686 twenty-five](https://conjectures.io/problems/erdos686-erdos-686-variants-twenty-five) | prove | One triple `(k,n,m)`; exact rational finite products; `norm_num` certificate. | No witness; elliptic rank does not guarantee admissible integral points. | 1–2 search gate; 1–3 proof **if witness found**; otherwise unknown. | U; no published pieces. | **2** |
+| 2. [677](https://conjectures.io/problems/erdos677-erdos-677) | counterexample | One equality of two same-length, disjoint interval LCMs; `decide`/prime-factor certificates. | Expected noncollision; known collisions use different lengths. | 1–2 search gate; 2–4 proof if found. | U; partial LCM lemmas published. | 1 |
+| 3. [686 four](https://conjectures.io/problems/erdos686-erdos-686-variants-four) | prove | Same small finite-product certificate as rank 1. | Several small lengths excluded; no positive-natural witness. | 1–2 search gate; 1–3 proof if found. | U; partial exclusions/reductions published. | 1 |
+| 4. [128](https://conjectures.io/problems/erdos128-erdos-128) | counterexample | Explicit finite triangle-free graph plus all half-set edge counts. | No graph; exponential checking; important symmetric classes already excluded. | 1–3 search gate; 4–10 proof if a small certificate appears. | U. | 1 |
+| 5. [699](https://conjectures.io/problems/erdos699-erdos-699) | counterexample | One binomial-gcd triple, with finite prime-factor bounds. | Known strict-form failures do not refute the weak target; vast reported search. | 1–2 search gate; 1–3 proof if small witness found. | U; partial material published. | 1 |
+| 6. [617](https://conjectures.io/problems/erdos617-erdos-617) | counterexample | Finite coloring at one new `r`; SAT certificate can in principle be replayed. | Cases through `r=5` reportedly verified; larger search/certificates costly. | 2 search gate; 7–14 proof if compact certificate found. | U; substantial partial contributions; external `r=5` proof. | 1 |
+| 7. [835](https://conjectures.io/problems/erdos835-erdos-835) | prove | One explicit coloring of all `k`-subsets is sufficient. | Composite `k+1` ruled out; remaining first `k` at least 10 gives 184,756 entries. | 1–2 search gate; 5–14 proof if coloring found. | U; partial contributions; 2025 partial theorem. | 1 |
+| 8. [366](https://conjectures.io/problems/erdos366-erdos-366) | prove | One forward 2-full/3-full pair; factorization certificate. | Known pairs have the opposite orientation; no forward witness. | 1–2 search gate; 1–3 proof if found. | U. | 1 |
+| 9. [985](https://conjectures.io/problems/erdos985-erdos-985) | counterexample | One prime with every smaller prime failing the primitive-root condition. | `p=2` excluded; reported large search; checking all smaller primes costly. | 1 search gate; 2–7 proof only if compact small certificate found. | U. | 1 |
+| 10. [141 eleven](https://conjectures.io/problems/erdos141-erdos-141-variants-eleven) | prove | Explicit consecutive-prime progression and certificates. | CPAP10 is not CPAP11; new large-prime search and gap certification. | Discovery likely >14; 5–14 proof conditional on suitable certificates. | U; CPAP10 partial work exists elsewhere/on prior contribution view. | 0 |
+| 11. [307](https://conjectures.io/problems/erdos307-erdos-307) | prove | Finite prime reciprocal-sum identity. | Published 59-prime/huge-product barrier; combinatorial discovery. | Discovery likely >14; 3–10 proof if witness found. | U; external barrier is not the main theorem. | 0 |
+| 12. [647](https://conjectures.io/problems/erdos647-erdos-647) | prove | A single integer satisfying a finite divisor inequality. | Reported exclusion through about `6.16e17`; enormous verification domain. | >14 discovery; no inexpensive full certificate route established. | U; external exclusion claim. | 0 |
+| 13. [406 one-two](https://conjectures.io/problems/erdos406-erdos-406-variants-one-two) | counterexample | Formally a finite ternary-digit witness beyond exponent 15. | Published exclusion through about `5.9e21` exponents; direct digit certificate then infeasible. | >14; no budget-fitting discovery/proof route. | U; partial digit/sieve bridge published. | 0 |
+| 14. [373 maximal](https://conjectures.io/problems/erdos373-erdos-373-variants-maximal-solution) | counterexample | One extra factorial decomposition would refute maximality. | Published bound through `exp(80)`; 2026 full claim lacks a supplied uniform proof. | >14; direct huge-factorial verification infeasible without structural certificate. | U; external full-solution claim unverified. | 0 |
+| 15. [257](https://conjectures.io/problems/erdos257-erdos-257) | prove | Recent claim initially suggested a literature-to-Lean route. | Latest paper explicitly leaves unconditional carry domination open. | >14; requires missing mathematics before formalization. | U; 2026 public claim, not a complete exact-target proof. | 0 |
+
+### Actual definitions, literature, and rejected shortcuts
+
+All references below were inspected or searched during this run. A publication,
+author certificate, and a current metadata label are different evidence levels.
+Some Erdős pages returned HTTP 403, so cached primary search results and forum
+threads were used; this is not an exhaustive search of 2026 literature.
+
+- **686, both selected variants.** [Local source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/686.lean):
+  `k,n,m : ℕ`, `k≥2`, `m≥n+k`; division is in **ℚ**, with positive denominator.
+  Negative-start constructions, natural division rounding, or a zero denominator
+  cannot win. The [primary forum](https://www.erdosproblems.com/forum/thread/686)
+  discusses nonsquare Pell constructions and specific square examples, which do
+  not settle 4 or 25. The vendor has a kernel proof excluding 4 at `k=2`, and a
+  `k=3` exclusion declaration still containing a placeholder. Site contributions
+  include `k=4` exclusion; these are partial, not an all-length theorem. For 25,
+  `k=3` gives `X³−X=25(Y³−Y)`, with `X=m+2,Y=n+2`. A reported rank-2 elliptic
+  curve (Cremona `140400dd1`) is a search hint, not an admissible integer witness.
+  Birational maps need not preserve integrality. No full exact-variant solution
+  was found. The selected ratio-25 site's source-type commitment is
+  `3ff209c8b606e11ea4bcceed78a71b302f8728b0147777dc34b81e95f3be7cab`.
+- **677.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/677.lean)
+  uses the **same** positive length and separated intervals of positive integers.
+  The [forum](https://www.erdosproblems.com/forum/thread/677) gives collisions
+  with different lengths, including `lcm(5,6,7)=lcm(14,15)=210`; these fail the
+  target's same-`k` condition. Fixed-length/finiteness results do not supply the
+  uniform noncollision theorem. No full solution found.
+- **128.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/128.lean):
+  `2*card(V')+1≥n` means `card(V')≥floor(n/2)`. This is a stronger hypothesis
+  than the literal English ceiling-half condition for odd `n`, and hence a
+  weaker implication, but even orders retain the hard problem. A five-cycle
+  fails the actual premise because of its independent two-set, so it is not
+  a counterexample. [Razborov's paper](https://arxiv.org/abs/2104.09406) proves
+  the sparse-half assertion for girth at least five, large independence number,
+  and strongly regular graphs. The [2026 SRG census](https://github.com/cormundus/erdos-128-census)
+  reports no counterexample. No full general solution found.
+- **699.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/699.lean)
+  asks for a prime **at least** `i`, not greater than `i`. For `(28,5,14)`, the
+  gcd is 1080 and its greatest prime factor is 5: a strict-form failure, not a
+  target failure. [Problem/forum](https://www.erdosproblems.com/699) and the
+  [author's computational record](https://api.scinet.pub/f/76626b5c-caf4-4c69-bb03-4507e376a274)
+  report no weak-form failure through `n=100000`, covering
+  41,665,416,675,000 pairs. That large run was **not rerun here**. A formal
+  Sylvester–Schur result about one binomial coefficient is not this gcd theorem.
+- **617.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/617.lean)
+  quantifies **all `r≥3`**, over `r²+1` vertices. Its loops are irrelevant because
+  the conclusion only uses distinct vertices. The
+  [July 2026 verification archive](https://zenodo.org/records/21535386) explicitly
+  covers **only `r=5`**: 89 LRAT certificates, claimed kernel replay, roughly
+  seven-hour full audit. I did not replay it. This is neither the whole target
+  nor a simple template for all `r`; a counterexample would need a new case.
+- **835.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/835.lean)
+  has actual `k`-subsets of `Fin (2*k)` and requires every color on every
+  `(k+1)`-set; `k>2` excludes tiny colorings. The
+  [Ma–Tang 2025 paper](https://github.com/QuanyuTang/erdos-problem-835/blob/main/On_Problem_835.pdf)
+  and [problem update](https://www.erdosproblems.com/835) exclude `k+1` composite.
+  They leave prime `k+1` cases, not a full nonexistence proof. Local known cases
+  exclude `k≤9`; first possible new witness is at least `k=10`.
+- **366.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/366.lean)
+  insists on positive `n`, 2-full **`n`**, and 3-full **`n+1`**.
+  [Problem/forum](https://www.erdosproblems.com/366) examples 8/9 and
+  12167/12168 are reversed. Reported searches of reverse pairs cannot be
+  silently applied to the forward target. No full forward solution found.
+- **985.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/985.lean)
+  explicitly excludes `p=2`; `orderOf` is in `ZMod p`, and `q<p` is intentional.
+  The [forum](https://www.erdosproblems.com/forum/thread/985) includes a March
+  2026 report referring to computational coverage near `10^14`; this was not
+  independently verified. Conditional/average primitive-root theorems do not
+  establish “every prime.” No small edge-case counterexample survives.
+- **141 eleven.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/141.lean)
+  requires distinct **consecutive** primes and an AP, with cardinality 11.
+  An arbitrary eleven-prime progression is insufficient. The
+  [record keeper's CPAP table](https://www.pzktupel.de/JensKruseAndersen/CPAP.html)
+  and recent CPAP10 work did not reveal CPAP11. Large-prime and intervening-gap
+  certification would be substantial even after a search success.
+- **307.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/307.lean)
+  requires genuine primes, so the coprime variant's examples containing 1 are
+  invalid. The [published Lean barrier](https://github.com/ElVec1o/erdos307/blob/76d242b024102f32d8411c714be4ad140a8b7c4b/lean/Erdos307/Closed.lean)
+  establishes necessary bounds of at least 59 primes in total and prime-product
+  at least `2·10^56` on each side. The linked barrier, not the local placeholder,
+  is claimed kernel-checked using `decide`. It is not a solution of the target.
+- **647.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/647.lean)
+  takes the supremum over **`Fin n`**, not all naturals, and requires `n>24`.
+  The [June 2026 forum](https://www.erdosproblems.com/forum/thread/647) and
+  [author certificate repository](https://github.com/scottdhughes/erdos647-proof-chain/tree/main/frontier-certificate)
+  claim exclusion through `615736321200000000`. This certificate was not
+  replayed here; even as a reported barrier it defeats a small-number plan.
+- **406 one-two.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/406.lean)
+  uses the genuine power-of-two predicate and ternary digits restricted to 1,2.
+  The zero-number edge does not satisfy the power predicate. The
+  [published Saye 2022 computation](https://cs.uwaterloo.ca/journals/JIS/VOL25/Saye/saye3.html)
+  excludes larger solutions through exponent `2·3^45≈5.9·10^21`.
+  This is a finite exclusion, not a full proof; a new brute-force witness
+  beyond it is not realistically kernel-checkable by expanding all digits.
+- **373 maximal, and the lower-priority finiteness/Surányi variants.**
+  [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/373.lean):
+  every factorial index is greater than 1, the list is sorted, and its head
+  is less than `n−1`. Appending 1! cannot create infinite solutions; empty
+  lists at `n=0,1` fail the head inequality. Surányi excludes `a=n−1` and
+  zero/one indices. [Nair–Shorey 2016](https://dspace.library.iitb.ac.in/xmlui/handle/123456789/19342)
+  proves the Hickerson bound through `exp(80)` unconditionally and the full
+  statement under explicit abc; [the 2018 paper](https://hrj.episciences.org/5117/pdf)
+  discusses the same barrier. [Ken Clements's March 2026 claim](https://kenclements.substack.com/p/on-primecomplete-products-of-consecutive)
+  asserts a general “Simultaneous Entry Lemma.” My inspection did not find
+  quantitative uniform inequalities proving it beyond the finite tables
+  through 17-prime support. Naming CRT/BHV/Matveev does not supply that step.
+  This is an **unverified full-solution claim**, not a theorem ready to port.
+- **257.** [Source](vendor/formal-conjectures/FormalConjectures/ErdosProblems/257.lean)
+  asks for **every infinite subset**. The January 2026 publication family
+  [Ruiz Camacho, latest version 004](https://zenodo.org/records/18321596) was
+  downloaded and text-extracted from its 63-page PDF. Its introduction,
+  Theorems 1.1/1.3 and Conjecture 17.20 explicitly distinguish special cases
+  from the missing unconditional carry-domination step for arbitrary sets.
+  This directly contradicts treating the earlier general-solution title as
+  a completed solution. No Lean work should begin from that title.
+
+Additional definition flags were discharged rather than promoted:
+**243** has `Summable` in **ℚ**, encoding a rational limit, so real convergence
+of a double-exponential reciprocal series is insufficient;
+**701** uses Mathlib's `Intersecting`, including self-pairs, so `{∅}` fails;
+**1056** has nonzero products mod `p`, preventing a block from crossing a
+multiple of `p`, so unbounded boundaries are no shortcut;
+**723 order-12** includes finite point/line types and a nondegenerate plane
+configuration; **1085 upper-d3** uses real `4/3`, not natural division;
+**952** uses the positive Gaussian norm; **975** requires a nonconstant
+irreducible polynomial and eventual positivity. **517** has strictly increasing
+Fabry support, preventing paired-coefficient cancellation. **849** counts rows,
+but coefficients strictly increase on the permitted half-row, so this does
+not change multiplicity. **779** excludes the known `n=0` defect explicitly.
+For **396**, `n≤k` would give a zero descending factorial dividing a positive
+central binomial coefficient, so the absent explicit `n>k` adds no witness.
+
+**No surviving formalization-loophole candidate was established.** The 128
+floor/ceiling wording difference is exact but supplies no win. If a future
+unchanged-task proof actually succeeds because of such a material mismatch,
+the defect-award rule above applies; no full award is inferred here.
+
+A further tempting finite target, **287**, was rejected after checking the
+[May 2026 forum bound](https://www.erdosproblems.com/forum/thread/287): reported
+prime-chain reasoning forces at least `68,634,921,076,157,089,631` denominators
+and first denominator above `3.99·10^19`. Small rational searches would not
+be useful. A linked small-case proof using `native_decide` would also fail
+this run's proof restrictions. The bound was not independently replayed.
+
+### Cheap experiments and exact scope
+
+The final top five all received experiments. Two additional initially promising
+arithmetic candidates were tested before their literature barriers were found.
+The script uses **exact Python integer arithmetic**, checks the time cap, and
+saves JSON; these results are **computationally verified, not Lean proofs**.
+Each job had a 90-second cap, below the requested ten-minute ceiling, and all
+finished completely within their stated bounds. No new target witness appeared.
+
+| Experiment / saved JSON | Completed domain | Result | Seconds |
+|---|---|---|---|
+| [686 four](experiments/round4-686-four.json) | Both starts `0..100000`; each `k=2..64`; 6,300,063 lower-start checks. | No separated ratio-4 match in that box. | 5.272 |
+| [686 twenty-five](experiments/round4-686-twenty-five.json) | Same box and check count. | No separated ratio-25 match. | 5.207 |
+| [677](experiments/round4-677.json) | Starts `0..20000`, `k=1..64`; 1,280,064 windows. | No same-length separated LCM collision. | 8.147 |
+| [128 circulants](experiments/round4-128-circulant.json) | All cyclic-distance generator sets, orders `4..24`: 12,280 sets, 950 triangle-free graphs, 9,724,224 tested half-subsets. | No counterexample **among circulants**. Average edge-count bound rejected 273 graphs; other graphs stopped at a failing half-set. | 15.749 |
+| [699](experiments/round4-699.json) | `n≤300`, all `1≤i<j≤floor(n/2)`; 1,113,775 pairs. | No weak-form violation; five strict-form exceptions. | 1.151 |
+| [406 one-two](experiments/round4-406-one-two.json) | Exponents `0..100000`, 100,001 powers. | Exactly `0,1,2,3,4,15` have no ternary zero. | 4.438 |
+| [373 maximal](experiments/round4-373-maximal.json) | `n=17..1000`; sorted factorial decompositions using indices `2..n−2`; 346,394 recursive nodes. | No extra decomposition; recovered `16!=14!5!2!`. | 25.060 |
+
+For 686 the product map is strictly increasing in the nonnegative start;
+dictionaries test the exact equation `P(m,k)=R*P(n,k)` for both starts in the
+box. This does not exclude a larger `m` for a checked `n`, or a larger `k`.
+Independent sanity identities recovered ratio 9 at `(k,n,m)=(3,11,25)` and
+ratio 16 at `(3,4,13)`; neither is a selected-target win. For 677 the minimum
+start stored per LCM detects every separated collision within each bounded
+same-length search. Unequal-length equality was separately reproduced.
+
+For 128 it suffices to test all floor-half subsets: any larger subset contains
+one and has at least as many induced edges. Integer threshold is
+`floor(n²/50)+1`. Circulant enumeration is **not** an enumeration of all
+triangle-free graphs; no general nonexistence conclusion follows.
+
+The five strict-form exceptions for 699 through 300 are `(10,3,5)`,
+`(16,2,6)`, `(28,3,14)`, `(28,5,14)`, `(244,3,122)`.
+The greatest prime factor equals `i` in each; none refutes the frozen target.
+For 373 recursion divides by every permitted factorial in descending order;
+prime support outside the maximum remaining factorial and oversized factors
+prune branches. This bounded arithmetic search is not a full Hickerson proof.
+
+Commands used:
+
+```bash
+python3 experiments/round4_target_screen.py 686-four --seconds 90
+python3 experiments/round4_target_screen.py 686-twenty-five --seconds 90
+python3 experiments/round4_target_screen.py 677 --seconds 90
+python3 experiments/round4_target_screen.py 128-circulant --seconds 90
+python3 experiments/round4_target_screen.py 699 --seconds 90
+python3 experiments/round4_target_screen.py 406-one-two --seconds 90
+python3 experiments/round4_target_screen.py 373-maximal --seconds 90
+python3 -m py_compile experiments/round4_target_screen.py
+git diff --check
+git diff --name-only -- tasks/erdos-168-ii vendor/formal-conjectures
+```
+
+Final verification at 2026-10-05 20:24 UTC: Python compilation, JSON parsing,
+277-row identity/type-hash/source-path validation, and whitespace/newline
+checks all passed. `git diff --check` exited 0. The diff for
+`tasks/erdos-168-ii` and `vendor/formal-conjectures` is empty. The handoff
+message is exactly one line. Work finished within the approximately
+60-minute budget (about 39 minutes elapsed); no computation exceeded 26 seconds.
+The downloaded literature and temporary extraction utilities live only in
+`/tmp/round4-site`; all deliverable results are in the files linked above.
+
+### Result, limitations, and next target
+
+**Proved here:** no new conjecture or Lean theorem. **Checked computationally:**
+the seven bounded results and sanity identities above. **Reported from others:**
+large exclusion ranges, partial formalizations, live status, and publication
+claims, with links and explicit non-replay labels. **Still conjectural:** a
+ratio-25 witness, any other new witness, and the chance of completing a target
+within the budget. No credible newly solved, unclaimed exact target or usable
+formalization defect was found. Search engines and public attempt labels are
+not exhaustive; recheck the exact task hash and public status before work.
+
+Single recommended next target: **erdos-686-variants-twenty-five**, **prove**.
+Its mathematical search is capped at 1–2 days; do not allocate two weeks to
+nonexistence or a new general consecutive-product theorem.
+
+1. **Pin and narrow.** Recheck the unchanged ratio-25 type, source commitment,
+   public status and current 686 literature. Work with natural starts only.
+   Review square exclusions at lengths 2 and 4; examine the `k=3` cubic and
+   its integral-point constraints before using elliptic rational points.
+2. **Discover or stop.** Spend at most 1–2 days on targeted exact integer-point
+   and valuation/congruence searches at plausible lengths. Require an explicit
+   triple and independently multiply both products. If none appears, stop
+   this target and obtain a refreshed pool; do not substitute a missing uniform
+   theorem or unbounded brute force for the gate.
+3. **Formalize only a verified witness.** Then allocate roughly 1–3 days to
+   a kernel-checked `Finset.prod`/ℚ proof with `norm_num` or `decide`, frozen
+   statement unchanged. Audit dependencies and the banned-token list, use no
+   `native_decide`, check the actual task bundle, and recheck award eligibility.
