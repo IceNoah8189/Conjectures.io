@@ -2487,3 +2487,652 @@ file exists separately under the ignored .claude-runs directory.
 The round is complete as a feasibility assessment. Irrationality, the
 global frozen optimum formula and the needed return/carry theorem remain
 unproved. No experiment approached the 60-minute computation limit.
+
+## Round 3: final return/carry attempt (2026-10-05; no Lean)
+
+Start: 19:04:57 UTC. Agreed stopping point: approximately 19:49:57 UTC.
+The unattended instruction overrides the earlier commit instruction:
+no commit, push, clone, or alternate checkout is used. The handoff is a
+one-line message in `.claude-runs/commitmsg.txt`. The challenge and all
+Lean files remain unchanged. No questions are asked.
+
+**Status:** a precise sufficient carry lemma and its complete conditional
+irrationality deduction are given below. The lemma has not been proved,
+reduced to a published theorem, or computationally verified. A simpler
+version without carries fails exact tests. This is not an irrationality
+proof and does not satisfy the pre-agreed SUCCESS criterion.
+
+### Definitions: the actual accumulated minimum, not a phase label
+
+For real t>=1 put V(t)={(a,b) in Z_{≥0}^2: 2^a 3^b<=t}. A corner is
+{(a,b),(a+1,b),(a,b+1)} contained in V(t). A point participates if it
+belongs to at least one corner. Let c_j(t) count participating points
+of colour a-b=j modulo 3, j=0,1,2, and h(t)=min_j c_j(t). Define
+
+```text
+E(t)=1 iff there is an integer m>=0 such that
+      24*2^m <= t < 27*2^m and c_((m+2) mod 3)(t)=h(t);
+E(t)=0 otherwise.
+g_rule(t)=|V(t)|-h(t)+E(t).
+epsilon(a,b)=g_rule(2^a*3^b)-g_rule((2^a*3^b)^-),  a,b>=0.
+eta(a,b)=epsilon(a,b)-1,                            a,b>=0;
+eta(a,b)=0,                                        otherwise.
+```
+
+The minus sign in t^- means the value just before adding that smooth
+point. The dyadic windows are disjoint, so m is unique when it exists.
+Under gate 1, epsilon is exactly the optimum's jump and belongs to
+{0,1}. The local birth argument in the earlier notes also establishes
+this bound directly for the rule. In particular |eta|<=1. Write
+
+```text
+S = sum_(a,b>=0) epsilon(a,b)/(2^a*3^b),
+S_eta = sum_(a,b in Z) eta(a,b)/(2^a*3^b) = S-3.
+```
+
+All these series converge absolutely, because the full reciprocal sum
+is (sum_a 2^-a)(sum_b 3^-b)=2*(3/2)=3. Subtracting the all-one array
+removes an exactly rational baseline; it is an allowed exact carry
+simplification, not a change to the frozen rule.
+
+Let theta=log_2(3), and let p_n/q_n be its continued-fraction convergents,
+in their usual order starting at 1/1. Define
+
+```text
+c_n=1 if p_n+q_n=0 mod 3, and c_n=3 otherwise;
+p=c_n*p_n, q=c_n*q_n, A=2^p, B=3^q, s=p*ln(2)+q*ln(3).
+```
+
+Thus p+q=0 modulo 3, A!=B, and s tends to infinity with n. Irrationality
+of theta and A!=B follow from unique prime factorization. No assumption
+on the partial quotients of theta is made. These returns preserve the
+colour of (a+p,b-q), but do not automatically preserve its accumulated
+minimum state.
+
+For r in {1,2,3} define the integer signed return table on Z^2 by
+
+```text
+kappa_(n,r)(a,b) = sum_(j=0..r)
+                    (-1)^(r-j)*binom(r,j)*eta(a+j*p,b+(r-j)*q).
+```
+
+Changing indices in absolutely convergent series gives the exact identity
+
+```text
+sum_(a,b in Z) kappa_(n,r)(a,b)*2^-a*3^-b
+    = (A-B)^r * S_eta.                                      (R3.1)
+```
+
+For example, r=1 compares eta(a+p,b) and eta(a,b+q), the two nearby,
+same-colour births. The table vanishes unless a>=-r*p and b>=-r*q,
+and |kappa|<=2^r<=8. These facts alone do not give sparse support.
+
+### Candidate C: a precise finite-carry and empty-window lemma
+
+Here is the candidate that would suffice. It is deliberately stated as
+a certificate about the minimum-dependent jump table, with its local
+carry operations explicit. It is **unproved**, and is not claimed to be
+a consequence of Denjoy--Koksma or of the 1062 theorem.
+
+**Lemma C (candidate).** For infinitely many convergent indices n with
+s>=1000 there exist r in {1,2,3}, a real T with 4*s<=T<=11*s, and two
+finitely supported integer-valued functions X,Y:Z^2 -> Z, such that the
+integer table
+
+```text
+Gamma(a,b)=kappa_(n,r)(a,b)
+           +X(a,b)-2*X(a-1,b)
+           +Y(a,b)-3*Y(a,b-1)
+```
+
+satisfies every one of the following conditions. Set
+z(a,b)=a*ln(2)+b*ln(3), u(a,b)=exp(-z(a,b)), and
+H0={(a,b):a<=0 and b<=0}.
+
+1. Gamma(a,b)=0 whenever a<-r*p or b<-r*q.
+2. |Gamma(a,b)|<=8 at every (a,b) outside H0.
+3. At most 404 points outside H0 have Gamma(a,b)!=0 and z(a,b)<=T.
+4. Gamma(a,b)=0 at every point with T<z(a,b)<=T+s/50.
+5. Among the nonzero points outside H0 with z<=T there is a point
+   (a_*,b_*) with a_*>=s/(10*ln2), and every other such point (a,b)
+   satisfies a<=a_*-4.
+
+All integers, quantifiers, coefficient bounds, scales, and gap constants
+are specified. X and Y may depend on n and r. No bound on their finite
+support size is assumed; the constraints are on the resulting Gamma.
+An elementary carry adds k at (a,b) and -2k at (a+1,b), or k at (a,b)
+and -3k at (a,b+1). Thus the displayed correction is a finite sequence
+of exact rational-value-preserving carries. This is substantially
+stronger than nonperiodicity of the uncarried labels. Condition 5 is a
+finite valuation witness: it makes nonvanishing under a rationality
+assumption provable, rather than assuming an unknown infinite remainder
+is nonzero. The separation 4 is chosen because a nonzero coefficient
+of absolute value <=8 has 2-adic valuation at most 3.
+
+This formulation permits exact removal of geometric boundary strings;
+the variant X=Y=0, even after subtracting the all-one baseline, is too
+strong in the computed examples. The choice 404 comes from the supplied
+1062 rigidity theorem's usable dimension bound, not from fitting the
+168 computations. A version with other fixed constants could also
+work if its gap beats the corresponding height exponent.
+
+### Complete paper deduction: Lemma C + gate 1 imply irrationality
+
+Only the arithmetic rigidity theorem below is external. Every analytic
+estimate and the reduction from F to the jump sum are included here.
+
+**1. Identify the extremal density.** Every positive integer is uniquely
+m*2^a*3^b with gcd(m,6)=1. A forbidden triple stays in one such component.
+Consequently gate 1 implies, for every integer N>=1,
+
+```text
+F(N)=sum_(m<=N, gcd(m,6)=1) g_rule(N/m)
+    =sum_(s0=2^a*3^b<=N) epsilon(a,b)*C(floor(N/s0)),
+C(k)=k-floor(k/2)-floor(k/3)+floor(k/6).
+```
+
+The second equality is finite telescoping of g_rule at its smooth jumps,
+followed by exchanging two finite sums. Since C(k)=k/3+O(1), for fixed
+s0 the corresponding summand divided by N tends to epsilon/(3*s0).
+It is bounded by epsilon/s0, because C(floor(N/s0))<=N/s0.
+The sum of these bounds is at most 3. Dominated convergence for a series
+therefore proves that F(N)/N converges to S/3. Hence the L in the
+challenge, including its limsup formulation, equals S/3 under gate 1.
+
+**2. Carries preserve the signed sum.** X and Y have finite support, so
+index shifts give
+
+```text
+sum_(a,b) [X(a,b)-2X(a-1,b)]*2^-a*3^-b=0,
+sum_(a,b) [Y(a,b)-3Y(a,b-1)]*2^-a*3^-b=0.
+```
+
+Together with (R3.1), this gives
+sum Gamma*u=(A-B)^r*(S-3). The coefficients on H0 contribute an integer
+I_n: their weights 2^-a*3^-b are positive integers, and condition 1
+leaves only finitely many such points. Conditions 1--2 also ensure
+absolute convergence of the rest.
+
+List the nonzero points outside H0 with z<=T as v_1,...,v_m, m<=404.
+Set k_i=Gamma(v_i) in {-8,...,-1,1,...,8}, and u_i=u(v_i). Define
+R_n(T)=sum_(z(a,b)>T) Gamma(a,b)*u(a,b); this tail converges absolutely
+by conditions 1--2. We obtain
+
+```text
+(A-B)^r*(S-3)=I_n+sum_(i=1..m) k_i*u_i+R_n(T).     (R3.2)
+```
+
+Every u_i is a positive {2,3}-unit and satisfies e^-T<=u_i<=e^(r*s).
+The upper bound uses a>=-r*p, b>=-r*q. Points with negative z can be
+outside H0; they have not been dropped or incorrectly called integers.
+
+**3. The empty window gives the required error.** For x>=0 the full
+nonnegative-lattice reciprocal tail has the elementary bound
+
+```text
+sum_(a,b>=0, a*ln2+b*ln3>x) 2^-a*3^-b
+    <= (2*x/ln3+5)*e^-x.                                  (R3.3)
+```
+
+Indeed, for b=0,...,floor(x/ln3), the sum of the allowed dyadic tail
+in that row is at most 2e^-x. All remaining rows together contribute
+at most 3e^-x. This proves (R3.3), including strict-endpoint cases.
+
+By condition 4, the tail starts after T+s/50. Translating its possible
+support by (r*p,r*q) and applying (R3.3) with x=T+s/50+r*s gives
+
+```text
+|R_n(T)| <= 8*(2*(T+s/50+r*s)/ln3+5)*e^(-T-s/50)
+          <= (240*s+40)*e^(-T-s/50)
+          <= e^(-T-s/200).                                 (R3.4)
+```
+
+The middle inequality uses T<=11s, r<=3, and ln3>1. For the last,
+240s+40<=exp(3s/200) for all s>=1000: at s=1000 it follows from
+e^15>(5/2)^15>240040; the logarithmic derivative of the ratio
+exp(3s/200)/(240s+40) is positive for s>=1000. No nonvanishing is
+inferred from this upper bound; the finite valuation witness is used
+in the next step.
+
+**4. Rationality produces an integer approximation.** Suppose L=P/Q
+with P in Z and Q an integer >=1. Step 1 gives S=3P/Q. In (R3.2) set
+
+```text
+P_n=3*(P-Q)*(A-B)^r-Q*I_n in Z,
+E_n=sum_i (Q*k_i)*u_i-P_n=-Q*R_n(T).
+```
+
+First prove E_n!=0 for all sufficiently large certificates. Let v_2
+denote the exponent of 2 in a nonzero rational number. The distinguished
+term of condition 5 has
+
+```text
+v_2(Q*k_* * u_*)=v_2(Q)+v_2(k_*)-a_*
+                <=v_2(Q)+3-a_*.
+```
+
+Every other listed term has valuation at least v_2(Q)-a, hence at
+least v_2(Q)+4-a_*, which is strictly larger. The integer P_n has
+valuation >=0 (or is zero). Since a_*>=s/(10ln2)->infinity, the
+distinguished valuation is eventually negative. It is then the unique
+smallest valuation in E_n. A rational sum with a unique smallest
+2-adic valuation is nonzero: divide by that power of 2 and clear all
+odd denominators; exactly one summand is odd and the others are even.
+This proves the claim without an assertion about the unknown infinite
+tail. Condition 5 also ensures m>=1.
+
+Consequently 0<|E_n|<=Q*e^(-T-s/200). Pass to an infinite subsequence
+with 1<=m<=404 fixed and the
+ordered vector (Q*k_1,...,Q*k_m) fixed. This is possible because the
+dimension and coefficient palette are finite; for example order points
+lexicographically before extracting the vector. Denote this fixed
+rational vector by d. No varying coefficient denominator is being
+absorbed into d.
+
+**5. Bound the projective height, including P_n.** Let
+
+```text
+A0=floor((T+r*q*ln3)/ln2),
+B0=floor((T+r*p*ln2)/ln3), D0=2^A0*3^B0.
+```
+
+Both exponents are nonnegative. Every listed unit has its denominator
+dividing D0: z<=T and b>=-r*q imply a<=A0, and the other bound implies
+b<=B0. Also D0<=exp(2T+r*s).
+
+Since 0<=S<=3, |(A-B)^r*(S-3)|<=3e^(r*s). The listed sum has absolute
+value at most 404*8e^(r*s)=3232e^(r*s), and (R3.4) bounds the tail by
+1. Therefore |I_n|<=3236e^(r*s) and |P_n|<=3239Qe^(r*s).
+Clearing the coordinates (P_n,u_1,...,u_m) by D0, then dividing by their
+gcd, cannot increase the maximum absolute coordinate. Its projective
+height consequently satisfies
+
+```text
+H(P_n,u_1,...,u_m) <= 3239Q*exp(2T+2r*s)
+                  <= 3239Q*exp(28s)
+                  <= exp(30s) eventually.                 (R3.5)
+```
+
+The last step is justified by fixed Q and s->infinity. In particular
+the integer coordinate, all denominator contributions, and the negative
+exponent boundary terms have been counted.
+
+**6. Apply the fixed-dimensional rigidity theorem.** Proposition 5.2
+of Liam Kruer and Jensen Kohlmeyer, *Erdős Problem 1062(ii)*, accepted
+exposition dated 22 September 2026, states that for fixed m<=404 and
+fixed rational d there is C=C(m,d)>0 such that a nonzero form
+sum_i d_i*u_i-P with positive {2,3}-units u_i>=t, integer P, and
+0<t<=1 satisfies
+
+```text
+|sum_i d_i*u_i-P| >= C*t*H(P,u_1,...,u_m)^(-1/10800).
+```
+
+Exact citation: [exposition, Proposition 5.2, page 5](https://conjectures.io/papers/erdos1062ii.pdf?v=20260922-authors).
+This is the same audited interface as in Round 2. Its content was read
+from the previously downloaded exposition; no Lean replay is performed.
+The browser's refetch returned an internal error. The retained PDF's
+SHA-256 is `fac3c6e9aede03371b1e92d07cb19daf818106d5ed525a735df116621714a146`.
+
+Use t=e^-T. Steps 2, 4, and 5 verify every hypothesis. Since
+30/10800=1/360, the lower and upper bounds give
+
+```text
+C*e^(-T-s/360) <= |E_n| <= Q*e^(-T-s/200),
+C <= Q*e^(-s/450) -> 0,
+```
+
+contradicting C>0. This proves, on paper, **Lemma C + the global frozen
+rule => L irrational**. It does not prove Lemma C. The deduction also
+explains why an unspecified growing coefficient palette, a growing
+dimension, or a possibly zero remainder would not suffice.
+
+### Proof attempt: exactly where the rotation argument breaks
+
+One additional arithmetic fact is provable without the carry lemma.
+For consecutive colour-preserving return multipliers M_n=2^p-3^q,
+**gcd(M_n,M_(n+1))=1**. Each M is odd and nonzero modulo 3. If a prime
+ell>=5 divided both, then, writing the original convergent exponents
+as p_n,q_n, both 2^(3p_n)*3^(-3q_n) and the corresponding next ratio
+would equal 1 modulo ell; this is true whether the colour multiplier
+c_n is 1 or 3. Consecutive convergent vectors have determinant +/-1
+and hence form a basis of Z^2. It follows that 2^3=3^3=1 modulo ell,
+so ell divides both 7 and 26, a contradiction. All nine adjacent pairs
+in the previously integer-certified continued-fraction prefix also
+have gcd 1 when computed with integers.
+
+Consequently, if a rational L=P/Q in lowest terms had a prime ell>=5
+in Q, at least one of every two consecutive return multipliers would
+leave that prime in the denominator of (A-B)^r*(S-3). A finite
+{2,3}-unit prefix is ell-integral, so its remainder cannot then be zero.
+This alternative nonvanishing observation does not supply a carry
+certificate at those indices and does not address Q with only prime
+factors 2 and 3. The isolated dyadic exponent in the final Lemma C
+addresses all rational Q, if that finite witness can be constructed.
+
+The row formula and Ostrowski decomposition from Round 1 express D as
+a sum of the bounded, mean-zero, three-state step cocycle. At a complete
+convergent block its coordinates change by a bounded amount (variation
+6), and a general length is bounded by its Ostrowski digit sum. These
+estimates do not make that change zero. A change of only one in a
+coordinate can switch whether a newborn colour is the unique minimum;
+at a tie it can also change E. Thus the operation D -> min_j c_j cannot
+be replaced by a fixed finite phase partition.
+
+The attempted proof first set X=Y=0, hoping the same-colour return
+would directly leave at most 404 events and a logarithmic empty window.
+That step fails before any number-theoretic estimate is used. With
+epsilon in place of eta the boundary slice is exactly
+
+```text
+kappa_(n,r)(-r*p,b)=epsilon(0,b), b>=0.
+```
+
+Only j=r survives; every other shifted a is negative. Therefore neither
+a near return nor any of the three tested fixed difference orders
+cancels this slice. With the rational baseline subtracted it becomes
+
+```text
+kappa_(n,r)(-r*p,b)=epsilon(0,b)-1, b>=0.             (R3.6)
+```
+
+This removes long strings of ones exactly, but leaves every zero of the
+pure-power jump sequence. The old data already contains 634 such zeros
+at b=4,...,2285. These alone exceed 404 in the candidate prefixes for
+the two returns with s>=1000 tested below, for all r=1,2,3.
+
+Geometric run compression is an exact first carry idea. A consecutive
+run of the remaining -1 digits from b=u through v has value
+-(3/2)*(3^-u-3^(-v-1)), times the common 2^(r*p). The old zero set has
+244 runs, hence this particular endpoint representation still uses
+488 terms on this slice alone. This is not a lower bound on every
+possible {2,3}-unit representation, and does not refute arbitrary
+finite carries in Lemma C. It does show that ordinary same-colour
+matching and this simplest geometric compression do not supply its
+fixed-dimensional certificate.
+
+In particular, a fixed finite initial boundary prefix can be absorbed
+into one **fixed rational coefficient** times 2^(r*p); the 1062 theorem
+allows such coefficients. The 634-entry count is therefore not a
+universal dimension obstruction. For infinitely growing return scales
+one would still have to control newly entering minimum-dependent
+events without a coefficient whose denominator or value changes with
+the scale. The renewed zeros below demonstrate why the old prefix
+cannot simply be declared the entire infinite correction.
+
+The next tempting step was to declare that slice eventually geometric:
+the saved data has epsilon(0,b)=1 throughout 2286<=b<=8192. The new
+exact computation refutes that extrapolation at b=45190. The proof
+therefore breaks at the assertion that bounded rotation-block drift
+can be converted into bounded-support carries uniformly across minimum
+changes. There is no proved construction of X,Y satisfying conditions
+2--4, and no construction that guarantees the isolated growing dyadic
+exponent in condition 5. Once that witness is given, the valuation
+argument above proves nonvanishing. None of the classical
+rotation discrepancy results cited in Round 1 supplies these facts.
+
+A final direct test used the scalar deficit d_b=d(3^b), which is an
+unconditional participating-colour quantity. To remove the three-state
+clock as well as preserve colour, triple the already colour-preserving
+return 1054/665, obtaining the shift h=1995 and p=3162. In all 2208
+available comparisons with k>=1995 and k+2h<=8192, the second difference
+
+```text
+d_(k+2h)-2*d_(k+h)+d_k
+```
+
+is exactly zero. Thus a concrete alternative was that the minimum
+becomes affine on these return blocks. The extended exact recurrence
+refutes it: the first nonzero comparison is k=12277, where
+
+```text
+(d_12277,d_14272,d_16267)=(18,21,23),
+23-2*21+18=-1.
+```
+
+In the natural window k>=h, k+2h<=11h=21945 there are 3326 nonzero
+second differences among 15961 comparisons; the third difference has
+5320 nonzeros among 13966 comparisons. Through b=131072 the respective
+counts become 37482 and 54536. Neither fixed higher difference tested
+therefore gives the hoped-for raw bounded support. This is not a proof
+that all possible signed carry regroupings fail. Moreover d_b alone
+does not determine the weighted jumps inside (3^b,3^(b+1)); even a true
+statement about these sampled deficits would require another argument
+to control the full density's mixed denominators.
+
+### Exact extension and boundary certificates
+
+`experiments/return_carry_audit.py` independently extends the normalized
+row recurrence to b=131072, using integer powers and bit lengths. It
+checks the exact complex rotation-word identity at every step, all
+8192 saved positive-power colour-count rows, and 9 selected closed-row
+reconstructions through b=8192. At b>=4 only one point participates at
+the birth 3^b, of colour -b. Its before-counts are obtained by subtracting
+that unit vector. Unique factorization excludes any dyadic-window
+endpoint at these powers, so E before and after uses the same exact
+window test. This computes epsilon(0,b) without sorting a huge triangle,
+calling an optimizer, or using numerical logarithms.
+
+The audit is **new exact frozen-rule jump data**, not new independent
+optimality evidence. Extending a participating-colour recurrence is not
+the same as extending a solver certificate for gate 1.
+
+Results from the completed run:
+
+- b=4,...,131072: 126900 ones and 4169 zeros; 131072 exact rotation-word
+  identity checks; 8192 saved count rows agree.
+- epsilon(0,b)=1 for every b=2286,...,45189: a run of 42904 ones.
+  The first renewed zero is **b=45190**. It occurs well beyond the
+  previously checked b<=8192, so the eventual-geometric claim fails
+  on data not used to formulate it.
+- The longest zero run in the new domain is b=47557,...,47639,
+  length 83. Additional zeros recur through b=97886; this is not
+  evidence of eventual stabilization after that index.
+- At b=131072, D=(-5,12) and d=19. The power 3^131072 has 207745 bits.
+- The run took approximately 41 seconds. It did not compute all smooth
+  prefixes below 3^131072; the pure-power recurrence is the reason this
+  extension is feasible.
+
+For the unmodified epsilon return table, count just the b>=4 boundary
+points at a=-r*p with z<=4s. Integer comparisons certify
+3^b<=2^((4+r)*p)*3^(4q), with no logarithmic rounding:
+
+| Same-colour return (p,q) | r=1 | r=2 | r=3 |
+| --- | ---: | ---: | ---: |
+| (252,159), triple of 84/53 | 827 | 973 | 1119 |
+| (1455,918), triple of 485/306 | 7625 | 8543 | 9461 |
+| (1054,665), already colour preserving | 5347 | 6012 | 6677 |
+
+These are lower bounds from one boundary slice, not counts of the full
+two-dimensional support. After the all-one subtraction the two larger
+returns each retain at least 634 nonzero boundary entries below 4s.
+The proposed raw support bound thus fails for every r=1,2,3 at each
+of these two returns. An assertion only about an unspecified infinite
+subsequence is not logically refuted by two finite returns; no such
+subsequence is established either.
+
+There is an exact obstruction to the **raw** empty-window condition
+through the whole interval 4s<=T<=11s for these two returns. Both satisfy
+3^(q-1)<2^p<3^(q+1), as checked by integers. Hence p/ theta lies in
+(q-1,q+1). For r=1,2,3 every b needed to meet a possible interval
+(T,T+s/50] on the slice a=-r*p lies between b=2286 and b=45189.
+More explicitly its upper range is bounded by
+(22+r)q+(11+r)+(2q+1)/50, which is below 23001 for q=918 and below
+16666 for q=665, while its lower range is above 5980 for q=665 and
+above 8257 for q=918. All the slice's jumps there are 1. Its z-values
+are spaced exactly ln3, and s/(50ln3)>(2q-1)/50>1. Thus every such
+interval contains a nonzero raw boundary event. This obstruction
+does not apply after a valid carry has removed that geometric string.
+
+This extension verifies a counterexample and boundary obstructions far
+beyond the formulation data. It **does not verify Lemma C**, which
+requires an actual carry certificate, the small event count and empty
+window after carrying, and the isolated dyadic valuation witness. The numerical
+escape clause in the SUCCESS criterion consequently has not been met.
+
+### Gate 1: construction proved; upper bound needs integer structure
+
+**Construction for all t.** Every complete corner has all three colours
+a-b, a-b+1, a-b-1 modulo 3. Omitting a minimum participating colour
+therefore gives a valid set of size |V|-h. If E(t)=1, let j=m+2 modulo
+3, start with the colour-j omission cover, remove
+
+```text
+R={(m+2,0),(m+1,2),(m+3,1)},
+```
+
+and add P={(m+1,1),(m+3,0)}. All three removed vertices have colour j,
+and both added vertices have a different colour. All five participate
+when 24*2^m<=t. Every potentially uncovered corner is covered by P:
+
+- The two corners containing (m+2,0) contain, respectively,
+  (m+1,1) or (m+3,0).
+- For (m+1,2), its upper-vertex corner contains (m+1,1). Its right-vertex
+  corner requires weight 27*2^m and is absent. Its base-vertex corner
+  requires weight 54*2^m and is absent.
+- For (m+3,1), its upper-vertex corner contains (m+3,0). Its other two
+  possible corners require weights 36*2^m or 72*2^m and are absent.
+
+Corners untouched by R retain their colour-j omission. Thus the new
+cover has size h-1, and g(t)>=|V|-h+E for every t. This proves the full
+construction side of gate 1 on paper; there is no additional asymptotic
+or irrationality hypothesis in it.
+
+**Upper bound.** What remains is to prove that every cover has at least
+h-E points. A natural edge-weight certificate would put nonnegative
+weights on complete corners, with total weight at each vertex <=1.
+Its weight sum bounds every cover from below by weak duality.
+
+This alone cannot give the exact answer, even with integer rounding.
+At t=24576 there are 80 points and 65 corners. The saved exact optimum
+and frozen rule require a minimum cover of 26. The new certificate
+`experiments/gate1-fractional-cover.json` gives an exactly feasible
+fractional cover of cost **249943/10000=24.9943<25**. Each variable lies
+in [0,1], and every one of the 65 corner inequalities is checked with
+Fraction arithmetic. By weak duality every feasible corner weighting
+has total weight <=24.9943; its rounded integer lower bound can be at
+most 25. Such weighting cannot force the required 26. This is a feasible
+primal certificate, not a claim of an exactly certified fractional LP
+optimum.
+
+The floating-point GLOP solver was used only to find that assignment;
+it was rounded upwards twice, then independently checked with exact
+rationals. An earlier attempt to recover small-denominator fractions
+from other GLOP solutions failed a feasibility assertion at t=24576;
+that reconstruction was discarded. The saved upward-rounded certificate
+passes every exact inequality and proves the stated obstruction.
+
+The incidence matrix is not totally unimodular: the corners based at
+(0,0), (1,0), (0,1), restricted to their three pairwise intersection
+vertices, give a 3-by-3 matrix with determinant +/-2. Integer valid
+inequalities or a discharging argument are therefore plausible routes,
+but plain fractional matching/cover duality has a demonstrated gap.
+
+A concrete discharging target is to charge every interface between
+different omitted colours to an excess omission, and prove that the
+only net saving is the one specified 3-to-2 boundary replacement.
+**The hard step is global control of those interfaces for the entire
+irrational staircase boundary, including arbitrarily large accumulated
+colour discrepancies and ties.** No classification proving this is
+available here. The known shift-count identity in Veselinov,
+*Extremal densities for forbidden configurations in S-smooth numbers*,
+arXiv:2604.15515v1, Proposition 3.3 and Corollary 3.4, gives a coarse
+boundary-error upper bound; it does not prove the frozen additive-one
+formula. [Primary source](https://arxiv.org/html/2604.15515v1).
+
+### Round 3 validation and decision
+
+Commands completed so far:
+
+```bash
+python3 experiments/return_carry_audit.py --through 131072
+```
+
+The exact LP primal certificate was searched using the already installed
+OR-Tools GLOP in `/tmp/erdos168-venv/bin/python`; only its rational
+feasibility is used. No optimizer for new integer optima was run.
+The new files are the boundary audit program and JSON, and the rational
+fractional-cover certificate. Final verification, handoff and elapsed
+time are recorded below before stopping.
+
+
+Final independent checks: a 55-second capped closed-row batch completed
+b=12277,14272,16267,45189 before timing out while attempting b=45190.
+Those four completed outputs agree with the recurrence, including the
+deficit triple (18,21,23). Rechecking b=45190 alone completed in about
+34 seconds and gave counts (539470993,539470993,539470993), D=(0,0),
+d=0, and jump 0. Its result is saved in
+`experiments/return-carry-closed-check.json`. This calculation uses the
+closed row formula and integer division, independently of the long
+incremental recurrence.
+
+The final boundary audit completed in about 42 seconds. Its source hash
+matches the final program, and the row-program, frozen-rule and saved-row
+hashes were independently checked. Its exact LP verifier reconstructs
+all 80 vertices and 65 corners, checks every rational cover inequality,
+and checks the saved integer cover witness and closed bounds at 24576.
+All recorded jump totals, zero runs and the nonlinear-deficit witness
+were independently checked against the saved JSON.
+
+Final commands and results:
+
+```bash
+python3 experiments/return_carry_audit.py --through 131072
+python3 -m py_compile experiments/return_carry_audit.py
+git diff --check
+git diff --name-only -- tasks/erdos-168-ii
+git status --short
+```
+
+The audit and compilation checks exited 0; `git diff --check` exited 0.
+The task-directory diff is empty. A separate whitespace/newline scan
+covers every added research file and the ignored handoff file. The
+handoff is exactly one line. No commit, push, alternate checkout, Lean
+run, or new integer-optimum computation was performed. The longest
+individual calculation was the deliberately capped 55-second batch.
+
+Stopped at 2026-10-05 19:45:31 UTC, within the approximately 45-minute budget.
+The planned stopping point was 19:49:57 UTC; the decisive checks are
+complete, so no additional 168 work is pending in this run.
+
+### REPORT FOR CLAUDE
+
+1. **What was done:** stated finite-carry Lemma C with all constants,
+   local carry operations, support/gap bounds and a finite dyadic
+   valuation witness; wrote its complete implication to irrationality;
+   attempted raw returns, rational baseline removal, geometric run
+   compression and second/third minimum differences. Wrote the full
+   gate-1 construction proof and an exact obstruction to plain LP weights.
+2. **Key results:** pure-power audit through b=131072; 126900 one-jumps,
+   4169 zero-jumps; first zero after the long apparent stabilization at
+   b=45190. The h=1995 second-difference extrapolation fails at k=12277
+   with deficit values (18,21,23); there are 3326 nonzero comparisons
+   by b=21945. At t=24576 the exact fractional-cover cost is
+   24.9943, while the saved integer cover size is 26.
+3. **Proved versus conjectured:** the conditional implication
+   Lemma C + global frozen rule => L irrational is proved on paper,
+   including nonvanishing and every height/error constant. The
+   construction side of gate 1 and the adjacent-return gcd fact are
+   proved on paper. Colour recurrence and specified finite obstructions
+   are checked exactly. Lemma C and the global gate-1 upper bound remain
+   unproved; no arithmetic verification of Lemma C was obtained.
+4. **Blocker:** no finite carry construction gives all of the uniformly
+   bounded support, logarithmic empty window and isolated dyadic
+   valuation witness for the accumulated minimum. Rotation returns and
+   seemingly affine or geometric long stretches do not supply it.
+5. **Next step:** stop 168 as agreed, archive these negative results and
+   move to another problem. Reopening it would require an independent
+   mathematical carry theorem or a proved global structural description,
+   rather than more finite pattern fitting or Lean work.
+6. **Files changed/added:** `NOTES.md`;
+   `experiments/return_carry_audit.py`;
+   `experiments/return-carry-audit.json`;
+   `experiments/return-carry-closed-check.json`;
+   `experiments/gate1-fractional-cover.json`;
+   `.claude-runs/commitmsg.txt`.
+
+The single best reason for FAILURE is that the sufficient carry lemma
+was neither proved nor verified; the exact extensions instead refuted
+the simpler minimum-return extrapolations.
+
+168 VERDICT: FAILURE

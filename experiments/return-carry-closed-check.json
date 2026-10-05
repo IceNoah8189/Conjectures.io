@@ -1,0 +1,16 @@
+{
+  "method": "Independent closed row formula using integer division, not the incremental powers-of-three recurrence. The prior timed batch independently checked b=12277,14272,16267,45189 before its 55-second cap.",
+  "b": 45190,
+  "counts": [
+    539470993,
+    539470993,
+    539470993
+  ],
+  "D": [
+    0,
+    0
+  ],
+  "d": 0,
+  "jump": 0,
+  "elapsed_seconds": 33.997222116995545
+}
