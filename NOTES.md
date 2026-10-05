@@ -876,3 +876,57 @@ statements and Lean files are unchanged, and no wallet, key or secret
 file was accessed. The new interval rule is a candidate for a general
 exact formula; proving its necessity and optimality remains separate
 from the irrationality argument. Neither has been proved in Lean.
+
+## Holdout experiment: predictions frozen through 10^14
+
+The rule from commit `6ca0694` is now frozen before comparing new exact
+answers. `experiments/holdout_predictions.py` predicts
+
+```text
+g_pred(t) = |Σ(t)| - min_j c_j(t) + E_pred(t),
+E_pred(t) = 1 iff some m>=0 satisfies 24*2^m <= t < 27*2^m
+                and c_((m+2) mod 3)(t) = min_j c_j(t).
+```
+
+There are **720 smooth cutoffs through 10^14**, ending at
+`96402615118848`. The rule predicts **481 jumps**, including 142 beyond
+the original 507-prefix sample, and predicts g(10^14)=481. Every predicted
+increment is zero or one. The complete predicted jump set is saved in
+`experiments/predicted-1e14-jumps.txt`; JSON and CSV retain every cutoff,
+factorization, participating-colour count, predicted excess and g.
+All old 507 exact values agree with the reconstructed prediction.
+Every predicted size has an independently checked feasible cover, which
+establishes achievability but does not establish optimality.
+
+The frozen holdout plan contains **213 new cutoffs**, all above
+`470184984576`. It prioritizes all **13 predicted E=1 cases** (larger m
+first), then the **42 distinct new smooth cutoffs** immediately below,
+at and above the two window edges, then a reproducible sample of 25
+other cutoffs (seed `16820261004`), and finally every remaining cutoff.
+The selection and predictions are saved before the holdout solver run.
+
+```bash
+python3 experiments/holdout_predictions.py
+python3 -m py_compile experiments/holdout_predictions.py experiments/holdout_worker.py experiments/holdout_verify.py
+/tmp/erdos168-venv/bin/python experiments/holdout_verify.py --timeout-ms 10000
+```
+
+Each exact query runs in a separate process, receives only t and resource
+limits, and builds the unrestricted corner-cover optimization problem;
+it receives no prediction, proposed optimum, colour rule, or bound.
+The parent compares results only after the integer optimum bounds close
+and the omission witness passes the existing numerical-corner checks.
+The initial standalone query at `57127475625984` did not close within
+30 seconds; UNKNOWN is not an optimum or a counterexample. A ten-second
+per-query holdout run is underway. Completed exact answers so far include
+g(`847288609443`)=354 and g(`52776558133248`)=463, both agreeing with the
+predicted excess. The complete results and limitations will be recorded
+when that run finishes, with additional solver work if needed.
+
+Memory is measured using each worker's `/proc/self/status` `VmHWM`.
+The initial raw `getrusage` figure of about 510 MiB retained earlier
+process history, as shown by a small worker with raw 510 MiB but current
+image peak 51.7 MiB; that raw figure is unsuitable for this report.
+Both counters are retained in query records, but summaries use `VmHWM`.
+The current workers have a 1024 MiB virtual address-space limit; timeouts
+so far have not reached that limit. No Lean was written or changed.

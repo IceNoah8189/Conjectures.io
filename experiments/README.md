@@ -211,3 +211,30 @@ of the 64 pair points lowers g by one. Exclusion is witnessed by the
 saved optimal covers, which already omit both points. `excess-pairs.json`
 records the source of every result and new constrained optimum witnesses.
 Full membership of all other points beyond prefix 200 was not recomputed.
+
+## Frozen predictions and new holdouts
+
+```bash
+python3 experiments/holdout_predictions.py
+experiments/.venv/bin/python experiments/holdout_verify.py --python experiments/.venv/bin/python
+```
+
+`holdout_predictions.py` freezes the interval rule from commit `6ca0694`
+through 10^14: 720 smooth cutoffs, 481 predicted jumps, and 213 new
+cutoffs above the original 507. `predicted-1e14.json` and `.csv` record
+all predictions; `predicted-1e14-jumps.txt` is the complete jump list.
+The saved plan prioritizes the 13 new excess cases, the 42 distinct edge
+neighbors, and 25 other cutoffs sampled with seed `16820261004`, then
+tests the rest. A feasible numerical-corner cover is checked for every
+prediction, without claiming that it is optimal.
+
+`holdout_verify.py` launches `holdout_worker.py` in a fresh process for
+each selected cutoff. The worker receives no formula, prediction or
+proposed bound and solves the unrestricted hitting-set problem. Only
+closed exact integer bounds and checked covers count as exact results.
+Timeouts are retained and the run continues, so it can report verified
+and unverified cutoffs separately. Worker peak resident memory uses
+Linux `/proc/self/status` `VmHWM`; raw `getrusage` is recorded separately
+because it can retain a high-water mark from previous process history.
+The memory limit is virtual address space, rather than a resident-memory
+cap. These computations are not Lean proofs.
