@@ -1583,8 +1583,7 @@ Results: **33,742/33,742 smooth cutoffs through 54*4^160 agree**;
 nearest-power b coefficients, indices 0..160, agree exactly**. The
 completed analysis also directly rechecks **2391/2391 saved frozen-rule
 count/d/delta_d rows** in `density-contributions.csv`, through 54*4^40.
-At the
-last cutoff 54*4^160=2^321*3^3, counts are (11247,11247,11248),
+At the last cutoff 54*4^160=2^321*3^3, counts are (11247,11247,11248),
 D=(0,-1), d=1. Verification and source hashes are saved in
 `experiments/colour-imbalance-verification.json`.
 
@@ -1973,3 +1972,16 @@ the accumulated discrepancy. The next step should use the proved
 three-interval rotation discrepancy and its boundary correction as the
 state for the frozen minimum/excess condition, rather than assuming
 that a few phase thresholds alone determine the minimum or b_k.
+
+Completed command results: both Python programs and `py_compile` passed;
+the final JSON program/dependency hashes match the final source files;
+`git diff --check` and `git diff --cached --check` passed in the writable
+checkout. Commit `98f5427` records the working row formula and initial
+verification; commit `f07bfa1` records the rotation reduction,
+unboundedness proof, complete growth/coding audit and saved-contribution
+checks. `git push origin work` succeeded, advancing the remote from
+`02aff4f` to `f07bfa1`. This completion note is committed and pushed as
+a final documentation step. The original shared files contain the same
+results; its read-only `.git` metadata still names the old local HEAD.
+The writable checkout and its commit history remain available at
+`/tmp/erdos168-round1-checkout`.
