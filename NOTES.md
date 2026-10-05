@@ -1017,3 +1017,126 @@ python3 experiments/holdout_verify.py --backend cp_sat --workers 8 --timeout-ms 
 The retry bounds, witness and resources are in
 `experiments/holdout-cpsat-retry.json` and `.csv`. The remaining 213-prefix
 coverage run continues; no general formula or Lean theorem is claimed.
+
+### Completed holdout results through 10^14
+
+**Every one of the 213 new cutoffs now has an unrestricted exact solver
+answer. There are zero mismatches and no unverified cutoffs.** The rule
+was unchanged from `6ca0694` throughout the experiment. Combining these
+answers with the original 507 gives all **720 smooth cutoffs through
+10^14**. The original fitting file `experiments/results.json` remains
+unchanged; the extended exact data is saved separately.
+
+| Holdout cohort | Cutoffs selected | Exact answers | Mismatches |
+| --- | ---: | ---: | ---: |
+| Predicted E=1, m=35..41 | 13 | 13 | 0 |
+| Smooth cutoff immediately below, at and above both window edges | 42 | 42 | 0 |
+| Other cutoffs sampled with seed 16820261004 | 25 | 25 | 0 |
+| Entire new domain above 470184984576 | 213 | 213 | 0 |
+
+The cohorts overlap. The full new domain has 13 exact E=1 cases, listed
+above, and 200 exact E=0 cases. Across all 720 cutoffs there are 45 E=1
+cases and 675 E=0 cases; no excess is larger than one. Exact g is never
+below the achievable colour candidate or the frozen prediction.
+The complete mismatch list is **empty**.
+
+There are **481 exact jumps**, including **142 new jumps** after the
+original sample. The predicted and exact jump sets agree at every
+smooth cutoff, and all exact increments are zero or one. The largest
+cutoff actually solved is
+
+```text
+t = 96402615118848 = 2^10 * 3^23,
+|Σ(t)| = 720, (c0,c1,c2) = (240,239,240), E(t) = 0,
+minimum omissions = 239, g(t) = 481.
+```
+
+This is also g(10^14), since there is no further smooth number between
+this cutoff and 10^14. The complete predicted list, generated before
+the new comparisons, is `experiments/predicted-1e14-jumps.txt`; the
+independently solved list is `experiments/verified-1e14-jumps.txt`.
+
+### Solver limits, memory and the second retry
+
+| Run | Attempted | Exact answers | Unclosed queries | Largest exact cutoff | Peak worker RSS |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Z3 rc2, 10-second query cap | 209 | 56 | 153 | 81339706506528 | 109.14 MiB |
+| CP-SAT, 4 workers, 30-second query cap | 213 | 211 | 2 | 96402615118848 | 196.38 MiB |
+| CP-SAT retry, 8 workers, 120-second query cap | 1 | 1 | 0 | 11132555231232 | 192.23 MiB |
+| CP-SAT final retry, 8 workers, 120-second query cap | 1 | 1 | 0 | 91507169819844 | 209.69 MiB |
+
+The Z3 pass stopped at its 1800-second overall budget after finishing
+its current query (1810.130 seconds total). Four planned cutoffs were
+not attempted by that pass; all four were solved by CP-SAT. The main
+CP-SAT pass took 1148.041 seconds, about 19.1 minutes. All **56** new
+cutoffs closed by both solvers have identical g. The full Z3 timeout
+and unattempted lists are retained in `experiments/holdout-z3.json`;
+they are performance results, not mathematical mismatches.
+
+The second CP-SAT timeout was at
+`91507169819844 = 2^2 * 3^28`. After 30 seconds the four-worker query
+had only a feasible g=471 and an omission lower bound of 237. Neither
+was accepted as exact. A fresh unrestricted eight-worker query closed
+the omission bounds at **239**, giving **g=479**, in **9.715 seconds**
+including startup, matching the frozen prediction. Its checked cover,
+bounds, statuses and memory are in
+`experiments/holdout-cpsat-retry-large.json` and `.csv`.
+
+Every worker had a 1024 MiB virtual address-space limit. No query hit
+that cap or reported an out-of-memory failure. Resident memory summaries
+use the current worker memory-image `VmHWM`, not the inherited raw
+`getrusage` counter discussed above. The largest measured worker peak
+was **214720 KiB = 209.6875 MiB**. The solver reached every requested
+cutoff; no inability to reach 10^14 remains.
+
+A column-by-column bitmask DP was considered as an alternative. The
+largest column at 10^14 has 30 points, so an uncompressed implementation
+has 2^30 masks. Two full maximum-height 16-bit cost arrays would alone
+use 4 GiB, before other data or transition work. This is an estimate
+for that simple storage layout, not a lower bound for all possible DPs;
+sparse or compressed states could improve it. I did not implement it
+because the independently written CP-SAT backend reached all 720
+prefixes with much smaller measured memory. No user DP code was copied.
+
+### Reproduction and independent result checks
+
+```bash
+python3 experiments/holdout_predictions.py
+python3 experiments/holdout_verify.py --timeout-ms 10000
+python3 experiments/holdout_verify.py --backend cp_sat --timeout-ms 30000 --wall-budget-seconds 1800 --output experiments/holdout-cpsat.json
+python3 experiments/holdout_verify.py --backend cp_sat --workers 8 --timeout-ms 120000 --wall-budget-seconds 180 --only-t 11132555231232 --output experiments/holdout-cpsat-retry.json
+python3 experiments/holdout_verify.py --backend cp_sat --workers 8 --timeout-ms 120000 --wall-budget-seconds 180 --only-t 91507169819844 --output experiments/holdout-cpsat-retry-large.json
+python3 experiments/holdout_results.py
+```
+
+The verification commands above use this environment's temporary solver
+venv by default; `--python experiments/.venv/bin/python` selects a local
+installation of `experiments/requirements-holdout.txt` instead.
+
+- `experiments/holdout-results.csv`: all 213 new cutoffs with factors,
+  colours, candidate, prediction, exact g/E, exact/predicted increments,
+  priority tags and the exact solvers that closed them. Its `difference`
+  column means **exact g minus predicted g**, and is zero in every row.
+- `experiments/holdout-results.json`: the same comparisons, complete
+  mismatch list, cohort counts and SHA-256 provenance for every source.
+- `experiments/results-1e14.json`: all 720 exact optima, matching integer
+  bounds and omission witnesses, with the actual jump set and provenance.
+- `experiments/results-1e14.csv`: all 720 comparisons. Here `difference`
+  means **exact g minus g_cand**; `prediction_difference` means exact g
+  minus g_pred. The latter is zero throughout.
+- The four raw solver JSON/CSV reports preserve incomplete searches,
+  accepted bounds, witnesses, query times, resource caps and memory.
+
+`holdout_results.py` rechecked every accepted query's cover, cardinality
+and bounds, rejected cross-solver disagreements, and independently
+reconstructed coordinate and numerical corners and participating-colour
+counts at all 720 prefixes. It checked the frozen rule and fitting-file
+hashes, the one-point increment bound, and exact equality of the full
+predicted and solved jump sets. An attempted aggregation before the last
+retry correctly refused to produce a complete report with one missing
+exact answer. Python compilation and `git diff --check` passed.
+
+These holdouts substantially extend the tested domain, but a proof of
+the exact formula for all t and the irrationality of the resulting
+infinite series are still open tasks. No Lean was written or changed,
+and no wallet or key file was accessed.

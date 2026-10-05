@@ -259,3 +259,43 @@ python3 experiments/holdout_verify.py --python experiments/.venv/bin/python --ba
 subset enumeration, and six saved MaxSAT optima including positive
 excess cases and window boundaries. `cpsat-validation.json` retains the
 70 matching comparisons and the SHA-256 of the saved comparison file.
+
+An individual unclosed query can be retried without changing the rule:
+
+```bash
+python3 experiments/holdout_verify.py --python experiments/.venv/bin/python --backend cp_sat --workers 8 --timeout-ms 120000 --only-t 11132555231232 --output experiments/holdout-cpsat-retry.json
+python3 experiments/holdout_verify.py --python experiments/.venv/bin/python --backend cp_sat --workers 8 --timeout-ms 120000 --only-t 91507169819844 --output experiments/holdout-cpsat-retry-large.json
+python3 experiments/holdout_results.py
+```
+
+`holdout_results.py` uses only the standard library. It checks the frozen
+rule hash and original fitting-sample hash, rechecks every exact worker's
+numerical cover and bounds, and rejects disagreements between exact
+solvers. It then combines the old 507 prefixes with the new answers and
+independently reconstructs all coordinate corners and participating-colour
+counts using `candidate_formula.compare`. It refuses to emit a complete
+report while any planned cutoff lacks an exact answer.
+
+`holdout-results.json` and `.csv` are the new-prefix comparison and
+cohort summary; raw solver reports retain bounds, witnesses, timeouts,
+timings and memory. `results-1e14.json` and `.csv` contain the complete
+combined exact table, keeping `results.json` as the original fitting
+sample. `verified-1e14-jumps.txt` lists the independently computed jumps
+for comparison with the frozen predicted list. These are finite exact
+computations relying on solver answers; matching holdouts do not prove
+the rule for every t or prove irrationality.
+
+The saved completed run verifies **all 213 new cutoffs**, so the combined
+domain has 720 exact prefixes through 10^14. There are **zero mismatches**
+and 481 exact jumps, identical to the frozen predicted jump list. This
+includes all 13 new excess cases, all 42 edge neighbors, and all 25 random
+samples. The largest solved cutoff is `96402615118848`, with g=481.
+The main CP-SAT run closed 211 queries; two eight-worker retries closed
+the others. All 56 queries also closed by Z3 agree. Peak worker resident
+memory over all runs was 209.69 MiB; no address-space cap was hit.
+
+In `holdout-results.csv`, `difference` means exact g minus g_pred.
+In `results-1e14.csv`, `difference` means exact g minus g_cand and
+`prediction_difference` means exact g minus g_pred. The prediction
+differences are all zero; the base colour candidate is one smaller
+at 45 of the 720 cutoffs.
