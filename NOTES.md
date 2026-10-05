@@ -1985,3 +1985,505 @@ a final documentation step. The original shared files contain the same
 results; its read-only `.git` metadata still names the old local HEAD.
 The writable checkout and its commit history remain available at
 `/tmp/erdos168-round1-checkout`.
+
+
+## Round 2: irrationality feasibility audit (2026-10-05)
+
+This round runs no Lean and changes no theorem statement. The explicit
+unattended-run instruction overrides the older commit rule: no git commit
+or push is run; the proposed commit message goes in
+`.claude-runs/commitmsg.txt` for Claude.
+
+Source correction established: arXiv:2604.17613v1 is Damek Davis,
+*Forbidden subgraphs in divisor graphs and an Erdős divisibility problem*
+(19 April 2026). Its abstract and the discussion after Corollary 4 leave
+irrationality open.
+The accepted 1062(ii) irrationality proof instead has a separate exposition
+by Liam Kruer and Jensen Kohlmeyer, dated 22 September 2026, linked at
+<https://conjectures.io/results/8d59a0af-6762-4606-93c9-72dd356a57bc>.
+Both sources were fetched; the six-page exposition was extracted as text
+in /tmp using pypdf 6.19.0. The arithmetic interfaces are Propositions
+5.1 and 5.2; their exact hypotheses and comparison with 168 follow below.
+
+The 168 problem page and all nine forum comments were retrieved with
+Python urllib after the browser tool returned 403. The page remains OPEN;
+no irrationality proof is claimed in the retrieved thread. The public
+baobingzhang repository README was also retrieved successfully: it claims
+only limit existence and explicitly excludes parts (i) and (ii).
+Revision `788ec986111b5b3db2270c1bdcbe47f28444f8c2`, 17 September 2026.
+No external proof was copied into this repository or executed.
+
+Commands/results so far: read AGENTS.md and the Round 1 notes; git status
+was initially clean; fetched the cited papers/pages with web access and
+urllib; source extraction only, no optimizer or Lean run. The completed
+mathematical analysis and exact computations are recorded below.
+
+### 1062: the exact arithmetic interfaces and what creates them
+
+Sources: [accepted exposition](https://conjectures.io/papers/erdos1062ii.pdf?v=20260922-authors),
+[public proof view](https://conjectures.io/results/8d59a0af-6762-4606-93c9-72dd356a57bc/solution),
+and [Davis](https://arxiv.org/html/2604.17613v1). Davis's abstract says
+only “The irrationality of c2 remains open.” The September proof is the
+relevant new result. It is **not** an arXiv irrationality theorem by Davis.
+
+The accepted source was downloaded through the site's public
+`/v1/results/8d59a0af-6762-4606-93c9-72dd356a57bc/solution` endpoint
+and inspected as text only. Its 4,965,602 bytes / 74,209 lines have SHA-256
+`2ebc87b06386daf9720ac037996ce87eb760dc58097cd098ec6620b1c7df92b6`,
+exactly the exposition's hash. No compiler or kernel replay was run;
+this is an interface audit, not a fresh verification of the whole proof.
+Retrieval hashes and URLs are in `experiments/irrationality-sources.json`.
+
+Write U={2^a*3^b : a,b in Z}, consisting of positive rational units, and
+H(P,u_1,...,u_m) for projective multiplicative height: clear denominators,
+divide all integer coordinates by their gcd, and take the largest
+absolute coordinate. Here are the precise two propositions in
+mathematical notation; all constants are retained.
+
+**Return proposition (exposition 5.1; source 73873–73963).** Rationality of
+the explicit 1062 density gives fixed m with 4<=m<=404, fixed d_i in Q,
+P_r in Z, u_(r,i) in U, real scales s_r and cutoffs T_r, with s_r -> infinity.
+For all sufficiently large r:
+
+```text
+T_r >= s_r,
+u_(r,i) >= exp(-T_r) for every i,
+H(P_r,u_(r,1),...,u_(r,m)) <= exp(27*s_r),
+0 < |sum_i d_i*u_(r,i) - P_r| <= exp(-T_r-s_r/200).
+```
+
+The exact source record additionally requires positivity of every unit
+at every index, and, for every distinct i,j,
+H_1(u_(r,i)/u_(r,j)) -> infinity, where H_1(v)=H(1,v). The quotient-height
+condition is proved in the construction but is **not needed** by the
+final contradiction. No assumption says the coefficients are eventually
+periodic, or that rationality forces their eventual periodicity.
+
+**Rigidity proposition (exposition 5.2; source 72599–72609).** For each fixed
+m<=404 and each fixed rational vector d, there is C=C(m,d)>0 such that
+for every P in Z, every u_i in U, and real t with 0<t<=1 and t<=u_i for
+all i, the nonzero form E=sum_i d_i*u_i-P satisfies
+
+```text
+|E| >= C*t*H(P,u_1,...,u_m)^(-1/10800).
+```
+
+Zero coefficients, coincident units and P=0 are allowed. Nonzero E and
+a fixed dimension/coefficient vector are essential. The source's
+`oneForm_integer_rigidity` takes a three-place covering contract as an
+argument; the final target supplies its proved contract. There is no
+extra unproved arithmetic assumption left in the accepted target.
+
+For completeness, that underlying contract has these hypotheses: a finite
+coordinate space of dimension at least two; an invertible rational matrix
+M; real weights c_(v,i) at v=infinity,2,3; rho>0;
+sum_(v,i)c_(v,i)<=-rho; c_(2,i),c_(3,i)<=0. Integer vectors x satisfying,
+for any real lambda>=0,
+
+```text
+|(M*x)_i| <= exp(c_(infinity,i)*lambda),
+|x_i|_2 <= exp(c_(2,i)*lambda),
+|x_i|_3 <= exp(c_(3,i)*lambda)
+```
+
+lie in a fixed finite union of proper rational subspaces. This is the
+contract at source 71972 and the theorem supplied at 72187. Specializing
+to one non-coordinate form and eliminating a coordinate on each
+exceptional hyperplane gives the rigidity bound by induction on dimension.
+This is a subspace-theorem argument, much stronger than merely clearing
+one common denominator and applying |nonzero integer|>=1.
+
+The final analytic deduction is short and can be independently checked:
+take t=exp(-T_r). Since 27/10800=1/400, rigidity and the upper error bound
+give C*exp(-T_r-s_r/400)<=exp(-T_r-s_r/200), hence
+C<=exp(-s_r/400)->0, a contradiction. This deduction requires every
+displayed bound, especially nonvanishing.
+
+The substantial input is the **return construction**, not a theorem
+about every bounded-coefficient two-base series. Its exact 1062 identity is
+
+```text
+L_1062 = (32 + sum_(k>=0) a_k/4^k + sum_(k>=0) b_k/3^k)/180.
+R4(k)=4^k/3^floor(log_3(4^k)) in [1,3),
+R3(k)=3^k/4^floor(log_4(3^k)) in [1,4).
+```
+
+The coefficients are integers chosen by the first matching strict
+inequality in these tables; equality continues to the next row.
+
+| R4 condition, in increasing threshold order | a_k |
+| --- | --- |
+| R4 < 16/15 | 78 |
+| R4 < 10/9 | 30 |
+| R4 < 4/3 | -30 |
+| R4 < 3/2 | 30 |
+| R4 < 2 | 0 |
+| R4 < 8/3 | -60 |
+| otherwise | -12 |
+
+| R3 condition, in increasing threshold order | b_k |
+| --- | --- |
+| R3 < 4/3 | 30 |
+| R3 < 8/5 | 35 |
+| R3 < 5/3 | 29 |
+| R3 < 2 | 24 |
+| otherwise | -60 |
+
+Thus |a_k|<=78 and |b_k|<=60 and the coefficient alphabets and phase
+partitions are finite. With alpha=log_3(4), these are exact codings of
+{k*alpha} and {k/alpha}; alpha is irrational. The shift identity
+
+```text
+(b^h-1)*sum_k c_k/b^k
+  = b^h*sum_(k<h)c_k/b^k + sum_k (c_(k+h)-c_k)/b^k
+```
+
+turns near returns into series supported near finitely many discontinuities.
+Integrality makes the finite prefixes integral after multiplication by
+(4^h-1)(3^ell-1). The remaining terms have a finite rational coefficient
+palette, including +/-z for z=180*L_1062-32 under the rationality assumption.
+Fixing m and that palette on a subsequence supplies the fixed d_i.
+
+The returns use a pair (p/q,P/Q) for alpha with q,Q>0, q<=Q,
+q*P-p*Q=1, delta=q*alpha-p>0 and 0<P-Q*alpha<delta. Such pairs have
+both denominators tending to infinity; the scale is s=P*log(3).
+Irrationality of alpha supplies them by the continued-fraction/Euclidean
+return construction. No hypothesis asserts bounded or unbounded partial
+quotients of theta, or an exponential approximation to log_2(3).
+
+The source groups the discontinuities into 16 event families. Same-family
+event times are separated by at least s_r/2; an interval [-s_r,k*s_r]
+contains at most 2k+3 per family. Cutoffs <=11*s_r therefore use at most
+4+16*(2*11+3)=404 units. Gaps of length s_r/100 after suitable cutoffs
+yield the stronger error exponent s_r/200. Height is bounded separately,
+including all denominators. Two cutoffs, one in (4s_r,5s_r) and one in
+(10s_r,11s_r), have different dyadic valuations of their truncations:
+the unique last dyadic contribution controls the valuation, while the
+ternary part is 2-integral. They cannot both have zero error. This is why
+simple rotation nonperiodicity would be an insufficient replacement.
+
+### Hypothesis-by-hypothesis comparison with 168
+
+Here “yes” for the actual limit refers to the classical increment identity;
+all extended minimum/excess calculations refer to L_rule until the frozen
+g formula is proved globally.
+
+| Input to the 1062 strategy | 168 status and concrete issue |
+| --- | --- |
+| Exact absolutely convergent increment formula | **Yes.** J(s) is 0/1 and L=(1/3)sum J(s)/s; sum over all smooth reciprocals is 3. |
+| Exact formula identifying the coefficients with the extremal density | **Conditional.** The frozen g=number of points-min c_j+E matches saved exact optima through 10^14, but has no global proof. |
+| Denominator support only at 2 and 3 | **Yes** for the smooth series. This alone gives no irrationality: the all-one sum is rational. |
+| Two pure-base series with bounded coefficients | **Yes with rational coefficients**, by the earlier diagonal regrouping; 0<=alpha_k<=1/72 and -12<=beta_k<=0. Uniform boundedness of the *nearest* b_k remains open, as Round 1 stressed. |
+| Integer coefficients, or a fixed common denominator allowing them to be made integers | **Fails for the exhibited natural coefficients.** (alpha_4,beta_4)=(139/17496,-305/64). The required finite common scale grows from 2^79*3^55 through 40 to 2^318*3^204 through 160. This is evidence about these coefficients, not a proof against every regrouping. |
+| Integer endpoint decomposition with a finite bounded alphabet | **Fails in the tested CRT decomposition.** Already (a_4,b_4)=(124,-44); the coefficients grow enormously. Restoring integrality loses boundedness and the fixed palette. |
+| Fixed finite threshold coding for the useful coefficients | **Absent; fails in the tested nearest-power catalogs.** Minimum colours use the accumulated rotation sum D, which is unbounded but o(log t). Equal log_2 phase can have different unique minima (6 versus 12). More general two-phase regroupings are not ruled out by this observation. |
+| Irrational slope and arbitrarily good rotation returns | **Yes.** theta=log_2(3); log_3(4)=2/theta is irrational too. Getting a near return of the underlying rotation does not itself return its accumulated minimum state. |
+| Shift identity justified by absolute convergence | **Yes** for the bounded rational diagonal coefficients and the absolutely convergent smooth series. It is only an identity, not the sparse-support estimate. |
+| Finite number of return-event families, uniform separation and large empty windows | **Not established.** Raw mixed denominators and changes of the accumulated minimum create many events; expanding rational coefficients back into individual units gives a growing number of coordinates. The colour-preserving return (252,-159) has only 12 raw mismatches in the tested region, an interesting finite observation, not a uniform event theorem. |
+| Fixed m, fixed rational d_i and controlled height of the return vector | **Not supplied.** Rational coefficients themselves are allowed by rigidity, but their varying denominators/numerators cannot be silently absorbed into a fixed d vector. Putting each mixed term in its own unit coordinate retains +/-1 coefficients and loses fixed m. |
+| Integer P | **Available** from a cleared rectangle. Its tail is large, and this fact does not give the other approximation bounds. |
+| Units >=exp(-T), error <=exp(-T-s/200), height <=exp(27s) | **No suitable family known.** Positive geometric tail bounds give the wrong size after denominator clearing. No numerical test proves this asymptotic family. Constants could change, but error must still beat the height exponent. |
+| Nonzero approximation error | **Unproved** for any hypothetical sparse 168 construction. Zero errors are compatible with many nonperiodic mixed digit arrays; a 2-adic or other separation lemma would be required. |
+| Pairwise unit quotient heights tend to infinity | **Not constructed; dispensable** for the final two-proposition contradiction. It cannot repair missing error or sparsity bounds. |
+| Eventual periodicity of either coefficient sequence | **Not a hypothesis or a conclusion used by this 1062 proof.** A rational sum of two independent expansions need not make either expansion periodic. |
+| Availability of the three-place rigidity theorem | **Potentially reusable mathematics.** It applies once the fixed finite approximation has been built. It cannot be applied directly to an infinite mixed sum or growing-dimensional vectors. |
+
+An arbitrary real number already has a bounded integer base-four expansion.
+So “find bounded integer coefficients” without a structural description is
+not the missing theorem. Moreover, take any irrational X in (0,1), use its
+canonical base-four digits a_k and the negatives of its base-three digits
+b_k. Then sum a_k/4^k+sum b_k/3^k=0 although both words are nonperiodic
+and bounded integer words. Neither boundedness nor nonperiodicity alone
+replaces the finite-threshold return argument.
+
+### Direct denominator clearing: proved identities and the obstruction
+
+Put S=3L=sum_(a,b>=0) epsilon(a,b)/(2^a*3^b), epsilon in {0,1},
+D=2^A*3^B, and
+
+```text
+H_(A,B) = sum_(a<=A,b<=B) epsilon(a,b)/(2^a*3^b),
+R_(A,B) = D*(S-H_(A,B)).
+```
+
+D*H_(A,B) is an integer. If L=p/q, **q*R_(A,B) must be an integer**
+for every A,B. Using S avoids the factor-three trap: to clear the same
+rectangle directly in L one may use q*2^A*3^(B+1). In the multiplier
+q*2^A*3^B on L, terms with b=B are not all cleared.
+
+Split the tail into (a>A,b<=B) and (b>B,all a). The all-one upper bound
+is exactly
+
+```text
+0 <= R_(A,B) <= 2^A + (3/2)*3^B - 1/2.
+```
+
+All powers of two are jumps for the actual problem: the new point (a,0)
+at t=2^a is isolated, so adding it raises the optimum by one. These terms
+alone give the stronger unconditional lower bound
+
+```text
+R_(A,B) >= 3^B.
+```
+
+Thus the positive cleared tail diverges as B increases. It cannot lie in
+(0,1/q), even along convergents A/B of theta. Subtracting the integer
+contribution 3^B removes that row, but other strips and their carries
+remain. For the all-one array the displayed upper bound is itself an
+integer; positivity of the tail is entirely consistent with rationality.
+
+Triangular truncation does not fix this. For X with A=floor(log_2 X),
+B=floor(log_3 X), every smooth denominator <=X divides D, but D is of
+order X^2. The reciprocal tail is O(log X/X), so the elementary upper
+bound after multiplication is O(X log X). The powers-of-two lower bound
+again gives at least 3^B, of order X. Continued-fraction closeness of
+2^A and 3^B changes neither order of magnitude. Exponentially improved
+signed cancellation would be necessary.
+
+The exact carry recurrences, valid for every digit array, are
+
+```text
+2*R_(A,B)-R_(A+1,B) = sum_(b<=B) epsilon(A+1,b)*3^(B-b),
+3*R_(A,B)-R_(A,B+1) = sum_(a<=A) epsilon(a,B+1)*2^(A-a).
+```
+
+Consequently fractional parts obey multiplication by 2 and 3. Under
+rationality they live in a finite residue orbit, but the integer parts
+grow and can encode nonperiodic boundary data. There is no bounded-state
+argument here linking rationality to eventual periodicity of epsilon.
+
+An explicit counterexample to that *generic* link: choose any nonperiodic
+binary eta_b, even a Sturmian rotation coding. Set epsilon(a,0)=1 for
+all a. For b>=1, set epsilon(0,b)=eta_b and epsilon(a,b)=1-eta_b for
+a>=1. Every such row has dyadic sum 1 since sum_(a>=1)2^(-a)=1. Hence
+S=2+sum_(b>=1)3^(-b)=5/2 and L=5/6 are rational. This has 0/1 digits,
+all powers of two present, and nonperiodic rotation-coded rows. It is
+not the 168 optimizer; it proves that those generic properties cannot
+force irrationality. The missing input must use the actual minimum/
+corner structure and exclude such carry cancellation.
+
+For a direct rectangle argument it would suffice to prove: for every
+fixed q>=1 there exists a rectangle with dist(q*R_(A,B),Z)>0, with
+a certified bound on its infinite tail. A useful stronger version would
+give a positive margin cofinally along a specified family of returns.
+We have neither theorem. Checking finitely many q or rectangles excludes
+finitely bounded denominators, not rationality.
+
+### Exact computations through 54*4^160
+
+`experiments/irrationality_audit.py` uses integers and Fraction for every
+decision, and Decimal only for display. It checks the frozen excess
+source hash, independently reconstructs the birth increments, and matches
+all 720 saved solver jumps and g values. No optimization run is hidden
+in this audit. The 33,742 smooth cutoffs give **22,495 rule jumps** and
+
+```text
+L_rule partial = 0.80096575500655898909042032638808241322472498911028...
+remaining all-smooth reciprocal mass for S < 2.592414e-96.
+```
+
+The exact remaining smooth mass is computed two ways: 3 minus the finite
+reciprocal sum, and geometric row tails including all absent rows. They
+agree. For each tested rectangle, subtract its exact integer head and
+bound the uncomputed tail by q*2^A*3^B times that mass. These are rigorous
+rational enclosures **for the extended frozen-rule series**, not certified
+enclosures for the actual optimizer beyond the solver domain.
+
+| Convergent rectangle (A,B), q=1 | Cleared tail R, display | Fractional part, display | Certified enclosure width, display |
+| --- | --- | --- | --- |
+| (3,2) | 14.0086030814 | 0.0086030814 | 1.867e-94 |
+| (8,5) | 384.433062344 | 0.433062344 | 1.613e-91 |
+| (19,12) | 1173056.84557 | 0.845569892 | 7.224e-85 |
+| (65,41) | 57357946453068896096.1792 | 0.179209682 | 3.489e-57 |
+| (84,53) | 39742338916807556858494531.0208163 | 0.0208162782 | 9.720e-46 |
+
+Convergents (485,306) and beyond do not fit in the requested domain; no
+precise fractional-tail claim is made for them. The balanced rectangle
+scan A=1..140, B=floor(log_3(2^A)), excludes integrality for q=1 in all
+140 cases. The closest approach has (A,B)=(88,55), with certified distance
+at least 0.00245594567045. At the fixed rectangle (84,53), all q=1..1000
+are excluded; the smallest certified margin is 0.000818648556818 at q=48.
+These observations do not establish a uniform margin for later returns.
+
+Accelerated Stern–Brocot descent supplies an exact finite denominator
+certificate: the first rational inside the frozen-rule density enclosure
+has denominator
+
+```text
+1829361475348747056877960981545986400667410121445  (about 1.82936e48).
+```
+
+The saved actual-optimum enclosure through 10^14 has minimum possible
+rational denominator **2,892,452**, attained by 2316755/2892452 inside
+that interval. The JSON includes adjacent Farey parents: their determinant
+is one, they bracket the complete interval, and their denominator sum is
+the asserted minimum. The facts are exact finite arithmetic certificates
+conditional on the respective density enclosure. Neither bound establishes
+irrationality; finite prefixes always permit a sufficiently large denominator.
+
+Raw return matching compares epsilon(a,b) with epsilon(a+p,b-q), restricted
+to b>=q+2 so both births are interior and both weights are <=54*4^160:
+
+| (p,q) | Colour shift (p+q) mod 3 | Compared pairs | Mismatches |
+| --- | --- | --- | --- |
+| (19,12) | 1 | 29318 | 16112 |
+| (65,41) | 1 | 21141 | 10844 |
+| (84,53) | 2 | 18151 | 11755 |
+| (57,36) | 0 | 22458 | 5343 |
+| (195,123) | 0 | 5239 | 1942 |
+| (252,159) | 0 | 1629 | 12 |
+
+The last return is the triple of (84,53). Its near agreement suggests
+looking at colour-preserving returns, but (195,123) shows why a claim
+that such returns always give very few mismatches would be premature.
+Different available regions and return qualities must not be conflated.
+These raw comparisons test a specific direct matching, not every signed
+regrouping or higher-order difference. No asymptotic dimension or gap
+bound follows from this table.
+
+### Literature: known results, recent claims, and applicability
+
+- [Graham–Witsenhausen–Spencer 1977](https://mathweb.ucsd.edu/~ronspubs/77_05_extremal_density.pdf)
+  was downloaded and its scanned pp. 108–109 visually read. Equation
+  (12) is the 168 jump series; Theorem 2 is the general finite-prime version
+  with factor product_(p)(1-1/p). The authors ask whether this density is
+  irrational, and their final remarks give rational examples for other
+  systems. They supply no irrationality result for 168.
+- [The live 168 page](https://www.erdosproblems.com/168) is OPEN on the
+  access date 2026-10-05. All nine comments in the
+  [forum thread](https://www.erdosproblems.com/forum/thread/168) were read.
+  They discuss bounds, the historical series and numerical corrections.
+  Boris Alexeev and Sean Eberhard identify the k=45 failure of the older
+  three-colour conjecture. Eberhard corrects his initial decimal in a
+  24 September 2025 comment. None claims an irrationality proof.
+- [Veselinov, arXiv:2604.15515v1](https://arxiv.org/html/2604.15515v1)
+  establishes density representations, boundary-order asymptotics and
+  reciprocal-tail bounds for smooth forbidden configurations. Its
+  optimizer-dependent jump criterion does not supply irrationality or a
+  complete explicit jump rule. No later resolving revision was found.
+- [Davis, arXiv:2604.17613v1](https://arxiv.org/html/2604.17613v1)
+  concerns fork-free divisor graphs, not the exact 168 condition. It proves
+  convergence/effective computability and leaves irrationality of its own
+  constant open. The separate September 1062 acceptance does not settle 168.
+- The [baobingzhang repository README](https://github.com/baobingzhang/jsp-000165-erdos168-lean/blob/788ec986111b5b3db2270c1bdcbe47f28444f8c2/README.md)
+  explicitly limits its claim to `erdos_168.variants.limit_exists` and
+  excludes both value and irrationality. Its method approximates a
+  6^K-periodic increment sequence, with mean error <=2^(-K)+3^(-K).
+  Limits of rational periodic means need not be irrational. README/build
+  claims were read; no fresh build or proof-source reuse was attempted.
+- A new [August 11 2026 computational report by Patrick White](https://erdosproblemaday.com/day/168-smooth-prefix-frontier)
+  claims f(5020)=3347, extending the published OEIS first-hit table from
+  f(5000)=3335. It explicitly leaves the value/irrationality questions open
+  and describes its upper bounds as floating-point SCIP results without
+  an exact proof certificate. Our frozen rule agrees with **all 3335
+  first-hit entries** of [A004059's data](https://oeis.org/A004059/b004059.txt)
+  through smooth index 5000 and with all 20 reported additional steps
+  through 5020. This is an external numerical cross-check, not an
+  independent exact optimum proof or a new verified domain for the rule.
+- [Bugeaud–Laurent, arXiv:2203.12901](https://arxiv.org/abs/2203.12901)
+  gives a relevant positive theorem for genuinely two-dimensional 0/1
+  supports: if 0<=vartheta,rho<1 with vartheta irrational, then
+  F_(vartheta,rho)(beta,alpha)=sum_(n>=1)sum_(m=1..floor(n*vartheta+rho))
+  beta^n*alpha^m is transcendental at nonzero algebraic alpha,beta with
+  |beta|<1 and |beta*alpha^vartheta|<1. These are a single affine-floor
+  boundary, not arbitrary structured digits. No identity expresses the
+  168 minimum/excess array as this support. Even a decomposition into
+  individually transcendental values would need a noncancellation theorem.
+- [Luca–Ouaknine–Worrell, arXiv:2412.07908v2, published 2025](https://arxiv.org/html/2412.07908v2)
+  proves transcendence of sum f(floor(n*vartheta+rho))*beta^(-n) for
+  nonconstant integer polynomial f, irrational vartheta, real rho and
+  algebraic |beta|>1. Its general Theorem 5 assumes polynomially growing
+  **integer** digits u_m and a fixed integer recurrence w_(r,m)=sum_i c_i
+  u_(m+i*h_r) along unbounded h_r. Nonzero supports must be infinite,
+  have minimum gap at least a positive constant times h_r, and obey a
+  uniform polynomial variation bound between support points (Definition
+  4). Current rational block coefficients meet none of the needed integer/
+  sparse-recurrence identification; D being a rotation *sum* does not
+  identify its nonlinear minimum as a polynomial of one affine floor.
+
+Searches included arXiv, the live page/thread, all specified historical
+authors, Davis, the requested README, mixed-base digit sums, Hecke–Mahler
+series and later computational reports. No known irrationality theorem
+or credible recent proof claim for **this** 168 limit was found. This is
+a scoped search result, not an assertion that no unindexed work exists.
+The counterexamples above rule out a general theorem based merely on
+structured 0/1 digits and an irrational rotation.
+
+### Verdict and the next mathematical decision
+
+**Verdict B: a return/carry approach is plausible, but it needs a new
+idea and presently supplies no proof.** This is substantially short of A;
+routine extrapolation of the present coefficient catalogs is not a
+realistic bounty strategy. The low raw mismatch count for (252,-159)
+is a reason to examine this approach, not evidence that its required
+uniform bounds hold.
+
+There are two separate unresolved gates. First, prove the frozen
+minimum/excess optimum formula globally, or obtain comparable proved
+structural control on the true optimum without it. Second, prove a
+return-sparsity or bounded-carry theorem for the **minimum of the
+accumulated three-colour cocycle**. One promising formulation would
+control colour-preserving returns (p,-q) with p+q=0 mod 3, possibly using
+a fixed higher-order signed difference to cancel the accumulated drift.
+It must produce uniformly finitely many unit families in a growing
+logarithmic window, a fixed coefficient palette, quantitative empty
+windows/error versus height, and a nonvanishing argument. An alternative
+would explicitly normalize to canonical base-four or base-six digits
+and prove their nonperiodicity by controlling all carries. Neither
+formulation is established by Round 1 or by this round.
+
+The 1062 rigidity theorem could finish such a construction, with any
+constants that make the error beat the height exponent. It does not
+create the missing construction. Invoking Hecke–Mahler transcendence
+without an exact representation or invoking irrational rotation without
+carry control would leave the central mathematical gap unchanged.
+
+There is consequently no justified Lean size/time estimate: no route A
+has been obtained. For perspective only, the accepted 1062 file has
+74,209 lines, with the density/rotation/arithmetic portion beginning
+near 65,918. That is an observed artifact size, not an estimate for 168.
+The next round should target the return/carry lemma on paper, with a
+precise success criterion, before more coefficient pattern-fitting or
+formalization. If such a lemma cannot be made precise, classify the
+current approach as C rather than treating numerical near returns as
+proof progress toward the bounty.
+
+### Reproduction and final checks
+
+The new audit uses the standard library only. The optional OEIS comparison
+reads numerical data, not the linked external Sage implementation. Fetch
+the data into /tmp with urllib (or an equivalent HTTP downloader), then:
+
+```text
+python3 experiments/irrationality_audit.py --oeis-table /tmp/oeis-a004059.txt
+python3 -m py_compile experiments/irrationality_audit.py
+git diff --check
+```
+
+The fetched data SHA-256 is
+`bba41cd187052c20e638c539893f16f73d23956f9900caa882e06778256b15ea`.
+Without the optional argument the arithmetic audit runs independently
+of that external table. JSON retains exact fractions, Farey-parent
+certificates, return comparisons and source hashes; CSV retains all
+140 rectangular-tail enclosures. Full downloaded papers and the inspected
+1062 source remain in /tmp, outside the final proof files.
+
+No Lean file, theorem statement, frozen rule, solver result, wallet, key
+or secret was changed or accessed as part of this work. No git commit,
+push, alternate checkout or clone was run. The one-line proposed commit
+message is in `.claude-runs/commitmsg.txt`. Final validation results are
+recorded immediately below after the last source revision.
+
+Final Round 2 validation: the full audit command exited 0 after the last
+source revision; `py_compile` exited 0; every source hash stored in the
+report matches the final file; both Farey-parent certificates were checked
+independently from the saved JSON. All five added/changed research files
+pass a direct trailing-whitespace scan, including files not yet tracked
+by git. `git diff --check` exited 0. `git diff --name-only` names only
+NOTES.md among tracked changes; the new files are the Python audit,
+its JSON/CSV outputs and the source manifest. The commit-message handoff
+file exists separately under the ignored .claude-runs directory.
+
+The round is complete as a feasibility assessment. Irrationality, the
+global frozen optimum formula and the needed return/carry theorem remain
+unproved. No experiment approached the 60-minute computation limit.

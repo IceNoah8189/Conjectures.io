@@ -1,0 +1,81 @@
+{
+  "access_date": "2026-10-05",
+  "sources": [
+    {
+      "name": "Davis 1062",
+      "url": "https://arxiv.org/html/2604.17613v1",
+      "bytes": 288583,
+      "sha256": "a0b4bf2d9846b01a5442cfc6b060fdf0b321eb3769813adaa9b78e07c2f87c3c"
+    },
+    {
+      "name": "Accepted 1062 exposition",
+      "url": "https://conjectures.io/papers/erdos1062ii.pdf?v=20260922-authors",
+      "bytes": 114537,
+      "sha256": "fac3c6e9aede03371b1e92d07cb19daf818106d5ed525a735df116621714a146"
+    },
+    {
+      "name": "Accepted 1062 source, inspected as text only",
+      "url": "https://conjectures.io/v1/results/8d59a0af-6762-4606-93c9-72dd356a57bc/solution",
+      "bytes": 4965602,
+      "sha256": "2ebc87b06386daf9720ac037996ce87eb760dc58097cd098ec6620b1c7df92b6"
+    },
+    {
+      "name": "GSW 1977",
+      "url": "https://mathweb.ucsd.edu/~ronspubs/77_05_extremal_density.pdf",
+      "bytes": 226338,
+      "sha256": "bc7a6525edb522d4b6889e90595ab61b8b979c464cb5fdcb8d6b07ef021aa193"
+    },
+    {
+      "name": "168 live page",
+      "url": "https://www.erdosproblems.com/168",
+      "bytes": 33496,
+      "sha256": "703e19fbfe246fe5736d5d92311491d6c40d34bbad9c9bcd78336c6643bd3edd"
+    },
+    {
+      "name": "168 forum, all nine comments",
+      "url": "https://www.erdosproblems.com/forum/thread/168",
+      "bytes": 54918,
+      "sha256": "17de5736a4002c742aa385188af2047d170d7e6b327424fd59a64ce161975eba"
+    },
+    {
+      "name": "168 limit-existence repository README",
+      "url": "https://raw.githubusercontent.com/baobingzhang/jsp-000165-erdos168-lean/main/README.md",
+      "bytes": 3284,
+      "sha256": "2b728428ada00ab9f9f26916c753004bd3fd47d51721f6a9ceb57e5c1d748bfa"
+    },
+    {
+      "name": "Veselinov 2026",
+      "url": "https://arxiv.org/html/2604.15515v1",
+      "bytes": 338894,
+      "sha256": "6dc5b3005680449023c99f510a15df169cc04dde2c7cc345bd4c0cdcfd89176b"
+    },
+    {
+      "name": "Bugeaud-Laurent 2022",
+      "url": "https://arxiv.org/pdf/2203.12901",
+      "bytes": 300963,
+      "sha256": "9adfd6e3d462b6cc59cb66c38a5fc3c998c37b4d54d93526885f554459784f85"
+    },
+    {
+      "name": "Luca-Ouaknine-Worrell 2024/2025",
+      "url": "https://arxiv.org/html/2412.07908v2",
+      "bytes": 261851,
+      "sha256": "5e79d903bd369e2bace33ccbab17c34d6b0c252e8047849e1ac439d2f9a7262b"
+    },
+    {
+      "name": "Eberhard OEIS first-hit data",
+      "url": "https://oeis.org/A004059/b004059.txt",
+      "bytes": 31513,
+      "sha256": "bba41cd187052c20e638c539893f16f73d23956f9900caa882e06778256b15ea"
+    }
+  ],
+  "168_repository_revision": "788ec986111b5b3db2270c1bdcbe47f28444f8c2",
+  "public_1062_source_hash_matches_exposition": true,
+  "limitations": "Literature audit and interface inspection only. No Lean run, fresh kernel replay, or full line-by-line verification of the 74,209-line accepted artifact. Downloaded full texts stay in /tmp.",
+  "additional_sources": [
+    {
+      "name": "Patrick White computational frontier, August 11 2026",
+      "url": "https://erdosproblemaday.com/day/168-smooth-prefix-frontier",
+      "scope": "Self-reported floating-point SCIP optima and checked witnesses through smooth index 5020; explicitly no irrationality proof or exact solver certificate."
+    }
+  ]
+}
