@@ -270,3 +270,42 @@ no DP source or computational certificate was supplied with these notes.
   302/452 count. The optional extension beyond 10^11 is still running
   solely to narrow the interval and resolve ten-place rounding of the
   infinite sum. These are computational results, not Lean proofs.
+
+## Final density result and verification (2026-10-04)
+
+- The final exact run retained all 507 completed smooth prefixes through
+  t=470184984576, with g(t)=339. Saved them in `experiments/results.json`.
+  The optional run toward 10^12 was deliberately stopped after the
+  completed results certified ten-place rounding; it did not compute all
+  534 prefixes through 10^12. No interrupted or UNKNOWN query contributes
+  to either saved result file.
+- Using the classical series identity and the exact remaining smooth
+  reciprocal tail, the infinite density lies in the outward-rounded
+  decimal enclosure [0.800965754989229, 0.800965755015529]. Its exact
+  rational interval has width approximately 2.62987e-11. Both endpoints
+  lie strictly between the rounding boundaries 0.80096575495 and
+  0.80096575505, so the density rounds to **0.8009657550** at ten places.
+- Precision difference: 0.8009657549 is a good approximation and is the
+  ten-place rounding of the 10^11 truncated sum, but the infinite sum is
+  between about 8.923e-11 and 1.156e-10 larger. This is the only numerical
+  correction found. All 20 requested jumps agree; the additional eight
+  listed jumps through 1024 also agree, as does the 302/452 count.
+- `experiments/exact_g.py` now certifies ten-place rounding automatically
+  when its exact interval fits strictly within one rounding cell. Both
+  saved large reports were regenerated from completed checkpoint rows,
+  checking their full smooth-number domains and the exhaustive oracle
+  through 64. The smaller cutoff does not resolve ten-place rounding;
+  the final cutoff does. JSON retains exact fractions, objective bounds,
+  and a minimum-cover witness at each threshold.
+- Direct reproduction commands (normal virtual-environment installation
+  is documented in `experiments/README.md`):
+  `/tmp/erdos168-venv/bin/python experiments/exact_g.py --limit 100000000000 --timeout-ms 120000 --output experiments/results-1e11.json`;
+  `/tmp/erdos168-venv/bin/python experiments/exact_g.py --limit 470184984576 --timeout-ms 120000 --progress --output experiments/results.json`.
+  The saved reports were assembled from the already completed final-run
+  checkpoint rather than rerunning these expensive optimizations.
+- `git diff --check` passed. Only experiments and documentation changed;
+  the challenge and all task statements remain unchanged. No Lean proof
+  was written, and no wallet, key, or secret file was accessed. The
+  remaining mathematical issue is the exact jump rule and irrationality
+  argument described in PLAN.md; the literature search found no proved
+  closed formula for g in the sources reviewed.

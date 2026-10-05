@@ -181,7 +181,7 @@ def make_report(limit, rows, brute_limit, engine="rc2"):
         "lower": fraction_record(lower - EXPECTED_DENSITY),
         "upper": fraction_record(upper - EXPECTED_DENSITY),
     }
-    return {
+    report = {
         "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
         "maxsat_engine": engine,
         "optimization_state": "fresh solver and Z3 context at each prefix; hard clauses before soft clauses",
@@ -206,6 +206,20 @@ def make_report(limit, rows, brute_limit, engine="rc2"):
         "difference_from_requested_decimal": difference,
         "rows": rows,
     }
+    scale = 10**10
+    shifted = lower * scale + Fraction(1, 2)
+    rounded_units = shifted.numerator // shifted.denominator
+    # Strictly inside one rounding cell: no tie convention is needed.
+    if (Fraction(2*rounded_units - 1, 2*scale) < lower
+            and upper < Fraction(2*rounded_units + 1, 2*scale)):
+        report["certified_rounding_decimal_places"] = 10
+        report["certified_rounded_density"] = (
+            f"{rounded_units // scale}.{rounded_units % scale:010d}"
+        )
+    else:
+        report["certified_rounding_decimal_places"] = None
+        report["certified_rounded_density"] = None
+    return report
 
 
 def main():

@@ -46,7 +46,7 @@ python3 -m venv experiments/.venv
 experiments/.venv/bin/python -m pip install -r experiments/requirements.txt
 experiments/.venv/bin/python experiments/exact_g.py --limit 288 --output experiments/small-results.json
 experiments/.venv/bin/python experiments/exact_g.py --limit 100000000000 --timeout-ms 120000 --output experiments/results-1e11.json
-experiments/.venv/bin/python experiments/exact_g.py --limit 1000000000000 --timeout-ms 120000 --progress --output experiments/results.json
+experiments/.venv/bin/python experiments/exact_g.py --limit 470184984576 --timeout-ms 120000 --progress --output experiments/results.json
 ```
 
 The JSON records g at every smooth number, all jumps, minimum-cover
@@ -55,6 +55,8 @@ g(t) equals the value at the last smooth number at most t, with g(0)=0.
 The upper density bound adds all remaining smooth reciprocal terms,
 computed exactly as 1 minus one third of the prefix's reciprocal sum.
 No floating-point arithmetic is used in optimization or these bounds.
+If the entire exact interval is strictly inside a single rounding cell,
+the report certifies the density's rounding to ten decimal places.
 When `--output` is supplied, completed rows are also flushed to an ignored
 `.partial.jsonl` file. This diagnostic checkpoint survives an error and
 is never read as input to the solver. The full `.json` report is written
@@ -70,3 +72,16 @@ The experiment uses the [Z3 project](https://github.com/Z3Prover/z3),
 distributed under the MIT licence (as recorded in the installed wheel's
 metadata). The lattice model, checks, and reporting code here were written
 for this experiment; no code from the user's DP or the literature was copied.
+
+The saved results contain all 507 completed prefixes through 470184984576,
+including 339 jumps. The 452-point prefix through 10^11 has 302 jumps.
+The exact density interval is contained in the outward-rounded enclosure
+`[0.800965754989229, 0.800965755015529]`, which certifies ten-place
+rounding to `0.8009657550`. The requested `0.8009657549` is the ten-place
+rounding of the sum truncated at 10^11. No listed jump disagrees, but the
+infinite sum has the small rounding correction just described.
+
+The original optional cutoff was 10^12. That run was stopped once the
+completed checkpoint rows certified all ten places; the saved report uses
+its actual final completed threshold. The command above reproduces that
+domain directly, rather than requiring an interrupted run.
