@@ -14,6 +14,8 @@ def analyze(report):
         "requiring_any_point_loses_at_most_one",
         "new_point_never_none", "new_point_forced_iff_jump",
         "requested_previous_prefix_jump_criterion",
+        "no_none_implies_active_forced_points_in_one_residue",
+        "none_in_one_residue_except_optional_bottom_boundary_pair",
     )}
     histograms = {name: Counter() for name in
                   ("status", "requirement_loss", "none_colour_count")}
@@ -45,15 +47,29 @@ def analyze(report):
         none = [point for point in points if point["status"] == "none"]
         none_colours = Counter((point["a"] - point["b"]) % 3 for point in none)
         histograms["none_colour_count"][len(none_colours)] += 1
+        if not none:
+            forced_colours = {
+                (point["a"] - point["b"]) % 3 for point in points
+                if point["weight"] in forced & active
+            }
+            if len(forced_colours) > 1:
+                rules["no_none_implies_active_forced_points_in_one_residue"].append(t)
         if len(none_colours) > 1:
             majority = none_colours.most_common(1)[0][0]
+            off_colour = [point for point in none
+                          if (point["a"] - point["b"]) % 3 != majority]
+            coordinates = {(point["a"], point["b"]) for point in off_colour}
+            is_bottom_pair = (len(coordinates) == 2 and any(
+                b == 1 and (a + 2, 0) in coordinates for a, b in coordinates
+            ))
+            if not is_bottom_pair:
+                rules["none_in_one_residue_except_optional_bottom_boundary_pair"].append(t)
             multicolour.append({
                 "t": t, "majority_residue": majority,
                 "counts": dict(none_colours),
                 "off_colour_points": [
                     {key: point[key] for key in ("weight", "a", "b")}
-                    for point in none
-                    if (point["a"] - point["b"]) % 3 != majority
+                    for point in off_colour
                 ],
             })
         if not prefix["flexible_count"]:

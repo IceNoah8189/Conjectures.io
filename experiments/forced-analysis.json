@@ -1,0 +1,653 @@
+{
+  "prefix_count": 200,
+  "last_t": 15116544,
+  "point_classifications": 20100,
+  "constrained_queries": 40200,
+  "rules_tested": {
+    "none_iff_other_two_corner_points_forced": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "isolated_points_forced": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "degree_one_points_never_none": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "requiring_any_point_loses_at_most_one": {
+      "fits_all_computed_cases": false,
+      "counterexamples": [
+        {
+          "t": 1417176,
+          "weight": 24,
+          "a": 3,
+          "b": 1,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 108,
+          "a": 2,
+          "b": 3,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 144,
+          "a": 4,
+          "b": 2,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 192,
+          "a": 6,
+          "b": 1,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 486,
+          "a": 1,
+          "b": 5,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 648,
+          "a": 3,
+          "b": 4,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 864,
+          "a": 5,
+          "b": 3,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 1152,
+          "a": 7,
+          "b": 2,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 1536,
+          "a": 9,
+          "b": 1,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 2916,
+          "a": 2,
+          "b": 6,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 3888,
+          "a": 4,
+          "b": 5,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 5184,
+          "a": 6,
+          "b": 4,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 6912,
+          "a": 8,
+          "b": 3,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 9216,
+          "a": 10,
+          "b": 2,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 12288,
+          "a": 12,
+          "b": 1,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 13122,
+          "a": 1,
+          "b": 8,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 17496,
+          "a": 3,
+          "b": 7,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 23328,
+          "a": 5,
+          "b": 6,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 31104,
+          "a": 7,
+          "b": 5,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 41472,
+          "a": 9,
+          "b": 4,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 55296,
+          "a": 11,
+          "b": 3,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 73728,
+          "a": 13,
+          "b": 2,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 78732,
+          "a": 2,
+          "b": 9,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 104976,
+          "a": 4,
+          "b": 8,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 139968,
+          "a": 6,
+          "b": 7,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 331776,
+          "a": 12,
+          "b": 4,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 354294,
+          "a": 1,
+          "b": 11,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 442368,
+          "a": 14,
+          "b": 3,
+          "loss": 2
+        },
+        {
+          "t": 1417176,
+          "weight": 472392,
+          "a": 3,
+          "b": 10,
+          "loss": 2
+        }
+      ]
+    },
+    "new_point_never_none": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "new_point_forced_iff_jump": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "requested_previous_prefix_jump_criterion": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "no_none_implies_active_forced_points_in_one_residue": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    },
+    "none_in_one_residue_except_optional_bottom_boundary_pair": {
+      "fits_all_computed_cases": true,
+      "counterexamples": []
+    }
+  },
+  "incident_pair_rule_cases": 20100,
+  "histograms": {
+    "status": {
+      "forced": 7732,
+      "flexible": 9636,
+      "none": 2732
+    },
+    "requirement_loss": {
+      "0": 17368,
+      "1": 2703,
+      "2": 29
+    },
+    "none_colour_count": {
+      "0": 105,
+      "1": 85,
+      "2": 10
+    }
+  },
+  "degree_status_counts": [
+    {
+      "status": "flexible",
+      "incident_corners": 1,
+      "count": 823
+    },
+    {
+      "status": "flexible",
+      "incident_corners": 2,
+      "count": 3173
+    },
+    {
+      "status": "flexible",
+      "incident_corners": 3,
+      "count": 5640
+    },
+    {
+      "status": "forced",
+      "incident_corners": 0,
+      "count": 116
+    },
+    {
+      "status": "forced",
+      "incident_corners": 1,
+      "count": 810
+    },
+    {
+      "status": "forced",
+      "incident_corners": 2,
+      "count": 2001
+    },
+    {
+      "status": "forced",
+      "incident_corners": 3,
+      "count": 4805
+    },
+    {
+      "status": "none",
+      "incident_corners": 2,
+      "count": 854
+    },
+    {
+      "status": "none",
+      "incident_corners": 3,
+      "count": 1878
+    }
+  ],
+  "unique_optimum_thresholds": [
+    1,
+    2,
+    6,
+    8,
+    12,
+    16,
+    48,
+    162,
+    324,
+    1152,
+    1296,
+    1536,
+    6144,
+    12288
+  ],
+  "all_points_flexible_thresholds": [
+    3,
+    27,
+    108,
+    243,
+    486,
+    864,
+    3456,
+    6912,
+    13824,
+    59049,
+    124416,
+    248832,
+    497664,
+    1990656,
+    3538944,
+    7077888,
+    14155776
+  ],
+  "simple_active_colour_cover_counterexamples": [
+    {
+      "t": 1536,
+      "minimum_omissions": 14,
+      "active_colour_sizes": [
+        15,
+        15,
+        15
+      ],
+      "excess": 1
+    },
+    {
+      "t": 6144,
+      "minimum_omissions": 19,
+      "active_colour_sizes": [
+        21,
+        20,
+        20
+      ],
+      "excess": 1
+    },
+    {
+      "t": 12288,
+      "minimum_omissions": 22,
+      "active_colour_sizes": [
+        23,
+        24,
+        23
+      ],
+      "excess": 1
+    },
+    {
+      "t": 786432,
+      "minimum_omissions": 45,
+      "active_colour_sizes": [
+        46,
+        46,
+        46
+      ],
+      "excess": 1
+    },
+    {
+      "t": 3145728,
+      "minimum_omissions": 54,
+      "active_colour_sizes": [
+        55,
+        55,
+        55
+      ],
+      "excess": 1
+    },
+    {
+      "t": 3188646,
+      "minimum_omissions": 54,
+      "active_colour_sizes": [
+        56,
+        55,
+        55
+      ],
+      "excess": 1
+    },
+    {
+      "t": 6291456,
+      "minimum_omissions": 59,
+      "active_colour_sizes": [
+        60,
+        60,
+        60
+      ],
+      "excess": 1
+    },
+    {
+      "t": 6377292,
+      "minimum_omissions": 59,
+      "active_colour_sizes": [
+        60,
+        61,
+        60
+      ],
+      "excess": 1
+    },
+    {
+      "t": 12582912,
+      "minimum_omissions": 64,
+      "active_colour_sizes": [
+        65,
+        65,
+        65
+      ],
+      "excess": 1
+    },
+    {
+      "t": 12754584,
+      "minimum_omissions": 64,
+      "active_colour_sizes": [
+        65,
+        65,
+        66
+      ],
+      "excess": 1
+    }
+  ],
+  "none_in_multiple_residue_classes": [
+    {
+      "t": 1536,
+      "majority_residue": 2,
+      "counts": {
+        "2": 12,
+        "0": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 384,
+          "a": 7,
+          "b": 1
+        },
+        {
+          "weight": 512,
+          "a": 9,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 6144,
+      "majority_residue": 1,
+      "counts": {
+        "1": 17,
+        "2": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 1536,
+          "a": 9,
+          "b": 1
+        },
+        {
+          "weight": 2048,
+          "a": 11,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 12288,
+      "majority_residue": 2,
+      "counts": {
+        "2": 20,
+        "0": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 3072,
+          "a": 10,
+          "b": 1
+        },
+        {
+          "weight": 4096,
+          "a": 12,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 786432,
+      "majority_residue": 2,
+      "counts": {
+        "2": 42,
+        "0": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 196608,
+          "a": 16,
+          "b": 1
+        },
+        {
+          "weight": 262144,
+          "a": 18,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 3145728,
+      "majority_residue": 1,
+      "counts": {
+        "1": 51,
+        "2": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 786432,
+          "a": 18,
+          "b": 1
+        },
+        {
+          "weight": 1048576,
+          "a": 20,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 3188646,
+      "majority_residue": 1,
+      "counts": {
+        "1": 51,
+        "2": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 786432,
+          "a": 18,
+          "b": 1
+        },
+        {
+          "weight": 1048576,
+          "a": 20,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 6291456,
+      "majority_residue": 2,
+      "counts": {
+        "2": 56,
+        "0": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 1572864,
+          "a": 19,
+          "b": 1
+        },
+        {
+          "weight": 2097152,
+          "a": 21,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 6377292,
+      "majority_residue": 2,
+      "counts": {
+        "2": 56,
+        "0": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 1572864,
+          "a": 19,
+          "b": 1
+        },
+        {
+          "weight": 2097152,
+          "a": 21,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 12582912,
+      "majority_residue": 0,
+      "counts": {
+        "0": 60,
+        "1": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 3145728,
+          "a": 20,
+          "b": 1
+        },
+        {
+          "weight": 4194304,
+          "a": 22,
+          "b": 0
+        }
+      ]
+    },
+    {
+      "t": 12754584,
+      "majority_residue": 0,
+      "counts": {
+        "0": 60,
+        "1": 2
+      },
+      "off_colour_points": [
+        {
+          "weight": 3145728,
+          "a": 20,
+          "b": 1
+        },
+        {
+          "weight": 4194304,
+          "a": 22,
+          "b": 0
+        }
+      ]
+    }
+  ],
+  "interpretation": "Finite exact computations; fitted converses are not Lean proofs or established general formulae."
+}

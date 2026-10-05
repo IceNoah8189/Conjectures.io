@@ -373,3 +373,154 @@ no DP source or computational certificate was supplied with these notes.
   In particular, its t=6 view reports four forced points and one `none`
   point. No full browser is available here, so this check covers rendering
   logic and point counts, not browser layout. The 200-prefix run continues.
+
+## Forced-point experiment: complete 200-prefix results (2026-10-04)
+
+The run completed **every prefix from 1 through 200**, ending at
+t=15116544 = 2^8*3^10, with g(t)=134. It independently recomputed 200
+unrestricted optima and made exactly 40,200 constrained solves: one
+exclusion and one requirement for each of 20,100 point/prefix pairs.
+All integer objective bounds closed, all returned witnesses passed the
+corner/cardinality/point checks, and all g values agree with the earlier
+saved report. No conjectural membership or jump rule entered the solver.
+The run took approximately 1,224 seconds. A separate 300-point performance
+trial was stopped during its constrained queries; it contributes no rows
+to this complete-prefix report.
+
+Commands:
+
+```bash
+/tmp/erdos168-venv/bin/python experiments/forced_points.py --prefixes 200 --timeout-ms 30000 --compare experiments/results.json --output experiments/forced-results.json
+python3 experiments/analyze_forced.py experiments/forced-results.json
+```
+
+Saved artifacts:
+
+- `experiments/forced-results.csv`: the complete table, including (a,b),
+  weight, status, both constrained maxima, and both losses.
+- `experiments/forced-results.json`: optima, unrestricted cover witnesses,
+  classifications, previous-prefix jump tests, and timings.
+- `experiments/forced-analysis.json`: all tested rules, counts, and explicit
+  counterexamples, including the unsuccessful candidate below.
+- `experiments/forced-viewer.html`: offline lattice viewer; move the slider
+  through all 200 prefixes or show the preceding prefix with the two lower
+  neighbors highlighted. Hovering shows both constrained maxima.
+
+Across point/prefix pairs there are 7,732 forced, 2,732 `none`, and 9,636
+flexible classifications. These counts include the same lattice point at
+different prefixes. There are 14 prefixes with a unique optimum and 17
+prefixes where every point is flexible. Representative rows:
+
+| Prefix | t | g | Forced | None | Flexible |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 5 | 6 | 4 | 4 | 1 | 0 |
+| 10 | 18 | 7 | 1 | 0 | 9 |
+| 24 | 162 | 17 | 17 | 7 | 0 |
+| 40 | 972 | 27 | 10 | 0 | 30 |
+| 45 | 1536 | 31 | 31 | 14 | 0 |
+| 61 | 6144 | 42 | 42 | 19 | 0 |
+| 100 | 93312 | 67 | 1 | 0 | 99 |
+| 149 | 1417176 | 101 | 99 | 47 | 3 |
+| 198 | 14155776 | 132 | 0 | 0 | 198 |
+| 200 | 15116544 | 134 | 124 | 61 | 15 |
+
+### Geometry and rules fitting all computed cases
+
+The visible structure is period-three diagonal bands, indexed by
+(a-b) modulo 3, with occasional changes near the boundary. Forcing is
+also present deep inside the lattice: at t=1417176, (3,3), of weight 216,
+is forced, while (5,3), of weight 864, belongs to no optimum. Both weights
+are much smaller than t. At other prefixes nearly everything is flexible,
+so one fixed band pattern cannot describe all thresholds.
+
+The following statements fit **all 200 computed prefixes**, but the
+geometric statements and the converse in the corner rule remain empirical:
+
+1. If no point is `none`, all forced points that participate in at least
+   one corner lie in a single residue class of (a-b) modulo 3. Isolated
+   points are allowed outside that class.
+2. If `none` points occur, they all lie in one residue class, except
+   possibly two additional points of the form (a,1) and (a+2,0). There
+   are 105 prefixes with no `none` points, 85 with just one residue class,
+   and 10 with this extra pair. For example, at t=1536 the unique optimum
+   omits 12 points of residue 2 and also (7,1), of weight 384, and (9,0),
+   of weight 512, both of residue 0. The full table records all ten
+   exceptions; a pair can persist into the next prefix.
+3. A point is `none` **if and only if** some incident corner has its other
+   two points forced. This fits all 20,100 classifications. The direction
+   from a forced pair to `none` follows directly from corner avoidance;
+   the reverse direction has only been checked computationally here. The
+   corner can have any of its three positions occupied by the `none`
+   point; checking only its two successors would fail, e.g. at t=72.
+4. All isolated points are forced, and a point in only one corner is
+   never `none`. These have short general arguments: an isolated point
+   can always be added; for a point in a single corner, an optimum
+   omitting it can include it after exchanging at most one other point.
+
+These rules do not yet give a formula for the forced set or for g. In
+particular, the corner rule uses the forced set as input, and does not
+determine that set from the lattice alone. Establishing the fitted
+converses or turning the bands and boundary corrections into an explicit
+rule remains work for the proof plan. Nothing here is proved in Lean.
+
+### Relation to jumps: requested criterion confirmed
+
+All **176** additions with b>0 satisfy the requested equivalence, using
+the optimum family of the **previous** prefix:
+
+```text
+2^a*3^b jumps
+  iff (a,b-1) is not forced previously
+       or (a+1,b-1) is not forced previously.
+```
+
+"Not forced" includes both flexible and `none` points: it means at least
+one previous optimum omits that point. This is the same existential
+condition as "some optimum omits one of the two lower neighbors."
+For example, the addition of 6 is a jump: at t=4, 2 is flexible and 4 is
+forced. The addition of 9 is flat: at t=8, both 3 and 6 are forced.
+There are no disagreements. The 24 powers of two also all jump, giving
+134 jumps and 66 flat additions in total.
+
+There is also a short ordinary mathematical justification (not a Lean
+proof). Adding a point with b>0 creates exactly one new corner, with those
+two lower neighbors. An old optimum omitting one neighbor can be extended
+by the new point. Conversely, a jump optimum must include the new point;
+deleting it gives an old optimum omitting at least one lower neighbor.
+The one-point bound makes these implications equivalent to a jump.
+
+In every computed case the new point is forced exactly when it jumps,
+and is flexible when it is flat; it is never `none`. This also follows
+directly: a jump optimum must contain it, while a flat prefix has an old
+optimum without it and an optimum obtained by exchanging one lower
+neighbor for it. Powers of two are isolated on addition and are forced.
+Thus a flat addition is precisely the case where both lower neighbors
+were forced, even though adding that point can change earlier forcing.
+
+### Counterexamples and verification limits
+
+- The simple rule "omit the smallest active residue class" fails at
+  ten computed thresholds. Here active means participating in a corner,
+  so isolated points are retained. The first failure is t=1536: each
+  active residue class has 15 points, but the exact minimum omissions
+  is 14, so g=31 rather than the candidate's 30. At every recorded failure
+  this candidate is worse by one. This tests only the simple uncorrected
+  choice, not the boundary-corrected conjecture discussed in the earlier
+  literature entry.
+- The extra small-sample guess that requiring any point loses at most
+  one is **false**. Its first counterexample is prefix 149, t=1417176:
+  g=101 but requiring 24=(3,1) gives 99. There are 29 loss-two points at
+  this prefix, all explicitly saved, and no further loss-two cases in
+  the other 199 computed prefixes. Fresh `rc2` and `maxres` models both
+  confirmed the first counterexample with omission bounds 50=50. This
+  supersedes the preliminary small-sample observation above.
+- The first 16 prefixes were independently verified by enumerating all
+  subsets and intersecting/unioning every optimum. The 42 fresh-model
+  cross-checks described above also passed. The final CSV and embedded
+  viewer data were checked against every JSON point row. Solver answers
+  are trusted computational evidence; no independently checked UNSAT
+  certificates or Lean membership proofs were produced.
+- `git diff --check` passed. The challenge and theorem statements are
+  unchanged. No wallet, key, or secret file was accessed. The remaining
+  mathematical task is still an exact general rule and the irrationality
+  argument; finite patterns by themselves do not establish either.

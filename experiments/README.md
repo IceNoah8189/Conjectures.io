@@ -130,3 +130,13 @@ Open `experiments/forced-viewer.html` in a browser. The analysis JSON
 explicitly labels finite fitted rules as computations, rather than proved
 general formulae. The small report can be analyzed with the same command
 using `--output` and `--viewer` to choose separate output paths.
+
+The saved full membership report covers all 200 prefixes through
+`15116544`, with g = 134, 20,100 classifications and 40,200 constrained
+queries. The requested previous-prefix jump test agrees in all 176 cases
+with b > 0. Empirical diagonal-band and forced-corner rules fit this domain;
+their general converses are unproved. The simple active-residue cover
+already fails at 1536. Requiring a point can lose two: the first example
+is 24 at t = 1417176, where the maximum drops from 101 to 99. See
+`forced-analysis.json` for complete rule checks and counterexamples, and
+`../NOTES.md` for interpretation and validation.
