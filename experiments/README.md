@@ -115,3 +115,18 @@ the unrestricted cover, timings, and tests of the jump criterion using
 statuses from the **previous** prefix. Complete prefixes are flushed to an
 ignored `.partial.jsonl` checkpoint. These are exact computational results
 relying on Z3, not Lean proofs.
+
+`analyze_forced.py` checks geometric and membership rules against every
+table row, records counterexamples to a simple residue-class cover, and
+generates a standalone HTML/SVG viewer with a prefix slider. It can also
+show the preceding prefix and highlight the lower neighbors relevant to
+the jump test. All plotting data is embedded; it needs no server or network.
+
+```bash
+python3 experiments/analyze_forced.py experiments/forced-results.json
+```
+
+Open `experiments/forced-viewer.html` in a browser. The analysis JSON
+explicitly labels finite fitted rules as computations, rather than proved
+general formulae. The small report can be analyzed with the same command
+using `--output` and `--viewer` to choose separate output paths.

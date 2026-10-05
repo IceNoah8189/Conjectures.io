@@ -347,3 +347,29 @@ no DP source or computational certificate was supplied with these notes.
   `/tmp/erdos168-venv/bin/python experiments/exact_g.py --limit 64 --output /tmp/erdos168-refactor-check.json`.
   It passed all integer-cutoff exhaustive checks through 64 and the
   expected jump comparison. No Lean file or task statement was changed.
+
+## Forced-point experiment: analysis tools verified (2026-10-04)
+
+- Added `experiments/analyze_forced.py`. It tests local corner rules,
+  incident-corner degrees, period-three residue classes (a-b modulo 3),
+  and the losses under point constraints, saving all counterexamples.
+  It also generates an offline HTML/SVG lattice viewer with a slider for
+  prefixes and a view of the preceding prefix's lower neighbors. The
+  viewer is a research artifact; all data is embedded locally.
+- The analysis ran successfully on all 820 rows of the small report.
+  The following empirical converses fit that report: every `none` point
+  completes a corner whose other two points are forced, and requiring
+  any point reduces the maximum by at most one. These are candidates to
+  test on the larger report, not assumptions in the solver or Lean proofs.
+  The easy direction of the first rule holds generally: a point cannot
+  coexist with two forced points completing a corner.
+- Additional validation rebuilt 42 selected constrained problems at
+  prefixes 40, 45, 100, and 150, using a fresh solver/context **per query**
+  and the alternative `maxres` engine. All constrained optima matched the
+  main run's temporary-assumption `rc2` queries, including all three
+  membership statuses where present.
+- The viewer's JavaScript passed 80 rendering-logic checks (the current
+  and previous views of all 40 small prefixes) in V8 with a minimal DOM.
+  In particular, its t=6 view reports four forced points and one `none`
+  point. No full browser is available here, so this check covers rendering
+  logic and point counts, not browser layout. The 200-prefix run continues.
