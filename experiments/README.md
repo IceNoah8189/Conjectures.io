@@ -140,3 +140,33 @@ already fails at 1536. Requiring a point can lose two: the first example
 is 24 at t = 1417176, where the maximum drops from 101 to 99. See
 `forced-analysis.json` for complete rule checks and counterexamples, and
 `../NOTES.md` for interpretation and validation.
+
+## Participating-colour candidate comparison
+
+`candidate_formula.py` tests
+`g_cand = |Σ(t)| - min(c_0(t), c_1(t), c_2(t))`, where c_j counts only
+points of colour `(a-b) mod 3` that belong to a complete corner. It uses
+the saved exact optima and needs only the Python standard library:
+
+```bash
+python3 experiments/candidate_formula.py
+```
+
+For every prefix, the program checks the candidate covers are feasible,
+reconstructs coordinate and numerical corners independently, and validates
+the saved exact objective bounds and omission witnesses. It also checks
+the overlapping exact reports and compares the discrepancies with the
+200-prefix extra-pair classifications. This computation does not rerun
+MaxSAT or certify optimality independently of the original solver.
+
+`candidate-results-through-100000000000.csv` gives all 452 requested
+smooth cutoffs through 10^11, including t, exact g, g_cand, their difference
+(`exact_g - g_cand`), lattice size, and colour counts. The candidate agrees
+in 424 cases and is one too small in 28. `candidate-results.csv` includes
+all 507 saved cutoffs, with 32 failures, also all of size one.
+`candidate-results.json` records all rows and discrepancies, provenance,
+and the membership comparison. Exact g is never below this achievable
+candidate. In the first 200 prefixes the failures coincide exactly with
+the ten recorded extra-pair prefixes, starting at 1536; forcing data is
+not available at the later failures. All discrepancy rows are listed in
+`../NOTES.md`. None of these computations is a Lean proof.

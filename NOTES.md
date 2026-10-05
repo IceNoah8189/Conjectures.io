@@ -524,3 +524,136 @@ were forced, even though adding that point can change earlier forcing.
   unchanged. No wallet, key, or secret file was accessed. The remaining
   mathematical task is still an exact general rule and the irrationality
   argument; finite patterns by themselves do not establish either.
+
+## Participating-colour candidate: all saved exact cutoffs (2026-10-04)
+
+Tested the candidate requested by the user:
+
+```text
+Σ(t) = {(a,b) : a,b >= 0 and 2^a*3^b <= t}
+c_j(t) = number of points participating in a corner with (a-b) mod 3 = j
+g_cand(t) = |Σ(t)| - min(c_0(t), c_1(t), c_2(t))
+difference = exact g(t) - g_cand(t)
+```
+
+The comparison uses the already saved exact results. It covers all **452
+smooth cutoffs at most 10^11**, ending at 99179645184. Since the exact
+report also contains 55 further cutoffs, the full comparison additionally
+covers all **507** saved cutoffs through 470184984576. No MaxSAT rerun was
+needed, and no Lean was written.
+
+Added `experiments/candidate_formula.py`, using only the Python standard
+library. For each prefix it constructs lattice corners from coordinates,
+takes their union to identify participating points, and counts the three
+colours. It checks each colour-class omission set meets every corner in
+exactly one point. It independently reconstructs the numerical triples
+{n,2n,3n}, checks the corner/participation correspondence, and rechecks the
+saved optimum's equal integer objective bounds and omission witness.
+The complete domains and overlapping g values of both exact result files
+also agree. These checks reuse the original exact solver answers; they
+do not independently prove optimality or produce Lean certificates.
+
+Reproduction command:
+
+```bash
+python3 experiments/candidate_formula.py
+```
+
+The full requested table of t, exact g, candidate g, and difference is in
+`experiments/candidate-results-through-100000000000.csv` (452 rows).
+`experiments/candidate-results.csv` contains all 507 rows. Both tables
+also give |Σ(t)| and c_0, c_1, c_2. The JSON report
+`experiments/candidate-results.json` saves the complete rows, all
+discrepancies, source-file SHA-256 hashes, verification results, and the
+comparison with the forcing data. Both CSV files were read back and
+checked row-for-row against the JSON report.
+
+### Achievability check and outcome
+
+**Exact g was never below g_cand**, in either domain. There is also a
+general elementary reason for this lower bound: the three points of a
+corner have colours r, r+1, and r-1 modulo 3, so exactly one point of
+each colour. All three participate in a corner by definition. Removing
+every participating point of any chosen colour therefore destroys every
+corner while retaining all isolated points. Choosing the smallest colour
+class leaves a feasible set of cardinality g_cand. This is a plain-English
+argument, not a Lean proof.
+
+Among the 452 cutoffs through 10^11, the candidate equals exact g in
+**424 cases** and is **one too small in 28 cases**. Among all 507 saved
+cutoffs, it equals exact g in **475 cases** and is **one too small in 32
+cases**. No larger gap was found. Thus the candidate is false as an exact
+formula; the finite observation that the gap is always zero or one is
+not a proved general upper bound.
+
+Every discrepancy through 10^11 is listed here; all other requested
+cutoffs have difference zero:
+
+| t | Exact g | g_cand | Exact minus candidate |
+| ---: | ---: | ---: | ---: |
+| 1536 | 31 | 30 | +1 |
+| 6144 | 42 | 41 | +1 |
+| 12288 | 48 | 47 | +1 |
+| 786432 | 93 | 92 | +1 |
+| 3145728 | 111 | 110 | +1 |
+| 3188646 | 112 | 111 | +1 |
+| 6291456 | 121 | 120 | +1 |
+| 6377292 | 122 | 121 | +1 |
+| 12582912 | 131 | 130 | +1 |
+| 12754584 | 132 | 131 | +1 |
+| 25165824 | 142 | 141 | +1 |
+| 25509168 | 143 | 142 | +1 |
+| 50331648 | 153 | 152 | +1 |
+| 51018336 | 154 | 153 | +1 |
+| 402653184 | 189 | 188 | +1 |
+| 408146688 | 190 | 189 | +1 |
+| 1610612736 | 215 | 214 | +1 |
+| 1632586752 | 216 | 215 | +1 |
+| 3265173504 | 229 | 228 | +1 |
+| 6530347008 | 243 | 242 | +1 |
+| 12884901888 | 257 | 256 | +1 |
+| 13060694016 | 258 | 257 | +1 |
+| 25769803776 | 272 | 271 | +1 |
+| 26121388032 | 273 | 272 | +1 |
+| 27518828544 | 273 | 272 | +1 |
+| 27894275208 | 274 | 273 | +1 |
+| 51539607552 | 287 | 286 | +1 |
+| 52242776064 | 288 | 287 | +1 |
+
+The four additional discrepancies in the saved extension beyond 10^11
+are:
+
+| t | Exact g | g_cand | Exact minus candidate |
+| ---: | ---: | ---: | ---: |
+| 103079215104 | 303 | 302 | +1 |
+| 104485552128 | 304 | 303 | +1 |
+| 206158430208 | 319 | 318 | +1 |
+| 208971104256 | 320 | 319 | +1 |
+
+### Comparison with the extra-pair prefixes
+
+Within the first 200 prefixes, the candidate fails **exactly** at the
+ten extra-pair thresholds already recorded above:
+1536, 6144, 12288, 786432, 3145728, 3188646, 6291456, 6377292,
+12582912, and 12754584. The script reconstructed those extra pairs from
+the saved `none` classifications and verified equality with both lists
+in `experiments/forced-analysis.json`. There are no missing or additional
+failures in that classified domain.
+
+In particular, **t=1536 is the first discrepancy**: |Σ|=45 and
+(c_0,c_1,c_2)=(15,15,15), so g_cand=30 while exact g=31. This agrees
+with the unique optimum and its exceptional pair (7,1), (9,0) in the
+previous notes.
+
+The other 18 failures through 10^11, and the four extended failures, are
+beyond the 200-prefix forcing dataset. Their g discrepancy is verified,
+but membership in every/no optimum was not computed there, so they
+cannot yet be identified as extra-pair prefixes from these results.
+The observed extra-pair match is confined to the domain with membership
+data; it is not an extrapolated general equivalence.
+
+`git diff --check` passed. Only the comparison program, its tables/report,
+and documentation changed. The challenge and all Lean statements remain
+unchanged; no wallet, key, or secret file was accessed. Remaining issues
+include a proved boundary correction or different exact formula for g,
+and the irrationality argument.
