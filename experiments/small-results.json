@@ -1,5 +1,6 @@
 {
   "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
+  "maxsat_engine": "rc2",
   "optimization_state": "fresh solver and Z3 context at each prefix; hard clauses before soft clauses",
   "z3_version": "5.1.0",
   "limit": 288,
@@ -115,7 +116,7 @@
       "cover": [],
       "minimum_cover_lower": 0,
       "minimum_cover_upper": 0,
-      "seconds": 0.013199
+      "seconds": 0.013041
     },
     {
       "t": 2,
@@ -125,7 +126,7 @@
       "cover": [],
       "minimum_cover_lower": 0,
       "minimum_cover_upper": 0,
-      "seconds": 0.0057
+      "seconds": 0.0079
     },
     {
       "t": 3,
@@ -137,7 +138,7 @@
       ],
       "minimum_cover_lower": 1,
       "minimum_cover_upper": 1,
-      "seconds": 0.003647
+      "seconds": 0.004202
     },
     {
       "t": 4,
@@ -149,7 +150,7 @@
       ],
       "minimum_cover_lower": 1,
       "minimum_cover_upper": 1,
-      "seconds": 0.003227
+      "seconds": 0.004581
     },
     {
       "t": 6,
@@ -161,7 +162,7 @@
       ],
       "minimum_cover_lower": 1,
       "minimum_cover_upper": 1,
-      "seconds": 0.003132
+      "seconds": 0.006757
     },
     {
       "t": 8,
@@ -173,7 +174,7 @@
       ],
       "minimum_cover_lower": 1,
       "minimum_cover_upper": 1,
-      "seconds": 0.003274
+      "seconds": 0.005285
     },
     {
       "t": 9,
@@ -181,12 +182,12 @@
       "g": 5,
       "jump": 0,
       "cover": [
-        2,
-        6
+        3,
+        4
       ],
       "minimum_cover_lower": 2,
       "minimum_cover_upper": 2,
-      "seconds": 0.003409
+      "seconds": 0.003634
     },
     {
       "t": 12,
@@ -199,7 +200,7 @@
       ],
       "minimum_cover_lower": 2,
       "minimum_cover_upper": 2,
-      "seconds": 0.004253
+      "seconds": 0.004164
     },
     {
       "t": 16,
@@ -212,7 +213,7 @@
       ],
       "minimum_cover_lower": 2,
       "minimum_cover_upper": 2,
-      "seconds": 0.003992
+      "seconds": 0.005465
     },
     {
       "t": 18,
@@ -221,12 +222,12 @@
       "jump": 0,
       "cover": [
         2,
-        9,
+        3,
         12
       ],
       "minimum_cover_lower": 3,
       "minimum_cover_upper": 3,
-      "seconds": 0.003728
+      "seconds": 0.00464
     },
     {
       "t": 24,
@@ -240,7 +241,7 @@
       ],
       "minimum_cover_lower": 3,
       "minimum_cover_upper": 3,
-      "seconds": 0.003816
+      "seconds": 0.003589
     },
     {
       "t": 27,
@@ -249,13 +250,13 @@
       "jump": 0,
       "cover": [
         2,
+        3,
         8,
-        9,
-        12
+        18
       ],
       "minimum_cover_lower": 4,
       "minimum_cover_upper": 4,
-      "seconds": 0.004636
+      "seconds": 0.004325
     },
     {
       "t": 32,
@@ -264,13 +265,13 @@
       "jump": 1,
       "cover": [
         2,
+        3,
         8,
-        9,
-        12
+        18
       ],
       "minimum_cover_lower": 4,
       "minimum_cover_upper": 4,
-      "seconds": 0.003955
+      "seconds": 0.004529
     },
     {
       "t": 36,
@@ -281,11 +282,11 @@
         2,
         9,
         12,
-        24
+        16
       ],
       "minimum_cover_lower": 4,
       "minimum_cover_upper": 4,
-      "seconds": 0.004062
+      "seconds": 0.004508
     },
     {
       "t": 48,
@@ -300,7 +301,7 @@
       ],
       "minimum_cover_lower": 4,
       "minimum_cover_upper": 4,
-      "seconds": 0.0041
+      "seconds": 0.004007
     },
     {
       "t": 54,
@@ -310,13 +311,13 @@
       "cover": [
         3,
         4,
-        12,
         16,
-        18
+        18,
+        36
       ],
       "minimum_cover_lower": 5,
       "minimum_cover_upper": 5,
-      "seconds": 0.005233
+      "seconds": 0.004562
     },
     {
       "t": 64,
@@ -326,13 +327,13 @@
       "cover": [
         3,
         4,
-        12,
         16,
-        18
+        18,
+        36
       ],
       "minimum_cover_lower": 5,
       "minimum_cover_upper": 5,
-      "seconds": 0.004219
+      "seconds": 0.004355
     },
     {
       "t": 72,
@@ -342,13 +343,13 @@
       "cover": [
         3,
         4,
-        16,
         18,
-        24
+        24,
+        48
       ],
       "minimum_cover_lower": 5,
       "minimum_cover_upper": 5,
-      "seconds": 0.004472
+      "seconds": 0.004317
     },
     {
       "t": 81,
@@ -358,14 +359,14 @@
       "cover": [
         3,
         4,
+        16,
         18,
         24,
-        27,
-        48
+        54
       ],
       "minimum_cover_lower": 6,
       "minimum_cover_upper": 6,
-      "seconds": 0.0055
+      "seconds": 0.005224
     },
     {
       "t": 96,
@@ -382,7 +383,7 @@
       ],
       "minimum_cover_lower": 6,
       "minimum_cover_upper": 6,
-      "seconds": 0.006192
+      "seconds": 0.006999
     },
     {
       "t": 108,
@@ -390,17 +391,17 @@
       "g": 14,
       "jump": 0,
       "cover": [
-        2,
+        1,
         6,
-        12,
-        24,
+        8,
         27,
         32,
-        36
+        36,
+        72
       ],
       "minimum_cover_lower": 7,
       "minimum_cover_upper": 7,
-      "seconds": 0.005474
+      "seconds": 0.005434
     },
     {
       "t": 128,
@@ -408,17 +409,17 @@
       "g": 15,
       "jump": 1,
       "cover": [
-        2,
+        1,
         6,
-        12,
-        24,
+        8,
         27,
         32,
-        36
+        36,
+        72
       ],
       "minimum_cover_lower": 7,
       "minimum_cover_upper": 7,
-      "seconds": 0.004942
+      "seconds": 0.005087
     },
     {
       "t": 144,
@@ -426,17 +427,17 @@
       "g": 16,
       "jump": 1,
       "cover": [
-        2,
-        9,
-        12,
-        16,
-        54,
-        72,
-        96
+        3,
+        6,
+        8,
+        27,
+        36,
+        48,
+        64
       ],
       "minimum_cover_lower": 7,
       "minimum_cover_upper": 7,
-      "seconds": 0.00634
+      "seconds": 0.005203
     },
     {
       "t": 162,
@@ -454,7 +455,7 @@
       ],
       "minimum_cover_lower": 7,
       "minimum_cover_upper": 7,
-      "seconds": 0.005216
+      "seconds": 0.005126
     },
     {
       "t": 192,
@@ -462,10 +463,10 @@
       "g": 17,
       "jump": 0,
       "cover": [
-        3,
-        6,
-        8,
-        27,
+        2,
+        9,
+        12,
+        24,
         36,
         48,
         54,
@@ -473,7 +474,7 @@
       ],
       "minimum_cover_lower": 8,
       "minimum_cover_upper": 8,
-      "seconds": 0.006023
+      "seconds": 0.005074
     },
     {
       "t": 216,
@@ -484,7 +485,7 @@
         2,
         9,
         12,
-        16,
+        24,
         48,
         54,
         64,
@@ -492,7 +493,7 @@
       ],
       "minimum_cover_lower": 8,
       "minimum_cover_upper": 8,
-      "seconds": 0.005139
+      "seconds": 0.004825
     },
     {
       "t": 243,
@@ -500,27 +501,7 @@
       "g": 18,
       "jump": 0,
       "cover": [
-        2,
-        6,
-        8,
-        27,
-        36,
-        48,
-        64,
-        72,
-        162
-      ],
-      "minimum_cover_lower": 9,
-      "minimum_cover_upper": 9,
-      "seconds": 0.005363
-    },
-    {
-      "t": 256,
-      "points": 28,
-      "g": 19,
-      "jump": 1,
-      "cover": [
-        2,
+        1,
         6,
         8,
         27,
@@ -532,7 +513,27 @@
       ],
       "minimum_cover_lower": 9,
       "minimum_cover_upper": 9,
-      "seconds": 0.005391
+      "seconds": 0.008342
+    },
+    {
+      "t": 256,
+      "points": 28,
+      "g": 19,
+      "jump": 1,
+      "cover": [
+        1,
+        6,
+        8,
+        27,
+        36,
+        48,
+        64,
+        162,
+        216
+      ],
+      "minimum_cover_lower": 9,
+      "minimum_cover_upper": 9,
+      "seconds": 0.006927
     },
     {
       "t": 288,
@@ -540,19 +541,19 @@
       "g": 20,
       "jump": 1,
       "cover": [
-        2,
-        9,
-        12,
-        16,
-        54,
-        72,
-        96,
-        192,
-        243
+        3,
+        4,
+        18,
+        24,
+        32,
+        81,
+        108,
+        144,
+        192
       ],
       "minimum_cover_lower": 9,
       "minimum_cover_upper": 9,
-      "seconds": 0.006537
+      "seconds": 0.006989
     }
   ]
 }

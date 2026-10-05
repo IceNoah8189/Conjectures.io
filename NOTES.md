@@ -231,3 +231,14 @@ no DP source or computational certificate was supplied with these notes.
   context as well as a fresh optimization object. The small-domain run
   passes again, and the ongoing large run has passed both earlier timeout
   points. No UNKNOWN answer has been used as an optimum.
+
+- The isolated `maxres` run completed every prefix through 10^11,
+  confirming 302 jumps among 452 smooth numbers, but its optional 10^12
+  extension timed out at t=587068342272. A separate exact `rc2` query
+  solved that prefix with cover size 171 in about two seconds. The
+  program now defaults to `rc2`, with the same exact objective-bound and
+  witness checks, and records the engine in its report. The small-domain
+  checks pass with this engine as well. Every completed row is flushed
+  to a diagnostic checkpoint, preventing loss of progress on a later
+  error; checkpoint data is never an optimization input. A final run is
+  in progress to retain the full density calculation.

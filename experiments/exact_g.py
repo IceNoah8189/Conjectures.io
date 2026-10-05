@@ -51,12 +51,12 @@ def checked_cover(weights, cover, triples):
         raise AssertionError("witness fails to hit a forbidden triple")
 
 
-def minimum_cover(weights, triples, timeout_ms=0):
+def minimum_cover(weights, triples, timeout_ms=0, engine="rc2"):
     """Solve one prefix in a fresh solver AND a fresh Z3 context."""
     context = z3.Context()
     variables = [z3.Bool(str(n), ctx=context) for n in weights]
     solver = z3.Optimize(ctx=context)
-    solver.set(maxsat_engine="maxres")
+    solver.set(maxsat_engine=engine)
     if timeout_ms:
         solver.set(timeout=timeout_ms)
     by_weight = dict(zip(weights, variables))
@@ -81,7 +81,7 @@ def minimum_cover(weights, triples, timeout_ms=0):
     return lower.as_long(), cover
 
 
-def exact_prefix(limit, timeout_ms=0, progress=False):
+def exact_prefix(limit, timeout_ms=0, progress=False, engine="rc2", checkpoint=None):
     """Compute g at every smooth point up to limit, with cover witnesses.
 
     Corner clauses are hard constraints; each non-omitted vertex is a
@@ -102,7 +102,7 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
                 indices = [positions[point] for point in corner]
                 triples.append(tuple(weights[i] for i in indices))
         previous_minimum = minimum
-        minimum, cover = minimum_cover(weights, triples, timeout_ms)
+        minimum, cover = minimum_cover(weights, triples, timeout_ms, engine)
         if minimum not in (previous_minimum, previous_minimum + 1):
             raise AssertionError("minimum cover violates one-point bound")
         checked_cover(weights, cover, triples)
@@ -119,6 +119,9 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
             "seconds": round(time.perf_counter() - started, 6),
         }
         rows.append(row)
+        if checkpoint is not None:
+            checkpoint.write(json.dumps(row) + "\n")
+            checkpoint.flush()
         if progress and (len(rows) % 25 == 0 or row["seconds"] > 1):
             print(f"points={len(rows)} t={weight} g={row['g']} "
                   f"cover={minimum} seconds={row['seconds']}", flush=True)
@@ -158,7 +161,7 @@ def fraction_record(value):
             "decimal": decimal}
 
 
-def make_report(limit, rows, brute_limit):
+def make_report(limit, rows, brute_limit, engine="rc2"):
     if brute_limit > limit:
         raise ValueError("brute-force limit must not exceed computation limit")
     for t in range(brute_limit + 1):
@@ -180,6 +183,7 @@ def make_report(limit, rows, brute_limit):
     }
     return {
         "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
+        "maxsat_engine": engine,
         "optimization_state": "fresh solver and Z3 context at each prefix; hard clauses before soft clauses",
         "z3_version": z3.get_version_string(),
         "limit": limit,
@@ -211,12 +215,20 @@ def main():
     parser.add_argument("--timeout-ms", type=int, default=0,
                         help="per-query time limit; UNKNOWN is an error")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--engine", choices=("rc2", "maxres"), default="rc2")
     parser.add_argument("--progress", action="store_true")
     args = parser.parse_args()
     if min(args.limit, args.brute_limit, args.timeout_ms) < 0:
         parser.error("limits must be nonnegative")
-    rows = exact_prefix(args.limit, args.timeout_ms, args.progress)
-    report = make_report(args.limit, rows, args.brute_limit)
+    if args.output:
+        # Preserve every completed query even if a later query times out.
+        # The partial file is diagnostic data, never an optimization input.
+        with args.output.with_suffix(".partial.jsonl").open("w") as checkpoint:
+            rows = exact_prefix(args.limit, args.timeout_ms, args.progress,
+                                args.engine, checkpoint)
+    else:
+        rows = exact_prefix(args.limit, args.timeout_ms, args.progress, args.engine)
+    report = make_report(args.limit, rows, args.brute_limit, args.engine)
     if args.output:
         args.output.write_text(json.dumps(report, indent=2) + "\n")
     summary = {key: value for key, value in report.items() if key not in ("rows", "jumps")}
