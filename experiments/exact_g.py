@@ -51,34 +51,72 @@ def checked_cover(weights, cover, triples):
         raise AssertionError("witness fails to hit a forbidden triple")
 
 
+class CoverSolver:
+    """One fixed prefix, with optional point constraints as assumptions.
+
+    The prefix has its own Z3 context. Constrained queries reuse this
+    fixed formula without adding vertices, clauses, or soft objectives.
+    Assumptions are local to one check and never survive into the next.
+    """
+
+    def __init__(self, weights, triples, timeout_ms=0, engine="rc2"):
+        self.weights, self.triples = list(weights), list(triples)
+        self.context = z3.Context()
+        self.variables = {
+            n: z3.Bool(str(n), ctx=self.context) for n in self.weights
+        }
+        self.solver = z3.Optimize(ctx=self.context)
+        self.solver.set(maxsat_engine=engine)
+        if timeout_ms:
+            self.solver.set(timeout=timeout_ms)
+        self.solver.add(*(
+            z3.Or(*(self.variables[n] for n in triple))
+            for triple in self.triples
+        ))
+        handles = [
+            self.solver.add_soft(z3.Not(variable), weight=1)
+            for variable in self.variables.values()
+        ]
+        # Same default objective id and unit weights: one cost per omission.
+        self.objective = handles[0]
+
+    def solve(self, *, excluded=None, required=None):
+        """Return the exact minimum omissions and a checked witness."""
+        assumptions = []
+        if excluded is not None:
+            assumptions.append(self.variables[excluded])
+        if required is not None:
+            assumptions.append(z3.Not(self.variables[required]))
+        result = self.solver.check(*assumptions)
+        if result != z3.sat:
+            raise RuntimeError(
+                f"no exact result at t={self.weights[-1]}, "
+                f"excluded={excluded}, required={required}: "
+                f"{result}; {self.solver.reason_unknown()}"
+            )
+        lower = self.solver.lower(self.objective)
+        upper = self.solver.upper(self.objective)
+        if not (z3.is_int_value(lower) and z3.is_int_value(upper)
+                and lower.as_long() == upper.as_long()):
+            raise RuntimeError(f"unclosed objective: {lower}, {upper}")
+        model = self.solver.model()
+        cover = {
+            n for n, variable in self.variables.items()
+            if z3.is_true(model.eval(variable, model_completion=True))
+        }
+        checked_cover(self.weights, cover, self.triples)
+        if len(cover) != lower.as_long():
+            raise AssertionError("incorrect witness cardinality")
+        if excluded is not None and excluded not in cover:
+            raise AssertionError("witness violates exclusion")
+        if required is not None and required in cover:
+            raise AssertionError("witness violates requirement")
+        return lower.as_long(), cover
+
+
 def minimum_cover(weights, triples, timeout_ms=0, engine="rc2"):
     """Solve one prefix in a fresh solver AND a fresh Z3 context."""
-    context = z3.Context()
-    variables = [z3.Bool(str(n), ctx=context) for n in weights]
-    solver = z3.Optimize(ctx=context)
-    solver.set(maxsat_engine=engine)
-    if timeout_ms:
-        solver.set(timeout=timeout_ms)
-    by_weight = dict(zip(weights, variables))
-    solver.add(*(z3.Or(*(by_weight[n] for n in triple)) for triple in triples))
-    handles = [solver.add_soft(z3.Not(variable), weight=1) for variable in variables]
-    # Same default objective id and unit weights: one cost per omission.
-    objective = handles[0]
-    result = solver.check()
-    if result != z3.sat:
-        raise RuntimeError(
-            f"no exact result at t={weights[-1]}: {solver.reason_unknown()}"
-        )
-    lower, upper = solver.lower(objective), solver.upper(objective)
-    if not (z3.is_int_value(lower) and z3.is_int_value(upper)
-            and lower.as_long() == upper.as_long()):
-        raise RuntimeError(f"unclosed objective: {lower}, {upper}")
-    model = solver.model()
-    cover = {
-        n for n, variable in zip(weights, variables)
-        if z3.is_true(model.eval(variable, model_completion=True))
-    }
-    return lower.as_long(), cover
+    return CoverSolver(weights, triples, timeout_ms, engine).solve()
 
 
 def exact_prefix(limit, timeout_ms=0, progress=False, engine="rc2", checkpoint=None):

@@ -85,3 +85,33 @@ The original optional cutoff was 10^12. That run was stopped once the
 completed checkpoint rows certified all ten places; the saved report uses
 its actual final completed threshold. The command above reproduces that
 domain directly, rather than requiring an interrupted run.
+
+## Points in every or no maximum set
+
+`forced_points.py` uses the same exact hitting-set solver. For each prefix
+it first computes g, then solves **twice for every point**: once with the
+omission variable true (point excluded), and once with it false (point
+required). A point is `forced` when exclusion reduces the optimum, `none`
+when requirement reduces it, and `flexible` when both constrained maxima
+equal g. Each query must close its integer objective bounds and return a
+witness satisfying the corners, cardinality, and point constraint.
+UNKNOWN or a timeout aborts without classifying that query.
+
+The solver and context are fresh at every prefix. Queries within that
+fixed prefix use temporary assumptions; no hard constraints or objectives
+are accumulated between them. The first 16 prefixes are also checked by
+enumerating every subset, intersecting and taking the union of **all**
+maximum sets. Optional `--compare` checks already saved optima only after
+the independent computation; they are never solver input.
+
+```bash
+experiments/.venv/bin/python experiments/forced_points.py --prefixes 40 --compare experiments/results.json --output experiments/forced-small.json
+experiments/.venv/bin/python experiments/forced_points.py --prefixes 200 --timeout-ms 30000 --compare experiments/results.json --output experiments/forced-results.json
+```
+
+The CSV table has one row for every point of every prefix, with coordinates,
+status, both constrained optima, and their losses relative to g. JSON adds
+the unrestricted cover, timings, and tests of the jump criterion using
+statuses from the **previous** prefix. Complete prefixes are flushed to an
+ignored `.partial.jsonl` checkpoint. These are exact computational results
+relying on Z3, not Lean proofs.

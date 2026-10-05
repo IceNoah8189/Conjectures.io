@@ -309,3 +309,41 @@ no DP source or computational certificate was supplied with these notes.
   remaining mathematical issue is the exact jump rule and irrationality
   argument described in PLAN.md; the literature search found no proved
   closed formula for g in the sources reviewed.
+
+## Forced-point experiment: solver and small verification (2026-10-04)
+
+- Added `experiments/forced_points.py`, reusing the independent Boolean
+  hitting-set MaxSAT model through a new `CoverSolver` helper. At every
+  prefix it computes the unrestricted maximum and then solves once with
+  each point excluded and once with that point required. Both constrained
+  maxima are saved; `forced` means exclusion lowers g, `none` means
+  requirement lowers g, and `flexible` means both preserve g. Every query
+  requires matching integer lower/upper objective bounds and a checked
+  witness. Assumptions apply only to that query. A fresh model and Z3
+  context are used at each prefix, without accumulating prefix vertices.
+- Performance trials of fixed-cardinality SAT timed out at 150 points.
+  Reusing the MaxSAT model with temporary point assumptions was much
+  faster, so the actual experiment computes constrained optima directly.
+  No timed-out query is treated as a membership result.
+- Command:
+  `/tmp/erdos168-venv/bin/python experiments/forced_points.py --prefixes 40 --compare experiments/results.json --output experiments/forced-small.json`.
+  All 40 prefixes through 972 completed: 820 point classifications,
+  1,640 constrained queries, and 40 unrestricted queries. All computed g
+  values agree with the previously saved independent results. A separate
+  exhaustive oracle enumerated every maximum set at each of the first 16
+  prefixes, confirming g and the intersection/union classifications.
+- The requested criterion was checked against the previous prefix, not
+  the prefix including the new point. All 30 cases with b>0 agree:
+  a jump occurs exactly when at least one of the two lower neighbors is
+  not forced previously. Powers of two always jump. Also, the new point
+  is forced in the new prefix exactly when it is a jump, in all 40 cases.
+- Points belonging to no optimum do occur. At t=6 the unique optimum is
+  {1,3,4,6}, so 2 belongs to none; at t=18 only 16 is forced and no point
+  belongs to none. This shows that membership need not persist as the
+  threshold grows. The saved CSV/JSON tables contain all small results;
+  a larger run is now computing 200 prefixes before drawing geometric
+  conclusions. These results are computational, not Lean proofs.
+- Regression command:
+  `/tmp/erdos168-venv/bin/python experiments/exact_g.py --limit 64 --output /tmp/erdos168-refactor-check.json`.
+  It passed all integer-cutoff exhaustive checks through 64 and the
+  expected jump comparison. No Lean file or task statement was changed.
