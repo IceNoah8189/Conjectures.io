@@ -1148,3 +1148,151 @@ These holdouts substantially extend the tested domain, but a proof of
 the exact formula for all t and the irrationality of the resulting
 infinite series are still open tasks. No Lean was written or changed,
 and no wallet or key file was accessed.
+
+## Density expansion from the frozen rule (2026-10-05)
+
+This investigation concerns the density of the rule frozen at `6ca0694`.
+It is conditional on that rule being the exact g formula for all cutoffs;
+the rule has only been checked by unrestricted solvers through 10^14.
+Nothing here is a Lean proof or an irrationality argument.
+
+### Exact contribution at a newly added smooth number
+
+Write h(t)=min_j c_j(t). If s=2^a*3^b is the new lattice point, the
+new participating-colour counts are as follows:
+
+| New point | Newly participating points | Count increment |
+| --- | --- | --- |
+| b=0 | none | (0,0,0) |
+| (a,b)=(0,1), s=3 | (0,0), (1,0), (0,1) | (1,1,1) |
+| b=1, a>=1 | (a,1), (a+1,0) | +1 in colours a-1 and a+1 modulo 3 |
+| b>=2 | (a,b) | +1 in colour a-b modulo 3 |
+
+All points with b>=1 participate immediately. A point (a,0), a>=1,
+first participates at 3*2^(a-1); (0,0) first participates at 3.
+This gives an independent incremental count formula. It matches all
+720 saved exact prefixes and all independently reconstructed colour
+counts, without calling the old prediction program or an optimizer.
+
+Put Δh(s)=h(s)-h(s^-), ΔE(s)=E(s)-E(s^-). The rule's jump indicator
+is J(s)=1-Δh(s)+ΔE(s), hence
+
+```text
+L_rule = 1 - H/3 + W/3,
+H = sum_s Δh(s)/s,     W = sum_s ΔE(s)/s.
+```
+
+The subtracted term is the **increase** in the minimum colour count;
+h never decreases. The constant 1 uses sum_s 1/s=3 exactly.
+Each Δh is 0 or 1. J is also always 0 or 1: an interior E increase
+requires Δh=1, an interior E decrease requires Δh=0; at the lower
+edge the two born colours enforce the same restriction, while at the
+upper edge the unchanged relevant minimal colour enforces Δh=0 if E
+was positive. Powers of two introduce no participating-count change.
+
+### A valid regrouping with bounded rational coefficients
+
+Pair exponents a=2u and a=2u+1, and group by n=u+b. Define
+
+```text
+C_n = sum_(b=0..n) (2*Δh(2^(2(n-b))*3^b)
+                         + Δh(2^(2(n-b)+1)*3^b)) * (3/4)^(n-b).
+```
+
+Then H=(1/2)*sum_n C_n/3^n and 0<=C_n<=12. This is a diagonal
+grouping whose endpoints have weights 3^n and 4^n (or twice those).
+
+For each dyadic window, let
+W_m=sum of ΔE(s)/s over its changes, including its upper-edge exit.
+Equivalently it is the sum of 1/start-1/end over positive episodes.
+Therefore
+
+```text
+0 <= W_m <= 1/(24*2^m) - 1/(27*2^m) = 1/(216*2^m),
+U_k = 4^k * (W_(2k) + W_(2k+1)),    0 <= U_k <= 1/144.
+```
+
+This produces the exact, absolutely convergent identity
+
+```text
+L_rule = (1/6) * (6 + sum_k alpha_k/4^k + sum_k beta_k/3^k),
+alpha_k = 2*U_k,        beta_k = -C_k,
+0 <= alpha_k <= 1/72,  -12 <= beta_k <= 0.
+```
+
+These coefficients are **rational**, not the requested integers.
+For example (alpha_4,beta_4)=(139/17496,-305/64). The least common
+scale N that would make these particular natural coefficients integers
+through k=40 is 2^79*3^55. Through k=160 it increases to 2^318*3^204.
+These finite checks do not prove that no different regrouping can
+produce bounded integer coefficients.
+
+The window is not a single positive episode in every case. At m=39,
+E changes at 13374150672384 (+1), 14089640214528 (-1),
+14281868906496 (+1), and 14843406974976 (-1). Every event and colour
+count through 54*4^40 is saved in `experiments/density-window-events.csv`;
+`experiments/density-contributions.csv` records every smooth cutoff.
+
+### Numerical check and an integer endpoint trial
+
+The rational series through k=40 is
+
+```text
+0.80096575500655898913344222942366676214690844605842...
+```
+
+Its exact signed-tail enclosure is
+
+```text
+[partial - 3^(-40), partial + 1/(1296*4^40)].
+```
+
+An independent direct jump sum through 54*4^160 gives
+0.80096575500655898909042032638808241322472498911028...;
+the remaining all-smooth reciprocal mass bounds its error. The exact
+intervals intersect and certify much more than twelve decimal places
+for the density of the frozen rule.
+
+The quoted 0.8009657550 is a ten-decimal rounding, not an exact value.
+The rule's twelve-decimal rounding is **0.800965755007**. Independently
+of extending the rule, the existing 720 exact prefixes give the actual
+density enclosure
+
+```text
+[0.80096575500645906403407966569563013853263570518260...,
+ 0.80096575500661058219658788202477788045293946639215...].
+```
+
+Thus literal agreement with 0.800965755000 to an absolute tolerance
+of 10^(-12) is impossible; the already verified lower bound exceeds it
+by more than 6.459*10^(-12). The saved solver interval certifies ten
+places, but straddles the twelve-place rounding boundary. The additional
+digits calculated here remain conditional on the frozen rule.
+
+For an integer endpoint trial, group the *net* loss Δh-ΔE on the same
+diagonals. The finite numerator P_n is an integer with denominator
+4^n*3^n. Solve P_n=A_n*3^n+B_n*4^n, choosing A_n in
+[-4^n/2,4^n/2) to minimize its absolute value, and set
+a_n=-A_n, b_n=-B_n. This gives exact **paired finite summands** with
+N=6, c=6. Already (a_4,b_4)=(124,-44); through 40 the largest absolute
+values are 487325319037653169772096 and 4900828572324321976.
+The coefficients become enormous and their normalized summands cancel.
+Boundedness and convergence of the two separate infinite integer
+series have not been established; splitting the convergent paired
+sum into them would be unjustified. This trial is not a claimed answer
+to the requested bounded-integer formula.
+
+`experiments/density-expansion.csv` and JSON retain all 41 coefficient
+rows, exact candidate ratios, rational coefficients and integer trials.
+The report records every conflict with the small geometric ratio-band
+catalog and a longer 160-index audit. A refinement using the actual
+nearest powers of three and the rational average-colour contribution
+is being investigated next.
+
+```bash
+python3 experiments/density_expansion.py
+```
+
+The new program uses only the standard library and exact fractions.
+It rechecks the frozen source hash and the saved solver/count data.
+The original rule, exact-result files and all Lean files are unchanged.
