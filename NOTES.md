@@ -1531,6 +1531,12 @@ r_0(t)=Q(N_1+1,0),    r_1(t)=Q(N_1,1),
 r_b(t)=Q(N_b,b) for 2<=b<=B=floor(log_3 t).
 ```
 
+Equivalently the correction to the full lattice row 0 is
+r_0=Q(A_0+1,0)-[A_0=A_1+2]*e_(A_0 mod 3): since
+A_0-A_1 is 1 or 2, at most its last point is isolated. Row 1 has
+zero correction to Q(A_1+1,1); its exceptional first birth also
+activates (0,0), in addition to (1,0), in row 0.
+
 For t<3 all participating counts vanish. The apparent special rule for
 b=1 in the birth table is precisely the simultaneous activation of
 its own point and the new point in row 0; it does not remove a point
@@ -1574,7 +1580,10 @@ routine. The frozen excess source SHA-256 is checked before use.
 
 Results: **33,742/33,742 smooth cutoffs through 54*4^160 agree**;
 **720/720 saved solver/corner comparisons agree**; all **161 saved
-nearest-power b coefficients, indices 0..160, agree exactly**. At the
+nearest-power b coefficients, indices 0..160, agree exactly**. The
+completed analysis also directly rechecks **2391/2391 saved frozen-rule
+count/d/delta_d rows** in `density-contributions.csv`, through 54*4^40.
+At the
 last cutoff 54*4^160=2^321*3^3, counts are (11247,11247,11248),
 D=(0,-1), d=1. Verification and source hashes are saved in
 `experiments/colour-imbalance-verification.json`.
@@ -1601,3 +1610,366 @@ create `.git/index.lock`). A writable checkout at
 `/tmp/erdos168-round1-checkout` is used for the required commits and
 `git push origin work`; changed files are copied there from this shared
 workspace. The original checkout's git metadata cannot be advanced here.
+
+### Proved rotation regrouping: the bounded summand has zero mean
+
+With x=log_2(t) and theta=log_2(3), A_b=floor(x-b*theta) exactly.
+This makes D a rotation sum with the three-state clock b mod 3. To
+obtain one ordinary circle rotation, group rows b=2+3q+j, j=0,1,2.
+For B>=2 write B-1=3Q+R, 0<=R<3, and set u=(x-2*theta)/3. Define
+
+```text
+G(y)=sum_(j=0..2) F(floor(3*{y-j*theta/3}), (2+j) mod 3).
+
+D(t)=C((A_1+1) mod 3) + sum_(q=0..Q-1) G(u-q*theta)
+     + sum_(j=0..R-1)
+         F(floor(3*{u-Q*theta-j*theta/3}), (2+j) mod 3).
+```
+
+The last sum has at most two terms. This follows from
+floor(3y) mod 3=floor(3*{y}). The formula for B=1 is just C.
+The means of the three columns of F are (1,1)/3, (1,-2)/3,
+(-2,1)/3, so **G has mean zero**. Each coordinate has total variation
+6. The discontinuities lie at (j*theta+i)/3 modulo 1, for 0<=i,j<=2;
+irrationality of theta makes these nine points distinct.
+
+The standard Denjoy--Koksma inequality therefore bounds each coordinate
+of a complete q_n-term G sum by 6 when q_n is a convergent denominator
+of theta. Including C and the final two rows gives ||D||_infinity<=9
+when Q=q_n. More generally, decomposing Q into its Ostrowski blocks
+gives 6 times the sum of its digits, plus 3, as a bound. The external
+inequality used here is stated in Proposition 4.2 of
+[Fayad--Kanigowski, Multiple mixing for a class of conservative surface flows](https://link.springer.com/article/10.1007/s00222-015-0596-6).
+This is a use of a classical theorem on paper, not a Lean proof.
+
+Uniform equidistribution for the fixed, Riemann-integrable step function
+G also gives D(t)=o(log t) and d(t)=o(log t). To see why the changing
+starting phase u causes no problem, sandwich each step coordinate by
+continuous upper and lower functions whose integrals differ by an
+arbitrarily small amount; continuous functions have uniform rotation
+averages (first prove this for Fourier polynomials using finite
+geometric sums, then approximate uniformly). Since Q is proportional
+to log t and the boundary terms are bounded, the assertion follows.
+Neither this argument nor Denjoy--Koksma proves an O(log log t) or an
+O(sqrt(log t)) bound for this particular theta. Bounded partial
+quotients of log_2(3) have not been assumed or established.
+
+### Proved unboundedness already along powers of three
+
+At t=3^k, put z=exp(2*pi*i/3) and Z_k=sum_j c_j(3^k)*z^j.
+For row b>=1 use n=k-b, so its length is floor(n*theta)+1 and its
+normalized colour is a+n. Geometrically summing each row yields
+
+```text
+(1-z)*Z_k
+  = 1-z^(floor((k-1)*theta)+2)
+    + z^(-k) * (sum_(n=0..k-1) z^n
+                - z*sum_(n=0..k-1) z^floor(n*(theta+1))),  k>=1.
+```
+
+The first term and sum z^n are bounded. Write alpha=(theta+1)/3 and
+W_k=sum_(n<k) z^floor(3*{n*alpha}). If D(3^k) were bounded, then Z_k
+and W_k would be bounded. If N_j(k) counts the visits {n*alpha} to
+[j/3,(j+1)/3), then W_k=sum_j N_j(k)*z^j and
+N_0(k)-k/3=(2/3)*Re(W_k). This would give bounded discrepancy for an
+interval of length 1/3 under an irrational rotation, which is impossible.
+The bounded-remainder interval criterion is |I| in alpha*Z+Z;
+1/3 is not in this group because alpha is irrational. This criterion
+is stated on page 1 of
+[Haynes--Koivusalo, Constructing bounded remainder sets and cut-and-project sets which are bounded distance to lattices](https://arxiv.org/pdf/1402.2125),
+with attribution to Hecke, Ostrowski and Kesten; Kesten's original
+[1966 paper](https://www.impan.pl/en/publishing-house/journals-and-series/acta-arithmetica/all/12/2/96036/on-a-conjecture-of-erdos-and-szusz-related-to-uniform-distribution-mod-1)
+is Acta Arithmetica 12, 193--212.
+
+For completeness, the necessary direction needed here has a short
+standalone argument. Let f=1_[0,1/3)-1/3 and T(y)=y+alpha. Bounded
+partial sums at 0 imply uniformly bounded partial sums at every orbit
+point by subtracting two sums at 0. Density of the orbit and right
+continuity of every finite step sum extend this bound to every phase.
+The functions H_N=(1/N)*sum_(n=1..N) S_n f have bounded L^2 norm and
+satisfy H_N-H_N composed with T = f + O(1/N) uniformly. A weak L^2
+subsequence gives a real measurable H with H-H composed with T=f.
+Then phi=exp(2*pi*i*H) is a nonzero L^2 eigenfunction satisfying
+phi composed with T=exp(2*pi*i/3)*phi. A nonzero Fourier coefficient
+of phi forces m*alpha=1/3 modulo 1 for an integer m, contradicting
+irrationality. Finally theta is irrational, since rational theta=p/q
+would imply 2^p=3^q, contradicting unique prime factorization.
+
+Thus **D(3^k) and d(3^k) are unbounded**, unconditionally for the
+participating-colour definition. Here d>=max(c_j)-min(c_j)>=||D||_infinity.
+This means unbounded record envelopes, not that d(t) tends to infinity;
+there are long small-discrepancy stretches and returns. Only the use
+of these quantities to describe exact g and its density is conditional
+on the frozen rule.
+
+### Exact growth measurements through the requested limit
+
+`experiments/colour_rotation.py` scans all 33,742 smooth cutoffs,
+records counts, D, d and delta_d, and computes all b blocks reached by
+54*4^160. Norm |D| here means ||D||_infinity; the Euclidean maximum
+is also recorded via its exact square. The results are:
+
+| Through 54*4^K | Smooth cutoffs | max ||D||_infinity | max d |
+| --- | --- | --- | --- |
+| K=0 | 16 | 2 | 3 |
+| K=5 | 92 | 2 | 4 |
+| K=10 | 231 | 2 | 4 |
+| K=20 | 698 | 2 | 4 |
+| K=40 | 2391 | 3 | 5 |
+| K=80 | 8803 | 3 | 5 |
+| K=120 | 19254 | 3 | 6 |
+| K=160 | 33742 | 4 | 6 |
+
+The maximum |c_0-c_1| is 4, maximum |c_1-c_2| is 3, maximum colour
+spread is 4, and maximum Euclidean |D| is sqrt(20). The coordinate
+and spread maximum 4 occurs **only twice**: t=2^199*3^73 and
+t=2^199*3^76. At the first, counts=(10502,10498,10500), D=(4,-2).
+The maximum d=6 occurs at 17 cutoffs, first at t=2^95*3^73,
+counts=(4727,4727,4724), D=(0,3), and last at t=2^209*3^73.
+The first larger records are:
+
+| t factorization | x=log_2 t (display) | D | d | Newly reached record |
+| --- | --- | --- | --- | --- |
+| 2^1*3^1 | 2.5849625 | (1,-1) | 2 | norm 1, d 2 |
+| 2^4*3^1 | 5.5849625 | (2,-1) | 3 | norm 2, d 3 |
+| 2^3*3^8 | 15.6797000 | (0,2) | 4 | d 4 |
+| 2^50*3^8 | 62.6797000 | (3,-1) | 4 | norm 3 |
+| 2^31*3^20 | 62.6992500 | (3,-2) | 5 | d 5 |
+| 2^95*3^73 | 210.7022626 | (0,3) | 6 | d 6 |
+| 2^199*3^73 | 314.7022626 | (4,-2) | 6 | norm 4 |
+
+Seven-point exploratory least-squares fits to the max-d envelope,
+using K=5,10,20,40,80,120,160 and x=2K+log_2(54), give R^2=0.90366
+for an affine function of x, 0.92461 for an affine function of sqrt(x),
+and 0.87867 for an affine function of log(x). These small, dependent,
+staircase samples **do not identify an asymptotic growth law**. The
+proved sublinear bound above excludes asymptotically positive linear
+growth in log t, despite the finite-range fit.
+
+### Exact b coefficients and both meanings of partial sum
+
+The limit lies between 3^205 and 3^206, so it covers complete blocks
+k=0..204 and part of block 205. The last coefficient is explicitly
+marked truncated in the data. All coefficients and sums use Fraction.
+
+| Last index | Unweighted sum b_k (display) | Weighted sum b_k/3^k (display) |
+| --- | --- | --- |
+| 20 | 0.477596821729 | 0.208427869725 |
+| 40 | -10.543271062718 | 0.208427869765 |
+| 80 | -17.802145728008 | 0.208427869765 |
+| 120 | -30.141470698083 | 0.208427869765 |
+| 160 | -64.635767251671 | 0.208427869765 |
+| 204, complete | -70.870603276188 | 0.208427869765 |
+| 205, truncated at 54*4^160 | -71.567938707823 | 0.208427869765 |
+
+The largest individual |b_k| remains
+718505744573433/281474976710656=2.552645187042774..., at k=32,
+where b_k is negative. The largest unweighted partial sum is
+2.2139895083528245 at k=24; the smallest is -72.86918028640869 at
+k=203. The affine fit to all complete partial sums k=1..204 is
+10.11599309-0.40739753*k, R^2=0.93924; square-root and logarithmic
+fits have R^2=0.85188 and 0.63743. This is empirical negative drift,
+not a proof that the unweighted partial sums diverge or that individual
+b_k are unbounded. Weighted absolute convergence was already proved
+from |delta_d|<=2 and the smooth reciprocal sum.
+
+Summation by parts makes the distinction explicit:
+
+```text
+b_k = d(3^(k+1)-)/3 - d(3^k-)
+      + 3^k * integral_(3^k..3^(k+1)) d(t)/t^2 dt.
+```
+
+Hence a bound d<=M on a block, including its left limit, implies
+|b_k|<=M. Unbounded d alone does not imply unbounded b_k; a constant
+part of d cancels in this formula. **Uniform boundedness of the b_k
+and boundedness/divergence of their unweighted partial sums remain open.**
+
+### Continued-fraction records and a longer exact powers-of-three audit
+
+The script certifies the continued-fraction prefix
+[1;1,1,2,2,3,1,5,2,23] using the exact bracket
+50508/31867 < theta < 24727/15601. Each endpoint comparison is
+checked by comparing 3^q with 2^p; Decimal only proposes the bracket
+and displays errors. The relevant convergents and signed errors are:
+
+| p/q | q*theta-p (display) |
+| --- | --- |
+| 3/2 | +0.1699250014 |
+| 8/5 | -0.0751874964 |
+| 19/12 | +0.0195500087 |
+| 65/41 | -0.0165374704 |
+| 84/53 | +0.0030125382 |
+| 485/306 | -0.0014747793 |
+| 1054/665 | +0.0000629796 |
+| 24727/15601 | -0.0000262492 |
+
+The two first records near x=62.7 have ratio 3^12/2^19; their phase
+separation is exactly 12*theta-19. Their grouped row length Q is 12,
+exactly the corresponding denominator. The first d=6 record changes
+the incoming row exponent from b=20 to b=73=20+53; its fractional-x
+phase moves by 53*theta-84. This is a concrete near-return relation.
+The grouped lengths at the later d=6 and norm-4 records are 43 and
+65; they are not themselves denominators 41 and 53. The data support
+continued-fraction resonance, **not a rule that every record occurs
+exactly at a convergent denominator**. The full requested scan only
+reaches Q=68, so denominators 306 and 665 require a longer audit.
+
+At t=3^k, a linear-time exact recurrence maintains the normalized
+sum of Q(floor(n*theta)+1,-n) for 0<=n<k, cyclically relabels colours
+by -k, and adds Q(floor((k-1)*theta)+2,0) for row 0. Floors come from
+the bit length of 3^n. The program verifies its complex rotation-word
+identity in Z[z]/(1+z+z^2) at **all 8192 indices**, matches the direct
+row formula at all k<=205, and also at k=306,665,918,1995,8192.
+
+| Powers-of-three audit through k | max ||D(3^k)||_infinity | max d(3^k) |
+| --- | --- | --- |
+| 205 | 1 | 2 |
+| 306 | 1 | 2 |
+| 665 | 2 | 4 |
+| 1024 | 2 | 4 |
+| 1995 | 3 | 6 |
+| 4096 | 5 | 9 |
+| 8192 | 9 | 15 |
+
+Exploratory fits on these seven longer-audit checkpoints have R^2=0.98589
+for an affine function of k (equivalently log t), 0.98187 for sqrt(k),
+and 0.87172 for log(k). The resonance over this finite range makes
+linear and square-root fits both plausible numerically; the proved
+sublinear bound still forbids a positive asymptotic linear slope.
+
+Both final maxima first occur at **k=7747**, with D=(6,-9). Record
+families include k=1762,3757,5752,7747, spaced by 1995=3*665;
+their D vectors are (3,-3),(4,-5),(5,-7),(6,-9). Another family has
+k=2427,4422,6417, also spaced by 1995. Since 1054+665 is divisible
+by 3, the rotation alpha has the near-return 573/665, with
+665*alpha-573=(665*theta-1054)/3. The large next partial quotient
+23 explains the extended repeating resonance before the next theta
+denominator 15601. This explanation of the observed records is
+consistent with the exact identities; it is not an asymptotic fit.
+At k=41,53,306,665 the counts actually tie, so the denominators are
+near-return controls rather than locations of maximal discrepancy.
+
+### Minimum-colour coding: precise counterexamples and limitations
+
+Let M(t) be the full set of minimum colours. The script also tests
+the least index in M(t), so ties cannot be hidden by arbitrary choices.
+For all smooth t, {x} alone cannot determine M: the first repeated
+phase conflict at t>=3 is t=3 versus 6. More strongly, the first
+conflict with **two different unique minima** is t=6 versus 12:
+both have 2^{ {x} }=3/2, but counts are (2,1,2) and (3,3,2), so
+M={1} and {2}. This rejects every coding solely by {x} over the
+full domain, not just a particular interval catalog.
+
+For two-phase tests, use exact coordinates
+R2=t/2^floor(x) in [1,2), R3=t/3^floor(x/theta) in [1,3).
+Rectangles formed from R2 thresholds 1,9/8,3/2,27/16,2 and R3
+thresholds 1,9/8,3/2,27/16,2,3 first conflict at t=6 versus 24,
+with unique minima 1 and 0. Both lie in the same box
+R2 in [3/2,27/16), R3 in [2,3). A second tested pair, {x/3} and
+{x/theta}, uses t/8^floor(x/3) thresholds 1,2,4,8 and the same R3
+thresholds; its first conflict is t=18 versus 24, M={0,1,2} versus
+{0}. These reject the **specified boxes**, not arbitrary partitions
+of an unspecified torus phase.
+
+At 3^k, all three natural thirds catalogs fail at k=8:
+
+- For {k*theta}, k=3 and 8 are both in [2/3,1), with M={0,1,2}
+  and {2}. Membership is checked exactly by cubing
+  3^k/2^floor(k*theta) and comparing with 2 and 4.
+- For {k*theta/3}, k=2 and 8 share [0,1/3), with the same conflict.
+- For {k*(theta+1)/3}, k=1 and 8 share [2/3,1), again with that conflict.
+
+Even allowing arbitrary interval edges, the necessary number of
+constant intervals on the line [0,1), ordered by phase, grows as follows.
+These are exact adjacent-label transition counts, without fitted
+rounding errors:
+
+| k=1..K | M on {k*theta} | least M on {k*theta} | M on {k*theta/3} | M on {k*(theta+1)/3} |
+| --- | --- | --- | --- | --- |
+| 40 | 32 | 28 | 26 | 29 |
+| 160 | 43 | 39 | 26 | 127 |
+| 205 | 43 | 39 | 26 | 127 |
+| 665 | 563 | 515 | 292 | 564 |
+| 1995 | 1851 | 1622 | 1865 | 1750 |
+| 4096 | 3958 | 3793 | 2946 | 3908 |
+| 8192 | 8062 | 7902 | 3011 | 8039 |
+
+A circle partition can save at most one interval by joining the first
+and last runs. Cyclically normalizing M by adding k is also tested;
+even that needs 1238 intervals on {k*theta} through 8192. The report
+contains all normalized-label and least-index counts.
+
+For a reproducible fitted-catalog holdout, train on k=1..40, take
+each maximal constant-label run in phase order, and place its boundary
+at the exact midpoint between adjacent unequal-label **ratio** values.
+The {k*theta} fit (32 intervals) first fails at k=44, predicting all
+three minima instead of {2}. The {k*theta/3} and alpha-phase fits
+first fail at k=41. These are first counterexamples to these explicit
+fitted catalogs, not universal counterexamples to all possible edges.
+
+Binary indicators of membership in M fail Sturmian balance. For colour
+0 the length-2 blocks starting at k=1 and 8 are 11 and 00, first
+exposing imbalance at k=9. For colour 1, length-4 blocks starting at
+1 and 8 are 1111 and 0110 (first at k=11). For colour 2, starts 1
+and 13 give 1111 and 0110 (first at k=16). The least-minimum binary
+indicators fail as well, and each membership indicator has a 00/11
+conflict even when the sample starts at k=1024. Thus these observed
+binary words are not Sturmian. Failure after finitely many starts
+does not prove that every tail fails balance.
+
+**Plain conclusion:** the row-count hypothesis is proved, and the
+imbalance is exactly a finite-step-function rotation **sum**, with
+unbounded discrepancy state. Three-distance/continued-fraction
+methods apply to its visit counts and near returns. The minimum is
+the nonlinear minimum of the accumulated counts, not a demonstrated
+local rotation label. The tested simple catalogs and Sturmian
+interpretations fail. An **eventual fixed finite-interval coding of
+M(3^k) has neither been proved nor disproved**. Because {k*theta} is
+injective for finite k, any finite sample can be fitted with enough
+intervals; a finite list of labels cannot by itself refute the existence
+of some unspecified finite partition. The same limitation applies to
+unspecified extra torus phases. No claim of universal impossibility
+or eventual stabilization is justified by these tests.
+
+### Round 1 artifacts, validation, and remaining issues
+
+New artifacts under `experiments/`:
+
+- `colour_imbalance.py`, `colour-imbalance-verification.json`: exact row
+  formula, independent birth/corner/solver comparisons and source hashes.
+- `colour_rotation.py`, `colour-rotation.json`: growth records,
+  Fraction partial sums, certified continued fractions, specified coding
+  counterexamples, exact interval-complexity counts, and exploratory fits.
+- `colour-imbalance-cutoffs.csv`: all 33,742 smooth cutoffs through
+  54*4^160, counts, D, spread, d, delta_d and the minimum-set bitmask.
+- `colour-imbalance-coefficients.csv`: all 206 reached blocks,
+  rational b_k and weighted/unweighted partial sums; block 205 is truncated.
+- `colour-imbalance-powers3.csv`: all k=0..8192, counts, D, d, both
+  minimum labels and floor(k*theta). The bitmask uses bit j for colour j.
+
+Commands for the completed analysis:
+
+```bash
+python3 experiments/colour_imbalance.py
+python3 experiments/colour_rotation.py
+python3 -m py_compile experiments/colour_imbalance.py experiments/colour_rotation.py
+git diff --check
+git diff --cached --check
+```
+
+The extended powers audit is linear in the number of powers and does
+not run a solver. Phase orders, memberships, counts, coefficients and
+counterexamples are exact. Regressions use floating point for display
+and are explicitly exploratory. The computation completed in minutes,
+well below the 60-minute limit; no computation was abandoned at that
+limit. No Lean, theorem statement, wallet, key or secret was changed.
+
+Remaining mathematical issues: prove the frozen g rule beyond the
+solver range; analyze b_k boundedness and unweighted partial-sum drift;
+settle any precisely formulated eventual minimum-colour coding; derive
+a useful uniform continued-fraction/Ostrowski description that retains
+the accumulated discrepancy. The next step should use the proved
+three-interval rotation discrepancy and its boundary correction as the
+state for the frozen minimum/excess condition, rather than assuming
+that a few phase thresholds alone determine the minimum or b_k.

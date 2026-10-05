@@ -131,6 +131,29 @@ Output files:
 Cutoffs, interval tests, identities and tail bounds use integers and
 `Fraction`; displayed decimals are computed only after these checks.
 
+## Colour imbalance and rotation audit (Round 1)
+
+```bash
+python3 experiments/colour_imbalance.py
+python3 experiments/colour_rotation.py
+```
+
+The row formula is checked against independent participation births at all
+33,742 smooth cutoffs through `54*4^160`, all 720 saved solver cutoffs,
+2,391 saved contribution rows, and 161 saved coefficient blocks. The
+second program records exact growth, rational coefficient partial sums,
+certified continued fractions, and counterexamples to specified minimum
+colour phase catalogs. It also uses an exact recurrence at `3^k` through
+`k=8192`. Integer and Fraction arithmetic decide counts and phase tests;
+the regressions are exploratory.
+
+The colour identities are unconditional for complete-corner participation.
+Their use to compute exact g and its density remains conditional on the
+frozen rule. The on-paper rotation reduction and unboundedness proof are in
+`../NOTES.md`. No eventual finite-interval minimum-colour coding is proved
+or disproved. Output files are `colour-imbalance-verification.json`,
+`colour-rotation.json`, and `colour-imbalance-{cutoffs,coefficients,powers3}.csv`.
+
 ## Points in every or no maximum set
 
 `forced_points.py` uses the same exact hitting-set solver. For each prefix

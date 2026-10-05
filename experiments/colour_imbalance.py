@@ -6,6 +6,7 @@ comparisons with g and the density interpretation use the frozen rule.
 """
 
 import argparse
+import csv
 from fractions import Fraction
 import json
 from pathlib import Path
@@ -74,8 +75,11 @@ def verify(limit):
         raise AssertionError("frozen participation/excess source changed")
     exact, saved_points, exact_source = saved_report(Path("experiments/results-1e14.json"))
     independent = {r["t"]: r for r in compare(exact, saved_points)}
+    contribution_path = Path("experiments/density-contributions.csv")
+    with contribution_path.open(newline="") as stream:
+        saved_contributions = {int(r["t"]): r for r in csv.DictReader(stream)}
     counts, g, matches, checked = [0, 0, 0], 0, 0, 0
-    oldh, oldE, oldd, k, power3 = 0, 0, 0, 0, 1
+    oldh, oldE, oldd, k, power3, contribution_matches = 0, 0, 0, 0, 1, 0
     coefficients = {}
     for t, a, b in lattice_points(limit):
         birth(t, a, b, counts)
@@ -86,6 +90,12 @@ def verify(limit):
         d = sum(counts)-3*h
         if d != max(-2*D[0]-D[1], D[0]-D[1], D[0]+2*D[1]):
             raise AssertionError(f"D-to-d identity fails at {t}")
+        if t in saved_contributions:
+            saved = saved_contributions[t]
+            if (counts != [int(saved[f"c_{j}"]) for j in range(3)]
+                    or d != int(saved["d"]) or d-oldd != int(saved["delta_d"])):
+                raise AssertionError(f"saved frozen-rule contribution differs at {t}")
+            contribution_matches += 1
         m = t.bit_length()-5
         E = int(m >= 0 and 24*2**m <= t < 27*2**m and counts[(m+2) % 3] == h)
         jump = 1-(h-oldh)+(E-oldE)
@@ -104,8 +114,9 @@ def verify(limit):
         checked += 1
     if matches != len(independent):
         raise AssertionError("not every saved solver cutoff was checked")
+    if contribution_matches != len(saved_contributions):
+        raise AssertionError("not every saved frozen-rule count cutoff was checked")
     audit_path = Path("experiments/density-expansion-audit.csv")
-    import csv
     with audit_path.open(newline="") as stream:
         audited = list(csv.DictReader(stream))
     for row in audited:
@@ -115,12 +126,14 @@ def verify(limit):
         "interpretation": "Row identities are unconditional for participating lattice points; g comparisons use the frozen rule, not a proof of it.",
         "limit": limit, "all_smooth_cutoffs_checked": checked,
         "all_saved_solver_cutoffs_checked": matches,
+        "saved_frozen_contribution_cutoffs_checked": contribution_matches,
         "saved_nearest_power_coefficients_checked": len(audited),
         "last_cutoff": {"t": t, "a": a, "b": b, "counts": counts, "D": D, "d": oldd},
         "F_rows_A_mod_3_columns_b_mod_3": F,
         "boundary_rows_N1_mod_3": BOUNDARY,
         "rule_source": rule_source, "exact_source": exact_source,
-        "saved_audit_source": source(audit_path), "program_source": source(Path(__file__)),
+        "saved_audit_source": source(audit_path), "saved_contribution_source": source(contribution_path),
+        "program_source": source(Path(__file__)),
     }
 
 
@@ -135,6 +148,7 @@ def main():
     args.output.write_text(json.dumps(report, indent=2)+"\n")
     print(json.dumps({key: report[key] for key in (
         "all_smooth_cutoffs_checked", "all_saved_solver_cutoffs_checked",
+        "saved_frozen_contribution_cutoffs_checked",
         "saved_nearest_power_coefficients_checked", "last_cutoff")}, indent=2))
 
 
