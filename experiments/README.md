@@ -6,7 +6,7 @@ one of its three variables to be true. Z3 solves the resulting Boolean
 hitting-set problem as MaxSAT: each retained point is a unit-weight soft
 constraint, while every corner constraint is mandatory. This program
 was written independently for this task. It uses no column-by-column
-bitmask DP, external optimization code, published value table, or assumed
+bitmask DP, copied problem-specific solver code, published value table, or assumed
 formula for the jump set. The expected prefix is used only for comparison
 after the optima have been computed.
 
@@ -20,6 +20,11 @@ It also checks that the minimum cover changes by zero or one as each
 point is added. Z3's `maxres` engine uses unsatisfiable cores to solve
 MaxSAT, avoiding the slow standalone cardinality queries of the initial
 small-domain version (commit `a11f93f`).
+Each prefix uses a fresh optimization object, with all hard clauses added
+before the soft objective. An initial incremental-object run timed out
+at t = 2448880128; rebuilding the same problem closed both bounds in
+under a second in a separate trial. A timeout is a performance failure,
+not a disagreement in g or in the jump list.
 
 This is an exact integer/Boolean computation relying on Z3's SAT/UNSAT
 optimization answers, not a Lean proof or an independently checked proof certificate.

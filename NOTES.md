@@ -180,7 +180,7 @@ no DP source or computational certificate was supplied with these notes.
 - Fan Chung, Paul Erdős, and Ronald Graham,
   [On sparse sets hitting linear forms](https://math.ucsd.edu/~fan/wp/linear.pdf),
   Number Theory for the Millennium I, 2002, pp. 257–272, studies the
-  equivalent problem of hitting all lattice corners. In Section 3 it
+  equivalent problem of hitting all lattice corners. In Section 4 it
   compares the minimum hitting number with a boundary-corrected choice
   among three residue classes and leaves equality conjectural. Its f(k)
   counts omissions, so our g(d_k) = k - f(k). Section 5 also asks whether
@@ -214,3 +214,13 @@ no DP source or computational certificate was supplied with these notes.
   cover has the corresponding size. The small run through 288 was repeated
   successfully, including all brute-force checks through 64. The larger
   run with this formulation is in progress.
+
+- Performance follow-up: the incremental optimization run returned
+  UNKNOWN (`sat.canceled`) at t=2448880128 after its 120-second query
+  limit. It produced no completed large-domain report. A fresh MaxSAT
+  model for this same prefix closed both bounds in about 0.46 seconds.
+  The final implementation rebuilds each prefix with hard clauses before
+  soft clauses, and again passes the full small-domain check. It also
+  independently reconstructs numerical triples to check completeness of
+  the lattice clauses at every prefix. A run through 10^12 is in progress
+  to obtain tighter density bounds and check the user's 10^11 count.

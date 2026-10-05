@@ -59,20 +59,11 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
     minimum number of omissions. Check matching integer lower and upper
     bounds and the returned cover; UNKNOWN aborts the computation.
     """
-    solver = z3.Optimize()
-    solver.set(maxsat_engine="maxres")
-    if timeout_ms:
-        solver.set(timeout=timeout_ms)
     variables, positions, weights, triples = [], {}, [], []
-    minimum, rows, objective = 0, [], None
+    minimum, rows = 0, []
     for weight, a, b in smooth_points(limit):
         started = time.perf_counter()
-        variables.append(z3.Bool(f"omit_{a}_{b}"))
-        # With the same default objective id, all soft clauses sum to
-        # one objective: each omitted point has cost one.
-        handle = solver.add_soft(z3.Not(variables[-1]), weight=1)
-        if objective is None:
-            objective = handle
+        variables.append(z3.Bool(str(weight)))
         positions[a, b] = len(weights)
         weights.append(weight)
         # Any corner containing the new point has one of these anchors.
@@ -80,9 +71,21 @@ def exact_prefix(limit, timeout_ms=0, progress=False):
             corner = ((x, y), (x + 1, y), (x, y + 1))
             if all(point in positions for point in corner):
                 indices = [positions[point] for point in corner]
-                solver.add(z3.Or(*(variables[i] for i in indices)))
                 triples.append(tuple(weights[i] for i in indices))
         previous_minimum = minimum
+        # Rebuild each optimization problem: retained optimization state
+        # caused severe slowdowns in an initial larger-prefix trial.
+        # Declare all hard clauses before adding the soft objective.
+        solver = z3.Optimize()
+        solver.set(maxsat_engine="maxres")
+        if timeout_ms:
+            solver.set(timeout=timeout_ms)
+        by_weight = dict(zip(weights, variables))
+        solver.add(*(z3.Or(*(by_weight[n] for n in triple)) for triple in triples))
+        handles = [solver.add_soft(z3.Not(variable), weight=1) for variable in variables]
+        # All soft clauses have the same default objective id and weight
+        # one, so their joint cost is exactly the number of omissions.
+        objective = handles[0]
         result = solver.check()
         if result != z3.sat:
             raise RuntimeError(
@@ -175,6 +178,7 @@ def make_report(limit, rows, brute_limit):
     }
     return {
         "method": "Boolean hitting set; exact MaxSAT with closed integer bounds; no column DP",
+        "optimization_state": "fresh at each prefix; hard clauses before soft clauses",
         "z3_version": z3.get_version_string(),
         "limit": limit,
         "smooth_count": len(rows),
