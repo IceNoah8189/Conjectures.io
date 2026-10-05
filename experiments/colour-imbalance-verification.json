@@ -1,0 +1,98 @@
+{
+  "interpretation": "Row identities are unconditional for participating lattice points; g comparisons use the frozen rule, not a proof of it.",
+  "limit": 115343299939729144449331172133155814188546044207259249577140246822399865192154589701239952694575104,
+  "all_smooth_cutoffs_checked": 33742,
+  "all_saved_solver_cutoffs_checked": 720,
+  "saved_nearest_power_coefficients_checked": 161,
+  "last_cutoff": {
+    "t": 115343299939729144449331172133155814188546044207259249577140246822399865192154589701239952694575104,
+    "a": 321,
+    "b": 3,
+    "counts": [
+      11247,
+      11247,
+      11248
+    ],
+    "D": [
+      0,
+      -1
+    ],
+    "d": 1
+  },
+  "F_rows_A_mod_3_columns_b_mod_3": [
+    [
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        -1
+      ],
+      [
+        -1,
+        1
+      ]
+    ],
+    [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        -1
+      ],
+      [
+        -1,
+        0
+      ]
+    ],
+    [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  ],
+  "boundary_rows_N1_mod_3": [
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      -1
+    ]
+  ],
+  "rule_source": {
+    "path": "experiments/excess_rule.py",
+    "sha256": "a8365d610af214cc1d3a2554906397e09d6ba3500875f84379b0437846f68d3e"
+  },
+  "exact_source": {
+    "path": "experiments/results-1e14.json",
+    "sha256": "5f12c47e18452ae9664ca1cba02b0271829b5e4128b213b82c2b5222725cc435",
+    "reported_limit": 100000000000000,
+    "smooth_prefixes": 720
+  },
+  "saved_audit_source": {
+    "path": "experiments/density-expansion-audit.csv",
+    "sha256": "0028f6be0ec62466a2dbb6f37e9d3446e11f27b475c3a0f5b7d216623bda4f3c"
+  },
+  "program_source": {
+    "path": "/home/aspic/Conjectures.io/experiments/colour_imbalance.py",
+    "sha256": "8be71f56243cf268fe050fd87329a942905955189fe960dfb5caa28289586b50"
+  }
+}

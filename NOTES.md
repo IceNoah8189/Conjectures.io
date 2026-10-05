@@ -1499,3 +1499,105 @@ It records the frozen-rule, exact-data and program source hashes.
 All calculations beyond the solver domain use the frozen rule without
 presenting it as proved. No Lean, wallet or key file was accessed or
 changed in this density step.
+
+## Round 1: exact row structure of the colour imbalance (2026-10-05)
+
+This round uses no Lean. The identities for participating colours below
+follow from the definition of a complete corner, independently of the
+frozen g rule. Their use in the density identity, and all comparisons
+with g outside the 720 solver cutoffs, remain conditional on that rule.
+
+### Proved row formula and boundary corrections
+
+Put N_b=A_b+1 for an existing row, and write N=3q+r, 0<=r<3.
+Let e_j be the j-th unit vector, with subscripts reduced modulo 3, and
+define
+
+```text
+Q(N,b) = q*(1,1,1) + sum_(0<=i<r) e_(i-b).
+```
+
+Every point (a,b) with b>=1 participates immediately: it is the upper
+vertex of the complete corner based at (a,b-1), whose other vertices
+have weights s/3 and 2s/3 when s=2^a*3^b. Thus r_b=Q(N_b,b) for
+**all b>=1**, including b=1. For row 0, (0,0) first participates at
+3. For a>=1, the earliest possible corner contains (a,0) as its
+right vertex and has largest weight 3*2^(a-1); its use as the left
+vertex would require the larger weight 3*2^a. Therefore, for t>=3,
+row 0 consists of the participating indices 0<=a<=A_1+1:
+
+```text
+r_0(t)=Q(N_1+1,0),    r_1(t)=Q(N_1,1),
+r_b(t)=Q(N_b,b) for 2<=b<=B=floor(log_3 t).
+```
+
+For t<3 all participating counts vanish. The apparent special rule for
+b=1 in the birth table is precisely the simultaneous activation of
+its own point and the new point in row 0; it does not remove a point
+from row 1. Claude's per-row hypothesis is therefore true. Full
+triples only change the common colour count and cancel from D.
+
+Define v_0=(1,0), v_1=(-1,1), v_2=(0,-1), and
+F(a,b)=sum_(0<=i<(a+1) mod 3) v_(i-b). Its full table is:
+
+| A_b mod 3 | b mod 3 = 0 | b mod 3 = 1 | b mod 3 = 2 |
+| --- | --- | --- | --- |
+| 0 | (1,0) | (0,-1) | (-1,1) |
+| 1 | (0,1) | (1,-1) | (-1,0) |
+| 2 | (0,0) | (0,0) | (0,0) |
+
+The combined row-0/row-1 correction C(N_1 mod 3) is respectively
+(1,0), (0,0), (1,-1) for residues 0,1,2. Consequently the exact
+closed form, for t>=3, is
+
+```text
+D(t) = C((A_1(t)+1) mod 3)
+       + sum_(b=2..B) F(A_b(t) mod 3, b mod 3).
+```
+
+For D=(u,v), the minimum colours are the indices attaining the minimum
+of (u,0,-v); and d=max(-2u-v,u-v,u+2v). These formulas include ties.
+Each row remainder has colour spread at most one, as does the combined
+boundary correction. Thus spread<=B, ||D||_infinity<=B and d<=2B.
+These are elementary upper bounds, not evidence of boundedness.
+
+### Exact verification completed
+
+`experiments/colour_imbalance.py` uses integer division and `bit_length`
+to find A_b: floor(log_2(t/3^b))=(t//3^b).bit_length()-1. No numerical
+logarithm is used for correctness. It computes the closed row counts
+and D afresh at every smooth cutoff and compares them with the
+independently updated participation births. It also reconstructs the
+coordinate and numerical corners and checks the saved optimum witnesses
+at all 720 solver cutoffs through 10^14, using the existing comparison
+routine. The frozen excess source SHA-256 is checked before use.
+
+Results: **33,742/33,742 smooth cutoffs through 54*4^160 agree**;
+**720/720 saved solver/corner comparisons agree**; all **161 saved
+nearest-power b coefficients, indices 0..160, agree exactly**. At the
+last cutoff 54*4^160=2^321*3^3, counts are (11247,11247,11248),
+D=(0,-1), d=1. Verification and source hashes are saved in
+`experiments/colour-imbalance-verification.json`.
+
+Commands/results for this completed step:
+
+```bash
+python3 experiments/colour_imbalance.py
+python3 -m py_compile experiments/colour_imbalance.py
+git diff --check
+```
+
+During development, an inline exploratory command had an unmatched
+parenthesis, and the first verification run caught a sign error in the
+displayed D-to-d expression at t=6. Both were corrected before the
+successful full run; neither indicated a disagreement in the row rule.
+Remaining work in this round: rotation regrouping, exact growth and
+coefficient partial sums, continued-fraction comparisons, and tests of
+minimum-colour interval/Sturmian codings.
+
+Commit workflow: the first ordinary `git add` failed because this
+environment mounts the original `.git` directory read-only (could not
+create `.git/index.lock`). A writable checkout at
+`/tmp/erdos168-round1-checkout` is used for the required commits and
+`git push origin work`; changed files are copied there from this shared
+workspace. The original checkout's git metadata cannot be advanced here.
