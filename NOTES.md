@@ -974,3 +974,46 @@ The holdout backend uses four search workers, seed 168 and the same
 now closed their unrestricted exact objectives and match the frozen
 rule, including every m=41 excess case. The remaining holdout run is
 still in progress; complete results will be recorded below.
+
+### Prioritized holdouts and the first timeout retry
+
+All 13 new predicted-positive cases have exact E=1, as listed here.
+Both g and E were compared only after unrestricted optimization closed.
+
+| t | Factorization | m | (c0,c1,c2) | Exact g |
+| ---: | --- | ---: | --- | ---: |
+| 847288609443 | 2^0 * 3^25 | 35 | (177, 176, 176) | 354 |
+| 1694577218886 | 2^1 * 3^25 | 36 | (185, 185, 185) | 371 |
+| 3389154437772 | 2^2 * 3^25 | 37 | (194, 194, 194) | 389 |
+| 6778308875544 | 2^3 * 3^25 | 38 | (203, 203, 203) | 407 |
+| 13374150672384 | 2^23 * 3^13 | 39 | (212, 212, 212) | 425 |
+| 13556617751088 | 2^4 * 3^25 | 39 | (213, 212, 212) | 426 |
+| 14281868906496 | 2^12 * 3^20 | 39 | (213, 213, 213) | 427 |
+| 27113235502176 | 2^5 * 3^25 | 40 | (222, 222, 222) | 445 |
+| 52776558133248 | 2^44 * 3^1 | 41 | (231, 231, 231) | 463 |
+| 53496602689536 | 2^25 * 3^13 | 41 | (232, 231, 231) | 464 |
+| 54226471004352 | 2^6 * 3^25 | 41 | (232, 231, 232) | 465 |
+| 56358560858112 | 2^33 * 3^8 | 41 | (232, 232, 232) | 465 |
+| 57127475625984 | 2^14 * 3^20 | 41 | (233, 232, 232) | 466 |
+
+All 42 distinct new smooth neighbors immediately below, at and above
+`24*2^m` and `27*2^m`, and all 25 cutoffs in the frozen random sample,
+have now also been solved exactly and agree. Positive excess does not
+mean that the cutoff itself is a jump: `56358560858112` has g=465,
+the same as its preceding smooth cutoff `54226471004352`.
+
+At random cutoff `11132555231232`, the initial four-worker CP-SAT run
+returned only `FEASIBLE` after 30 seconds (incumbent g=419, minimum-cover
+lower bound 208). It was not accepted. A fresh unrestricted eight-worker
+run closed both omission bounds at 208 and gave **g=420**, matching the
+rule, in 11.862 seconds including process startup. Its peak resident
+memory was 196840 KiB = 192.23 MiB. This was an incomplete search followed
+by an exact result, not a mismatch. The retry receives no proposed bound.
+
+```bash
+python3 experiments/holdout_verify.py --backend cp_sat --workers 8 --timeout-ms 120000 --wall-budget-seconds 180 --only-t 11132555231232 --output experiments/holdout-cpsat-retry.json
+```
+
+The retry bounds, witness and resources are in
+`experiments/holdout-cpsat-retry.json` and `.csv`. The remaining 213-prefix
+coverage run continues; no general formula or Lean theorem is claimed.

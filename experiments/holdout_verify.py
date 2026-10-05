@@ -20,12 +20,18 @@ def main():
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--wall-budget-seconds", type=int, default=1800)
     parser.add_argument("--maximum-queries", type=int, default=0)
+    parser.add_argument("--only-t", type=int, action="append", help="query only these planned cutoffs")
     parser.add_argument("--output", type=Path, default=Path("experiments/holdout-z3.json"))
     args = parser.parse_args()
     predictions = json.loads(args.predictions.read_text())
     by_t = {row["t"]: row for row in predictions["rows"]}
     started, rows = time.perf_counter(), []
     plan = predictions["selection_plan"]
+    if args.only_t:
+        requested = set(args.only_t)
+        if not requested <= {item["t"] for item in plan}:
+            raise ValueError("requested cutoff outside frozen holdout plan")
+        plan = [item for item in plan if item["t"] in requested]
     with args.output.with_suffix(".partial.jsonl").open("w") as checkpoint:
         for selection in plan:
             if (time.perf_counter() - started >= args.wall_budget_seconds
