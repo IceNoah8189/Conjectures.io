@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run independent isolated MaxSAT workers on the frozen holdout plan."""
+"""Run isolated exact-solver workers on the frozen holdout plan."""
 
 import argparse
 import csv
@@ -16,6 +16,8 @@ def main():
     parser.add_argument("--timeout-ms", type=int, default=10000)
     parser.add_argument("--memory-mib", type=int, default=1024)
     parser.add_argument("--engine", choices=("rc2", "maxres"), default="rc2")
+    parser.add_argument("--backend", choices=("z3", "cp_sat"), default="z3")
+    parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--wall-budget-seconds", type=int, default=1800)
     parser.add_argument("--maximum-queries", type=int, default=0)
     parser.add_argument("--output", type=Path, default=Path("experiments/holdout-z3.json"))
@@ -30,9 +32,13 @@ def main():
                     or args.maximum_queries and len(rows) >= args.maximum_queries):
                 break
             t = selection["t"]
-            command = [args.python, "experiments/holdout_worker.py", str(t),
+            worker = ("experiments/holdout_worker.py" if args.backend == "z3"
+                      else "experiments/holdout_cpsat_worker.py")
+            command = [args.python, worker, str(t),
                        "--timeout-ms", str(args.timeout_ms),
-                       "--memory-mib", str(args.memory_mib), "--engine", args.engine]
+                       "--memory-mib", str(args.memory_mib)]
+            command += (["--engine", args.engine] if args.backend == "z3"
+                        else ["--workers", str(args.workers)])
             query_started = time.perf_counter()
             try:
                 completed = subprocess.run(command, capture_output=True, text=True,
@@ -62,7 +68,10 @@ def main():
     mismatches = [row for row in exact if row["difference"]]
     report = {
         "predictions_source": str(args.predictions),
-        "engine": args.engine, "query_timeout_ms": args.timeout_ms,
+        "backend": args.backend,
+        "engine": args.engine if args.backend == "z3" else "cp_sat",
+        "workers": 1 if args.backend == "z3" else args.workers,
+        "query_timeout_ms": args.timeout_ms,
         "address_space_limit_mib": args.memory_mib,
         "attempted_cutoffs": len(rows), "planned_cutoffs": len(plan),
         "exact_cutoffs": len(exact), "not_exact_cutoffs": len(failures),

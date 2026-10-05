@@ -238,3 +238,24 @@ Linux `/proc/self/status` `VmHWM`; raw `getrusage` is recorded separately
 because it can retain a high-water mark from previous process history.
 The memory limit is virtual address space, rather than a resident-memory
 cap. These computations are not Lean proofs.
+
+The optional second backend is [Google OR-Tools CP-SAT](https://developers.google.com/optimization/cp/cp_solver),
+distributed under [Apache 2.0](https://github.com/google/or-tools/blob/stable/LICENSE).
+`holdout_cpsat_worker.py` independently generates the unrestricted Boolean
+corner-cover model. It accepts only `OPTIMAL` with equal integer objective
+bounds and a checked cover; feasible incumbents alone are recorded as
+unverified. No formula, colour restriction, initial optimum or supplied
+bound enters the optimization. Four workers and seed 168 are used by
+default. Its original problem-specific code uses the documented API;
+no published problem solver or DP code was copied.
+
+```bash
+experiments/.venv/bin/python -m pip install -r experiments/requirements-holdout.txt
+experiments/.venv/bin/python experiments/validate_cpsat.py
+python3 experiments/holdout_verify.py --python experiments/.venv/bin/python --backend cp_sat --timeout-ms 30000 --output experiments/holdout-cpsat.json
+```
+
+`validate_cpsat.py` checks all integer cutoffs 1..64 against exhaustive
+subset enumeration, and six saved MaxSAT optima including positive
+excess cases and window boundaries. `cpsat-validation.json` retains the
+70 matching comparisons and the SHA-256 of the saved comparison file.

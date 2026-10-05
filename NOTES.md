@@ -930,3 +930,47 @@ image peak 51.7 MiB; that raw figure is unsuitable for this report.
 Both counters are retained in query records, but summaries use `VmHWM`.
 The current workers have a 1024 MiB virtual address-space limit; timeouts
 so far have not reached that limit. No Lean was written or changed.
+
+### Additional exact backend
+
+To resolve the MaxSAT timeouts I wrote
+`experiments/holdout_cpsat_worker.py`, an independent formulation using
+[Google OR-Tools CP-SAT](https://developers.google.com/optimization/cp/cp_solver).
+It uses the same mathematical corner-cover problem, with one Boolean
+omission variable for each smooth integer, one hard disjunction for each
+numerical triple, and an unrestricted minimum-cardinality objective.
+There are no colour restrictions, supplied objective bounds or predicted
+solutions. It requires `OPTIMAL`, equality of both reported objective
+values with the small integer cover cardinality (without rounding), and
+a separately reconstructed numerical-corner witness check. `FEASIBLE`
+and `UNKNOWN` are not treated as exact answers. This is trusted solver
+computation, not an independently certified proof or a Lean proof.
+
+OR-Tools version `9.15.6755` is pinned in
+`experiments/requirements-holdout.txt`. Its
+[licence is Apache 2.0](https://github.com/google/or-tools/blob/stable/LICENSE).
+The problem-specific code is original; no DP or published proof code
+was copied. Installation occurred only in the existing temporary venv:
+
+```bash
+/tmp/erdos168-venv/bin/python -m pip install ortools==9.15.6755
+/tmp/erdos168-venv/bin/python experiments/validate_cpsat.py
+python3 experiments/holdout_verify.py --backend cp_sat --timeout-ms 30000 --wall-budget-seconds 1800 --output experiments/holdout-cpsat.json
+```
+
+Pip was bootstrapped there from a public wheel after checking SHA-256
+`71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e`.
+The backend validation agrees with exhaustive subset enumeration at all
+64 integer cutoffs 1..64 and with six saved MaxSAT optima, including the
+first excess case 1536, the unique-minimum case `26121388032`, an upper
+window edge, and the original final cutoff. The one-worker trial at
+`26121388032` timed out after 30 seconds without an exact result; the
+four-worker validation closed it and agreed. This was a timeout, not a
+different value. All 70 accepted comparisons are saved in
+`experiments/cpsat-validation.json`.
+
+The holdout backend uses four search workers, seed 168 and the same
+1024 MiB address-space cap. All **13 new predicted-excess cutoffs** have
+now closed their unrestricted exact objectives and match the frozen
+rule, including every m=41 excess case. The remaining holdout run is
+still in progress; complete results will be recorded below.

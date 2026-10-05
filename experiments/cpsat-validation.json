@@ -1,0 +1,428 @@
+{
+  "exhaustive_integer_cutoffs": 64,
+  "saved_maxsat_cutoffs": 6,
+  "source_sha256": "81a260fc978b73c0b153fbb7e714cc1a660c198fc9b79f613e264a6864fa5b0e",
+  "mismatches": [],
+  "rows": [
+    {
+      "t": 1,
+      "g": 1,
+      "comparison_g": 1,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 2,
+      "g": 2,
+      "comparison_g": 2,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 3,
+      "g": 2,
+      "comparison_g": 2,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 4,
+      "g": 3,
+      "comparison_g": 3,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 5,
+      "g": 3,
+      "comparison_g": 3,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 6,
+      "g": 4,
+      "comparison_g": 4,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 7,
+      "g": 4,
+      "comparison_g": 4,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 8,
+      "g": 5,
+      "comparison_g": 5,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 9,
+      "g": 5,
+      "comparison_g": 5,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 10,
+      "g": 5,
+      "comparison_g": 5,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 11,
+      "g": 5,
+      "comparison_g": 5,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 12,
+      "g": 6,
+      "comparison_g": 6,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 13,
+      "g": 6,
+      "comparison_g": 6,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 14,
+      "g": 6,
+      "comparison_g": 6,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 15,
+      "g": 6,
+      "comparison_g": 6,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 16,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 17,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 18,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 19,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 20,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 21,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 22,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 23,
+      "g": 7,
+      "comparison_g": 7,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 24,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 25,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 26,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 27,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 28,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 29,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 30,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 31,
+      "g": 8,
+      "comparison_g": 8,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 32,
+      "g": 9,
+      "comparison_g": 9,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 33,
+      "g": 9,
+      "comparison_g": 9,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 34,
+      "g": 9,
+      "comparison_g": 9,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 35,
+      "g": 9,
+      "comparison_g": 9,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 36,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 37,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 38,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 39,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 40,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 41,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 42,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 43,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 44,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 45,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 46,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 47,
+      "g": 10,
+      "comparison_g": 10,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 48,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 49,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 50,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 51,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 52,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 53,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 54,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 55,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 56,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 57,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 58,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 59,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 60,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 61,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 62,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 63,
+      "g": 11,
+      "comparison_g": 11,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 64,
+      "g": 12,
+      "comparison_g": 12,
+      "source": "exhaustive subset enumeration"
+    },
+    {
+      "t": 768,
+      "g": 26,
+      "comparison_g": 26,
+      "source": "experiments/results.json"
+    },
+    {
+      "t": 864,
+      "g": 26,
+      "comparison_g": 26,
+      "source": "experiments/results.json"
+    },
+    {
+      "t": 1536,
+      "g": 31,
+      "comparison_g": 31,
+      "source": "experiments/results.json"
+    },
+    {
+      "t": 26121388032,
+      "g": 273,
+      "comparison_g": 273,
+      "source": "experiments/results.json"
+    },
+    {
+      "t": 208971104256,
+      "g": 320,
+      "comparison_g": 320,
+      "source": "experiments/results.json"
+    },
+    {
+      "t": 470184984576,
+      "g": 339,
+      "comparison_g": 339,
+      "source": "experiments/results.json"
+    }
+  ]
+}
