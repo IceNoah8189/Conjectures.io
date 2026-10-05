@@ -92,7 +92,7 @@ def main():
     with args.output.with_suffix(".csv").open("w", newline="") as stream:
         fields = ["t", "status", "g_pred", "g", "difference", "predicted_E", "exact_E",
                   "wall_seconds", "proc_peak_rss_kib", "tags"]
-        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow({key: "|".join(row["tags"]) if key == "tags" else row.get(key)

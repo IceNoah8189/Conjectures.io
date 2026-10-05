@@ -122,7 +122,7 @@ def main():
     }
     args.output.write_text(json.dumps(report, indent=2) + "\n")
     with args.output.with_suffix(".csv").open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     args.output.with_name(args.output.stem + "-jumps.txt").write_text(

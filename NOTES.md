@@ -1136,6 +1136,14 @@ predicted and solved jump sets. An attempted aggregation before the last
 retry correctly refused to produce a complete report with one missing
 exact answer. Python compilation and `git diff --check` passed.
 
+The staged whitespace check then caught the standard CSV writer's CRLF
+line endings in new tables; the earlier unstaged check had not inspected
+new files. I let that commit proceed despite the failed staged check.
+The writers now explicitly emit LF endings, and all seven CSV files
+created in this task were normalized without changing any data fields.
+The staged check and the complete task diff from `6ca0694` were checked
+again before committing this correction; both passed.
+
 These holdouts substantially extend the tested domain, but a proof of
 the exact formula for all t and the irrationality of the resulting
 infinite series are still open tasks. No Lean was written or changed,

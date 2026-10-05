@@ -40,7 +40,7 @@ def read_solver(path):
 
 def write_csv(path, rows):
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows({k: "|".join(v) if isinstance(v, list) else v for k, v in row.items()}
                          for row in rows)
