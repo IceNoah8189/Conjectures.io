@@ -242,3 +242,31 @@ no DP source or computational certificate was supplied with these notes.
   to a diagnostic checkpoint, preventing loss of progress on a later
   error; checkpoint data is never an optimization input. A final run is
   in progress to retain the full density calculation.
+
+## Completed independent comparison through 10^11 (2026-10-04)
+
+- Saved `experiments/results-1e11.json` from the final run's completed
+  checkpoint rows, after checking that their thresholds equal every
+  smooth number at most 10^11 and rerunning the exhaustive checks through
+  64. It can be reproduced directly with:
+  `/tmp/erdos168-venv/bin/python experiments/exact_g.py --limit 100000000000 --timeout-ms 120000 --output experiments/results-1e11.json`.
+- The exact solver independently confirms g(10^11)=302 on 452 points,
+  hence 302 jumps. All 20 requested jump points through 288 agree, with
+  no additional jump in that range. All integer cutoffs 0 through 64 agree
+  with exhaustive enumeration. Every prefix has matching integer objective
+  bounds and a cover checked against independently reconstructed triples.
+- The computed truncated density sum is exactly
+  15545471736978701297281 / 19408409961765342806016,
+  approximately 0.80096575492806223493. It rounds to the user's
+  0.8009657549 at ten decimal places.
+- By the classical jump-series identity, the complete infinite sum lies
+  between this lower bound and approximately 0.80096575504550563262.
+  The exact upper bound is 215909329711917929261 / 269561249468963094528;
+  the interval width is less than 1.175e-10. The exact fractions are in
+  the report. Thus the requested decimal is an accurate approximation;
+  it is below even the truncated sum by about 2.81e-11, so it should not
+  be read as an exact value or a certified full-series rounding.
+- No disagreement was found with the requested jump list or the reported
+  302/452 count. The optional extension beyond 10^11 is still running
+  solely to narrow the interval and resolve ten-place rounding of the
+  infinite sum. These are computational results, not Lean proofs.

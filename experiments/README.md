@@ -45,6 +45,7 @@ For reproducible runs with Python 3.10 or later:
 python3 -m venv experiments/.venv
 experiments/.venv/bin/python -m pip install -r experiments/requirements.txt
 experiments/.venv/bin/python experiments/exact_g.py --limit 288 --output experiments/small-results.json
+experiments/.venv/bin/python experiments/exact_g.py --limit 100000000000 --timeout-ms 120000 --output experiments/results-1e11.json
 experiments/.venv/bin/python experiments/exact_g.py --limit 1000000000000 --timeout-ms 120000 --progress --output experiments/results.json
 ```
 
