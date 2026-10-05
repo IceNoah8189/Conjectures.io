@@ -86,6 +86,51 @@ completed checkpoint rows certified all ten places; the saved report uses
 its actual final completed threshold. The command above reproduces that
 domain directly, rather than requiring an interrupted run.
 
+## Conditional density expansions
+
+```bash
+python3 experiments/density_expansion.py --through 40 --audit-through 160
+```
+
+This standard-library program derives weighted increments independently
+from the births of participating lattice points. It revalidates all 720
+saved exact cutoffs and checks the frozen rule's source hash. Beyond the
+solver domain it computes the **density of the frozen rule**, conditional
+on that rule giving exact g for every cutoff. It does not run new solvers,
+prove the rule, or prove irrationality.
+
+Two exact, absolutely convergent identities are recorded: a diagonal
+grouping with N=6 and bounded rational coefficients, and a grouping
+around the preceding powers of three with N=9 and constant 7. The latter
+removes the rational average-colour contribution before summing the
+remaining colour imbalance. Its coefficients are also rational; no
+uniform bound on its colour coefficients is proved. An integer endpoint
+trial is exact only for paired finite summands and has very large
+cancelling coefficients. A bounded-integer formula depending only on
+the tested small ratio intervals was not established.
+
+The sum through index 40 and an independent direct jump sum certify
+the conditional twelve-place value `0.800965755007`, with exact rational
+tail enclosures. The previously quoted `0.8009657550` is ten-place
+rounding. `../NOTES.md` gives the derivation, the full 0..40 nearest-power
+coefficient table, tested thresholds, conflicts and limitations.
+
+Output files:
+
+- `density-expansion.json`: exact fractions, enclosures, source hashes,
+  0..40 coefficient records, and all ratio-band conflicts through 160.
+- `density-expansion.csv`: all 41 coefficients and exact ratios, for
+  both rational groupings and the integer trial.
+- `density-expansion-audit.csv`: the complete 161-row coefficient audit.
+- `density-contributions.csv`: all smooth cutoffs through `54*4^40`,
+  participating births, colour counts, Δh, ΔP, Δd, E, ΔE and rule jumps.
+- `density-window-events.csv`: each window correction change in that
+  domain, including previous colour counts. A window can have multiple
+  positive episodes.
+
+Cutoffs, interval tests, identities and tail bounds use integers and
+`Fraction`; displayed decimals are computed only after these checks.
+
 ## Points in every or no maximum set
 
 `forced_points.py` uses the same exact hitting-set solver. For each prefix

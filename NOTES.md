@@ -1285,9 +1285,8 @@ to the requested bounded-integer formula.
 `experiments/density-expansion.csv` and JSON retain all 41 coefficient
 rows, exact candidate ratios, rational coefficients and integer trials.
 The report records every conflict with the small geometric ratio-band
-catalog and a longer 160-index audit. A refinement using the actual
-nearest powers of three and the rational average-colour contribution
-is being investigated next.
+catalog and a longer 160-index audit. The completed nearest-power
+refinement is recorded below.
 
 ```bash
 python3 experiments/density_expansion.py
@@ -1296,3 +1295,207 @@ python3 experiments/density_expansion.py
 The new program uses only the standard library and exact fractions.
 It rechecks the frozen source hash and the saved solver/count data.
 The original rule, exact-result files and all Lean files are unchanged.
+
+### Nearest-power grouping and the average-colour constant
+
+Let P(t)=c_0(t)+c_1(t)+c_2(t), the number of participating points,
+and let d(t)=P(t)-3h(t). The birth table above gives
+Δd=ΔP-3Δh, always an integer between -2 and 2. In particular:
+
+- At a pure power of two, Δd=0.
+- At s=3, Δd=0.
+- At b=1,a>=1, Δd is 2 if Δh=0 and -1 if Δh=1.
+- At b>=2, Δd is 1 if Δh=0 and -2 if Δh=1.
+
+The total weighted participation increment has an exact rational value:
+
+```text
+sum_s ΔP(s)/s
+  = sum_(a>=0,b>=1) 1/(2^a*3^b)
+    + 1/3 + sum_(a>=1) 1/(3*2^(a-1))
+  = 1 + 1/3 + 2/3 = 2.
+```
+
+Consequently H=(2-sum_s Δd(s)/s)/3, so the average-colour part
+contributes 7/9 to the density:
+
+```text
+L_rule = 7/9 + (1/9)*sum_s Δd(s)/s + (1/3)*sum_s ΔE(s)/s.
+```
+
+Now group a smooth number with the immediately preceding pure power
+of three. Define
+
+```text
+B_k = 3^k * sum_(3^k <= s < 3^(k+1)) Δd(s)/s,
+U_k = 4^k * (W_(2k)+W_(2k+1)), as above.
+
+L_rule = (1/9) * (7 + sum_k a_k/4^k + sum_k b_k/3^k),
+a_k = 3*U_k,   b_k = B_k.
+```
+
+This is an exact nearest-power identity, but its displayed a_k,b_k
+are **rational coefficients**, not a solution of the requested
+bounded-integer problem. We have 0<=a_k<=1/48. Absolute convergence
+of the b series follows from |Δd|<=2 and the all-smooth reciprocal
+sum; no uniform bound on b_k has been proved. In the 0..160 audit
+the largest |b_k| is 718505744573433/281474976710656, about
+2.552645187043. The least scale N clearing the actual coefficients
+a_k/9,b_k/9 through 40 is 2^63*3^55, and through 160 is
+2^252*3^204. These are finite necessary scales for this grouping,
+not universal impossibility results for other identities.
+
+Subtracting the average participation term is necessary if this direct
+grouping is to have bounded colour coefficients. The raw coefficients
+R_k=2*3^k*sum_(3^k<=s<3^(k+1)) Δh(s)/s cannot be uniformly
+bounded: each is at least 2/3 times the number of h increases in its
+block. Bounded R_k would imply h(3^K)=O(K). On the other hand,
+the lattice contains a rectangle with a<=floor(K*log_2(3)/2)
+and 1<=b<=floor(K/2); all its points participate and each colour
+occupies a third of each long row up to a bounded error. Thus every
+c_j(3^K), and hence h(3^K), is Ω(K^2). The audit's largest raw
+R_k is about 104.1721886. This observation concerns the raw nearest
+grouping, not every possible bounded-integer representation.
+
+The complete nearest-power rational coefficient table is:
+
+| k | a_k (N=9, rational) | b_k (N=9, rational) |
+| --- | --- | --- |
+| 0 | 0 | 0 |
+| 1 | 0 | 1 |
+| 2 | 0 | -3/4 |
+| 3 | 1/72 | -3/4 |
+| 4 | 139/11664 | -51/64 |
+| 5 | 0 | -87/128 |
+| 6 | 0 | -267/512 |
+| 7 | 139/34992 | -2037/2048 |
+| 8 | 139/34992 | -1767/4096 |
+| 9 | 139/11664 | 14367/8192 |
+| 10 | 139/11664 | -1803/2048 |
+| 11 | 0 | -4215/65536 |
+| 12 | 139/17496 | 691635/524288 |
+| 13 | 47089/4251528 | 647709/1048576 |
+| 14 | 87025/8503056 | -4620261/4194304 |
+| 15 | 625/34992 | 10001091/8388608 |
+| 16 | 139/11664 | 2912325/4194304 |
+| 17 | 649928320/282429536481 | -35603961/33554432 |
+| 18 | 649928320/94143178827 | 370798827/268435456 |
+| 19 | 5602197223/564859072962 | 280144833/1073741824 |
+| 20 | 52178765849/4518872583696 | 621701355/2147483648 |
+| 21 | 36580486169/2259436291848 | 2763582273/8589934592 |
+| 22 | 649928320/94143178827 | 2716181421/17179869184 |
+| 23 | 0 | 13566575373/68719476736 |
+| 24 | 4581153284461/617673396283947 | 9098004699/8589934592 |
+| 25 | 4581153284461/411782264189298 | -796655795343/549755813888 |
+| 26 | 4581153284461/411782264189298 | -1737753915957/2199023255552 |
+| 27 | 13902108371950217/1200757082375992968 | 4075892566785/4398046511104 |
+| 28 | 122887604273152/50031545098999707 | -27292674275445/17592186044416 |
+| 29 | 122887604273152/150094635296999121 | -36935854397367/35184372088832 |
+| 30 | 122887604273152/50031545098999707 | 15296539556025/17592186044416 |
+| 31 | 16851410874505865/2401514164751985936 | -131664584917743/140737488355328 |
+| 32 | 33490101420557792123/5252111478312593242032 | -718505744573433/281474976710656 |
+| 33 | 27039976847468589947/2626055739156296621016 | -724528054530399/4503599627370496 |
+| 34 | 122887604273152/50031545098999707 | -8699411899018293/9007199254740992 |
+| 35 | 122887604273152/50031545098999707 | -91197719718596439/36028797018963968 |
+| 36 | 27039976847468589947/2626055739156296621016 | -87324373645778355/144115188075855872 |
+| 37 | 24889935323105522555/1750703826104197747344 | -93202684155026463/144115188075855872 |
+| 38 | 24889935323105522555/1750703826104197747344 | -267334565829322371/576460752303423488 |
+| 39 | 27039976847468589947/2626055739156296621016 | -225746581809115131/576460752303423488 |
+| 40 | 121070277808535247848320/19383245667680019896796723 | -4232005989494681379/9223372036854775808 |
+
+The exact nearest-power sum through 40 is
+
+```text
+0.80096575500655898909202224667897956586529631381390...
+```
+
+Put M_K=3-sum_(s<3^(K+1)) 1/s. A rigorous enclosure is
+
+```text
+[partial - (2/9)*M_K,
+ partial + (2/9)*M_K + 1/(1296*4^K)].
+```
+
+At K=40 this is
+
+```text
+[0.80096575500655898871244713045314595356901390416125...,
+ 0.80096575500655898947159736354306982365002600345991...].
+```
+
+It contains the independent direct jump sum quoted above and has width
+less than 7.60*10^(-19). Thus both regroupings reproduce the density
+of the rule to at least twelve places, with exact tail bounds.
+
+### Ratio thresholds tested, and why this does not solve the requested form
+
+For R4=4^k/3^floor(log_3(4^k)), the geometric thresholds tested are
+
+```text
+1, 9/8, 3/2, 27/16, 3.
+```
+
+They arise by comparing the four window edges 24*4^k,27*4^k,
+48*4^k,54*4^k with their nearest powers of three: 24R4 crosses
+27 at 9/8, 48R4 crosses 81 at 27/16, and 54R4 crosses 81 at
+3/2. For R3=3^k/4^floor(log_4(3^k)), the tested catalog is
+
+```text
+1, 3/2, 27/16, 3, 27/8, 4.
+```
+
+A pure power 3^k is in an even window when
+3/2<=R3<27/16 and an odd window when 3<=R3<27/8, subject to
+m>=0. These thresholds determine geometric window membership;
+they do not supply the extra minimum-colour condition or determine
+the coefficient sums over the whole block.
+
+Using the first observed value in each band as its proposed constant,
+the nearest-power a coefficients have 33 conflicts through 40 and
+150 through 160. The b coefficients have 35 and 155 conflicts,
+respectively. These are counts of unequal coefficients within bands,
+not mismatches in g. Examples away from the initial cutoffs:
+
+| Coefficient | Common ratio interval | First index, ratio, value | Second index, ratio, value |
+| --- | --- | --- | --- |
+| a | [27/16,3) | k=14, 268435456/129140163, 87025/8503056 | k=15, 1073741824/387420489, 625/34992 |
+| b | [27/16,3) | k=12, 531441/262144, 691635/524288 | k=16, 43046721/16777216, 2912325/4194304 |
+
+Even allowing arbitrary interval edges fitted to the finite sample,
+the nearest rational a values require at least 39 constant intervals
+for indices 0..40 and 160 for 0..160; b requires 41 and 161.
+The same counts occur for the alternative bounded rational grouping.
+All conflicts, ratios, coefficient fractions and integer endpoint trials
+are saved in `experiments/density-expansion.json`; the 41-row CSV
+contains indices 0..40, and `density-expansion-audit.csv` contains
+the complete 161-row audit. The contribution table also records ΔP,
+d and Δd at every smooth cutoff through 54*4^40.
+
+**Result:** neither natural grouping gives bounded integer coefficients
+determined by these small ratio catalogs. The diagonal grouping gives
+bounded rational coefficients; the nearest-power grouping gives the
+rational N=9 identity and the constant 7. The integer endpoint trial
+requires very large cancelling coefficients. A different identity with
+bounded integers and different thresholds remains possible, but has
+not been derived or numerically established. None of these finite
+tests proves universal nonexistence of such an identity. A proof of
+the frozen g rule and a valid irrationality argument are still needed.
+
+Validation for this step:
+
+```bash
+python3 experiments/density_expansion.py
+python3 -m py_compile experiments/density_expansion.py
+git diff --check
+git diff --cached --check
+```
+
+The program uses exact Fraction arithmetic, independently generates
+the participating-count births, checks the saved optimum/count data
+at all 720 solver cutoffs, verifies both regroupings and every integer
+paired-summand identity, and checks that the rational-series,
+nearest-power, paired-series and direct-smooth enclosures intersect.
+It records the frozen-rule, exact-data and program source hashes.
+All calculations beyond the solver domain use the frozen rule without
+presenting it as proved. No Lean, wallet or key file was accessed or
+changed in this density step.

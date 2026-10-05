@@ -37,9 +37,9 @@ def below(n, base):
     return exponent, power
 
 
-def write_csv(path, rows):
+def write_csv(path, rows, fields=None):
     with path.open("w", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
+        writer = csv.DictWriter(stream, fieldnames=fields or list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -48,8 +48,9 @@ def scan(limit, saved_counts, saved_g, keep_through):
     """Compute birth increments without calling the old prediction code."""
     counts = [0, 0, 0]
     h, E, g = 0, 0, 0
-    H, W, reciprocal_sum, jump_sum = (Fraction(0) for _ in range(4))
+    H, W, reciprocal_sum, jump_sum, P_flux, d_flux = (Fraction(0) for _ in range(6))
     increments, window_flux, events, rows = {}, {}, [], []
+    nearest_d, nearest_h, nearest_reciprocal = {}, {}, {}
     largest_spread, episode_counts = 0, {}
     matched = 0
     for t, a, b in lattice_points(limit):
@@ -68,8 +69,10 @@ def scan(limit, saved_counts, saved_g, keep_through):
         inside = m >= 0 and 24*2**m <= t < 27*2**m
         next_E = int(inside and counts[(m+2) % 3] == next_h)
         dh, de = next_h-h, next_E-E
+        dp = sum(births)
+        dd = dp-3*dh
         jump = 1-dh+de
-        if dh not in (0, 1) or jump not in (0, 1):
+        if dh not in (0, 1) or jump not in (0, 1) or abs(dd) > 2:
             raise AssertionError(f"increment bound fails at {t}")
         g += jump
         if t in saved_counts:
@@ -79,13 +82,20 @@ def scan(limit, saved_counts, saved_g, keep_through):
         increments[a, b] = (dh, de, jump)
         H += Fraction(dh, t)
         W += Fraction(de, t)
+        P_flux += Fraction(dp, t)
+        d_flux += Fraction(dd, t)
         reciprocal_sum += Fraction(1, t)
         jump_sum += Fraction(jump, 3*t)
+        k, p3 = below(t, 3)
+        nearest_d[k] = nearest_d.get(k, Fraction(0))+Fraction(dd*p3, t)
+        nearest_h[k] = nearest_h.get(k, Fraction(0))+Fraction(2*dh*p3, t)
+        nearest_reciprocal[k] = nearest_reciprocal.get(k, Fraction(0))+Fraction(1, t)
         largest_spread = max(largest_spread, max(counts)-min(counts))
         row = {"t": t, "a": a, "b": b, "birth_0": births[0],
                "birth_1": births[1], "birth_2": births[2],
                "c_0": counts[0], "c_1": counts[1], "c_2": counts[2],
-               "h": next_h, "delta_h": dh, "E": next_E, "delta_E": de,
+               "h": next_h, "delta_h": dh, "d": sum(counts)-3*next_h,
+               "delta_P": dp, "delta_d": dd, "E": next_E, "delta_E": de,
                "rule_jump": jump}
         if t <= keep_through:
             rows.append(row)
@@ -103,16 +113,21 @@ def scan(limit, saved_counts, saved_g, keep_through):
         raise AssertionError("saved solver domain was not fully checked")
     if jump_sum != (reciprocal_sum-H+W)/3:
         raise AssertionError("direct and telescoping density sums disagree")
+    if d_flux != P_flux-3*H:
+        raise AssertionError("average-colour and imbalance increments disagree")
     return {
         "increments": increments, "window_flux": window_flux,
         "events": events, "rows": rows, "H": H, "W": W,
         "reciprocal_sum": reciprocal_sum, "jump_sum": jump_sum,
+        "P_flux": P_flux, "d_flux": d_flux,
+        "nearest_d": nearest_d, "nearest_h": nearest_h,
+        "nearest_reciprocal": nearest_reciprocal,
         "max_colour_spread": largest_spread, "episode_counts": episode_counts,
         "saved_exact_matches": matched,
     }
 
 
-def coefficients(k, increments, window_flux):
+def coefficients(k, increments, window_flux, nearest_d, nearest_h):
     colour_numerator = window_numerator = 0
     for b in range(k+1):
         u = k-b
@@ -151,6 +166,9 @@ def coefficients(k, increments, window_flux):
         "alpha_rational": record(alpha), "beta_rational": record(beta),
         "colour_diagonal": record(colour), "window_diagonal": record(correction),
         "loss_diagonal": record(loss), "window_U": record(U),
+        "a_nearest_rational": record(3*U),
+        "b_nearest_rational": record(nearest_d[k]),
+        "raw_colour_nearest": record(nearest_h[k]),
         "integer_trial_a": a_trial, "integer_trial_b": b_trial,
         "trial_a_normalized": record(Fraction(a_trial, 4**k)),
         "trial_b_normalized": record(Fraction(b_trial, 3**k)),
@@ -204,26 +222,34 @@ def main():
     saved_g = {r["t"]: r["exact_g"] for r in compared}
     keep_limit, limit = 54*4**args.through, 54*4**args.audit_through
     scanned = scan(limit, saved_counts, saved_g, keep_limit)
-    coeffs = [coefficients(k, scanned["increments"], scanned["window_flux"])
+    coeffs = [coefficients(k, scanned["increments"], scanned["window_flux"],
+                          scanned["nearest_d"], scanned["nearest_h"])
               for k in range(args.audit_through+1)]
     wanted = coeffs[:args.through+1]
     partial = Fraction(1)
     paired_partial = Fraction(1)
+    nearest_partial = Fraction(7, 9)
     for row in wanted:
         k = row["k"]
         partial += (Fraction(row["alpha_rational"]["fraction"])/4**k
                     + Fraction(row["beta_rational"]["fraction"])/3**k)/6
         paired_partial += (Fraction(row["integer_trial_a"], 4**k)
                            + Fraction(row["integer_trial_b"], 3**k))/6
+        nearest_partial += (Fraction(row["a_nearest_rational"]["fraction"])/4**k
+                            + Fraction(row["b_nearest_rational"]["fraction"])/3**k)/9
     # Correct signed tails: omitted colour terms are nonpositive;
     # omitted completed-window terms are nonnegative.
     lower = partial-Fraction(1, 3**args.through)
     upper = partial+Fraction(1, 1296*4**args.through)
     paired_lower = paired_partial-Fraction(1, 3**args.through)
     paired_upper = paired_partial
+    nearest_colour_tail = Fraction(2, 9)*(3-sum(
+        (scanned["nearest_reciprocal"][k] for k in range(args.through+1)), Fraction(0)))
+    nearest_lower = nearest_partial-nearest_colour_tail
+    nearest_upper = nearest_partial+nearest_colour_tail+Fraction(1, 1296*4**args.through)
     smooth_lower = scanned["jump_sum"]
     smooth_upper = smooth_lower+(3-scanned["reciprocal_sum"])/3
-    if max(lower, paired_lower, smooth_lower) > min(upper, paired_upper, smooth_upper):
+    if max(lower, paired_lower, nearest_lower, smooth_lower) > min(upper, paired_upper, nearest_upper, smooth_upper):
         raise AssertionError("independent exact truncation intervals are disjoint")
     true_lower = sum((Fraction(r["jump"], 3*r["t"]) for r in saved["rows"]), Fraction(0))
     true_upper = true_lower+(3-sum((Fraction(1, r["t"]) for r in saved["rows"]), Fraction(0)))/3
@@ -233,20 +259,38 @@ def main():
                   for r in wanted for key in ("alpha_rational", "beta_rational")))
     scale_audit = lcm(*((Fraction(r[key]["fraction"])/6).denominator
                         for r in coeffs for key in ("alpha_rational", "beta_rational")))
+    nearest_scale = lcm(*((Fraction(r[key]["fraction"])/9).denominator
+                          for r in wanted for key in ("a_nearest_rational", "b_nearest_rational")))
+    nearest_scale_audit = lcm(*((Fraction(r[key]["fraction"])/9).denominator
+                                for r in coeffs for key in ("a_nearest_rational", "b_nearest_rational")))
     report = {
         "interpretation": "Conditional density of the frozen rule, not a proof of the rule for all t or of irrationality.",
+        "program_source": source(Path(__file__)),
         "rule_frozen_at_commit": frozen["rule_frozen_at_commit"], "rule_source": rule_source,
         "exact_source": exact_source, "saved_solver_matches": scanned["saved_exact_matches"],
         "coefficient_through": args.through, "audit_through": args.audit_through,
         "audit_smooth_limit": limit, "contributions_through": keep_limit,
         "bounded_rational_formula": "L_rule=(6+sum(alpha_k/4^k)+sum(beta_k/3^k))/6; alpha=2U, beta=-C_H",
         "rational_coefficient_bounds": {"alpha": "0 <= alpha <= 1/72", "beta": "-12 <= beta <= 0"},
+        "nearest_power_rational_formula": "L_rule=(7+sum(a_nearest_k/4^k)+sum(b_nearest_k/3^k))/9; a_nearest=3U, b_nearest=3^k*sum_{3^k<=s<3^(k+1)}(delta_P-3delta_h)/s",
+        "nearest_power_coefficient_bounds": {"a_nearest": "0 <= a_nearest <= 1/48",
+                                             "b_nearest": "abs(delta_P-3delta_h)<=2 ensures absolute convergence; uniform boundedness of b_nearest is not asserted"},
+        "partial_nearest_power_series": record(nearest_partial),
+        "nearest_power_series_lower": record(nearest_lower),
+        "nearest_power_series_upper": record(nearest_upper),
+        "nearest_colour_tail_bound": record(nearest_colour_tail),
+        "nearest_scale_for_integer_coefficients_through_K": nearest_scale,
+        "nearest_scale_for_integer_coefficients_through_audit": nearest_scale_audit,
+        "largest_abs_b_nearest_through_audit": record(max(abs(Fraction(r["b_nearest_rational"]["fraction"])) for r in coeffs)),
+        "largest_raw_colour_nearest_through_audit": record(max(Fraction(r["raw_colour_nearest"]["fraction"]) for r in coeffs)),
         "partial_rational_series": record(partial),
         "rational_series_lower": record(lower), "rational_series_upper": record(upper),
         "partial_paired_integer_series": record(paired_partial),
         "paired_series_lower": record(paired_lower), "paired_series_upper": record(paired_upper),
         "direct_smooth_lower": record(smooth_lower), "direct_smooth_upper": record(smooth_upper),
         "direct_colour_sum_H": record(scanned["H"]), "direct_window_sum_W": record(scanned["W"]),
+        "direct_participation_sum": record(scanned["P_flux"]),
+        "direct_imbalance_sum": record(scanned["d_flux"]),
         "actual_density_lower_from_saved_solver": record(true_lower),
         "actual_density_upper_from_saved_solver": record(true_upper),
         "minimum_common_integer_N_for_natural_coefficients_through_K": scale,
@@ -260,6 +304,15 @@ def main():
             "beta_40": ratio_bands(coeffs, "ratio3", "beta_rational", catalog3, args.through),
             "alpha_audit": ratio_bands(coeffs, "ratio4", "alpha_rational", catalog4, args.audit_through),
             "beta_audit": ratio_bands(coeffs, "ratio3", "beta_rational", catalog3, args.audit_through),
+            "a_nearest_K": ratio_bands(coeffs, "ratio4", "a_nearest_rational", catalog4, args.through),
+            "b_nearest_K": ratio_bands(coeffs, "ratio3", "b_nearest_rational", catalog3, args.through),
+            "a_nearest_audit": ratio_bands(coeffs, "ratio4", "a_nearest_rational", catalog4, args.audit_through),
+            "b_nearest_audit": ratio_bands(coeffs, "ratio3", "b_nearest_rational", catalog3, args.audit_through),
+        },
+        "geometric_threshold_derivation": {
+            "ratio4": "1,9/8,3/2,27/16,3 partition the nearest powers of 3 at 24*4^k,27*4^k,48*4^k,54*4^k",
+            "ratio3": "3^k lies in an even window for 3/2<=ratio3<27/16, or in an odd window for 3<=ratio3<27/8, subject to m>=0; minimum-colour condition remains necessary",
+            "interpretation": "Geometric window thresholds, not a successful coefficient-only formula.",
         },
         "max_colour_spread_in_audit": scanned["max_colour_spread"],
         "multiple_positive_episodes": {str(m): count for m, count in scanned["episode_counts"].items() if count > 1},
@@ -274,14 +327,20 @@ def main():
              "beta_rational": r["beta_rational"]["fraction"],
              "colour_diagonal": r["colour_diagonal"]["fraction"],
              "window_U": r["window_U"]["fraction"],
-             "integer_trial_a": r["integer_trial_a"], "integer_trial_b": r["integer_trial_b"]}
-            for r in wanted]
-    write_csv(args.output.with_suffix(".csv"), flat)
+             "integer_trial_a": r["integer_trial_a"], "integer_trial_b": r["integer_trial_b"],
+             "a_nearest_rational": r["a_nearest_rational"]["fraction"],
+             "b_nearest_rational": r["b_nearest_rational"]["fraction"],
+             "raw_colour_nearest": r["raw_colour_nearest"]["fraction"]}
+            for r in coeffs]
+    write_csv(args.output.with_suffix(".csv"), flat[:args.through+1])
+    write_csv(args.output.with_name("density-expansion-audit.csv"), flat)
     write_csv(args.output.with_name("density-contributions.csv"), scanned["rows"])
-    write_csv(args.output.with_name("density-window-events.csv"), scanned["events"])
+    write_csv(args.output.with_name("density-window-events.csv"), scanned["events"],
+              list(scanned["rows"][0])+["m", "before_c_0", "before_c_1", "before_c_2"])
     print(json.dumps({key: report[key] for key in (
         "saved_solver_matches", "coefficient_through", "audit_through", "partial_rational_series",
         "rational_series_lower", "rational_series_upper", "partial_paired_integer_series",
+        "partial_nearest_power_series", "nearest_power_series_lower", "nearest_power_series_upper",
         "direct_smooth_lower", "largest_integer_trial_abs_a_through_K",
         "largest_integer_trial_abs_b_through_K",
         "minimum_common_integer_N_for_natural_coefficients_through_K",
