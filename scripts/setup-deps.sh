@@ -21,9 +21,11 @@ if [[ ! -d "$checkout/.git" ]]; then
     exit 1
   fi
   git clone --filter=blob:none --no-checkout "$repository" "$checkout"
+  fresh=1
 fi
 
-if [[ -n "$(git -C "$checkout" status --porcelain)" ]]; then
+# A --no-checkout clone has an empty work tree, which Git reports as deletions.
+if [[ -z "${fresh:-}" && -n "$(git -C "$checkout" status --porcelain)" ]]; then
   echo "Formal Conjectures checkout has local changes: $checkout" >&2
   exit 1
 fi
